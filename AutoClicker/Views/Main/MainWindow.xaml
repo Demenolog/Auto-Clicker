@@ -7,9 +7,8 @@
         DataContext="{Binding Path=MainWindowModel, Source={StaticResource Locator}}"
         Title="Auto clicker"
         ResizeMode="NoResize"
-        Height="300" Width="300">
+        Height="300" Width="500">
     <Window.Resources>
-        
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -26,9 +25,15 @@
                   Grid.ColumnSpan="2"
                   Header="Frequence">
             <StackPanel Orientation="Horizontal"
-                        HorizontalAlignment="Left"
+                        HorizontalAlignment="Center"
                         VerticalAlignment="Center">
                 <Label Style="{DynamicResource LabelDefaultStyle}">Hours:</Label>
+                <TextBox Style="{DynamicResource TextBoxDefaultStyle}"></TextBox>
+                <Label Style="{DynamicResource LabelDefaultStyle}">Minutes:</Label>
+                <TextBox Style="{DynamicResource TextBoxDefaultStyle}"></TextBox>
+                <Label Style="{DynamicResource LabelDefaultStyle}">Seconds:</Label>
+                <TextBox Style="{DynamicResource TextBoxDefaultStyle}"></TextBox>
+                <Label Style="{DynamicResource LabelDefaultStyle}">Milliseconds:</Label>
                 <TextBox Style="{DynamicResource TextBoxDefaultStyle}"></TextBox>
             </StackPanel>
         </GroupBox>
