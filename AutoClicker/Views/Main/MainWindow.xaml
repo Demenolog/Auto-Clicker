@@ -8,6 +8,9 @@
         Title="Auto clicker"
         ResizeMode="NoResize"
         Height="300" Width="300">
+    <Window.Resources>
+        
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="0.75*"></RowDefinition>
@@ -25,9 +28,8 @@
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Center">
-                <TextBox Width="50"
-                         Height="20">
-                </TextBox>
+                <Label Style="{DynamicResource LabelDefaultStyle}">Hours:</Label>
+                <TextBox Style="{DynamicResource TextBoxDefaultStyle}"></TextBox>
             </StackPanel>
         </GroupBox>
     </Grid>
