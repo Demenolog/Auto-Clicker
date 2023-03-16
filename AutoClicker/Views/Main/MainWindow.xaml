@@ -7,12 +7,13 @@
         DataContext="{Binding Path=MainWindowModel, Source={StaticResource Locator}}"
         Title="Auto clicker"
         ResizeMode="NoResize"
-        Height="300" Width="500">
+        Height="400" Width="500">
     <Window.Resources>
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="0.75*"></RowDefinition>
+            <RowDefinition></RowDefinition>
             <RowDefinition></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
@@ -23,7 +24,7 @@
         <GroupBox Style="{StaticResource GroupBoxDefaultStyle}"
                   Grid.Row="0"
                   Grid.ColumnSpan="2"
-                  Header="Frequence">
+                  Header="Click interval">
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center">
@@ -36,6 +37,29 @@
                 <Label Style="{DynamicResource LabelDefaultStyle}">Milliseconds:</Label>
                 <TextBox Style="{DynamicResource TextBoxDefaultStyle}"></TextBox>
             </StackPanel>
+        </GroupBox>
+        <GroupBox Style="{StaticResource GroupBoxDefaultStyle}"
+                  Grid.Row="1"
+                  Grid.Column="0"
+                  Header="Click options">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Row="0"
+                       Grid.Column="0"
+                       Content="Mouse button:">
+                </Label>
+                <Label Grid.Row="1"
+                       Grid.Column="0"
+                       Content="Click type:">
+                </Label>
+                </Grid>
         </GroupBox>
     </Grid>
 </Window>
