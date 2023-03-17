@@ -3,6 +3,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:sys="clr-namespace:System;assembly=System.Runtime"
         mc:Ignorable="d"
         DataContext="{Binding Path=MainWindowModel, Source={StaticResource Locator}}"
         Title="Auto clicker"
@@ -29,13 +30,13 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center">
                 <Label Style="{DynamicResource LabelDefaultStyle}">Hours:</Label>
-                <TextBox Style="{DynamicResource TextBoxDefaultStyle}"></TextBox>
+                <TextBox Style="{DynamicResource TextBoxDefaultStyle}" />
                 <Label Style="{DynamicResource LabelDefaultStyle}">Minutes:</Label>
-                <TextBox Style="{DynamicResource TextBoxDefaultStyle}"></TextBox>
+                <TextBox Style="{DynamicResource TextBoxDefaultStyle}" />
                 <Label Style="{DynamicResource LabelDefaultStyle}">Seconds:</Label>
-                <TextBox Style="{DynamicResource TextBoxDefaultStyle}"></TextBox>
+                <TextBox Style="{DynamicResource TextBoxDefaultStyle}" />
                 <Label Style="{DynamicResource LabelDefaultStyle}">Milliseconds:</Label>
-                <TextBox Style="{DynamicResource TextBoxDefaultStyle}"></TextBox>
+                <TextBox Style="{DynamicResource TextBoxDefaultStyle}" />
             </StackPanel>
         </GroupBox>
         <GroupBox Style="{StaticResource GroupBoxDefaultStyle}"
@@ -55,11 +56,97 @@
                        Grid.Column="0"
                        Content="Mouse button:">
                 </Label>
+                <ComboBox Grid.Row="0"
+                          Grid.Column="1"
+                          Margin="2"
+                          SelectedItem="Left">
+                    <sys:String>Left</sys:String>
+                    <sys:String>Right</sys:String>
+                </ComboBox>
                 <Label Grid.Row="1"
                        Grid.Column="0"
                        Content="Click type:">
                 </Label>
-                </Grid>
+                <ComboBox Grid.Row="1"
+                          Grid.Column="1"
+                          Margin="2"
+                          SelectedItem="Single">
+                    <sys:String>Single</sys:String>
+                    <sys:String>Double</sys:String>
+                </ComboBox>
+            </Grid>
+        </GroupBox>
+        <GroupBox Style="{StaticResource GroupBoxDefaultStyle}"
+                  Grid.Row="1"
+                  Grid.Column="1"
+                  Header="Click repeat">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <CheckBox Grid.Row="0"
+                          Grid.Column="0"
+                          Content="Repeat"
+                          Margin="6"
+                          HorizontalAlignment="Left"
+                          VerticalAlignment="Center">
+                </CheckBox>
+                <StackPanel Grid.Row="0"
+                            Grid.Column="1"
+                            Orientation="Horizontal">
+                    <TextBox HorizontalContentAlignment="Center"
+                             VerticalContentAlignment="Center"
+                             Margin="2"
+                             Width="40">1
+                    </TextBox>
+                    <Label Style="{StaticResource LabelDefaultStyle}">times</Label>
+                </StackPanel>
+                <CheckBox Grid.Row="1"
+                          Grid.Column="0"
+                          Grid.ColumnSpan="2"
+                          Content="Repeat until stopped"
+                          Margin="6"
+                          HorizontalAlignment="Left"
+                          VerticalAlignment="Center"
+                          IsChecked="True">
+                </CheckBox>
+            </Grid>
+        </GroupBox>
+        <GroupBox Style="{StaticResource GroupBoxDefaultStyle}"
+                  Grid.Row="2"
+                  Grid.Column="0"
+                  Grid.ColumnSpan="2"
+                  Header="Cursor position">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <CheckBox Content="Current location"
+                          VerticalAlignment="Center"
+                          HorizontalAlignment="Left"
+                          IsChecked="True">
+                </CheckBox>
+                <StackPanel Grid.Row="0"
+                           Grid.Column="1"
+                           Orientation="Horizontal"
+                           VerticalAlignment="Center">
+                    <CheckBox VerticalAlignment="Center"
+                              HorizontalAlignment="Left"
+                              VerticalContentAlignment="Center"
+                              HorizontalContentAlignment="Center">
+                        <Button Height="25"
+                                Width="75"
+                                Content="Pick location">
+                        </Button>
+                    </CheckBox>
+                </StackPanel>
+            </Grid>
         </GroupBox>
     </Grid>
 </Window>
