@@ -99,10 +99,12 @@
                 <StackPanel Grid.Row="0"
                             Grid.Column="1"
                             Orientation="Horizontal">
-                    <TextBox HorizontalContentAlignment="Center"
+                    <TextBox Style="{StaticResource TextBoxDefaultStyle}"
+                             HorizontalContentAlignment="Center"
                              VerticalContentAlignment="Center"
                              Margin="2"
-                             Width="40">1
+                             Width="40"
+                             Text="1">
                     </TextBox>
                     <Label Style="{StaticResource LabelDefaultStyle}">times</Label>
                 </StackPanel>
@@ -124,7 +126,7 @@
                   Header="Cursor position">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition Width="0.85*"></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <CheckBox Content="Current location"
@@ -145,6 +147,10 @@
                                 Content="Pick location">
                         </Button>
                     </CheckBox>
+                    <Label Style="{StaticResource LabelDefaultStyle}">X:</Label>
+                    <TextBox Style="{StaticResource TextBoxDefaultStyle}"></TextBox>
+                    <Label Style="{StaticResource LabelDefaultStyle}">Y:</Label>
+                    <TextBox Style="{StaticResource TextBoxDefaultStyle}"></TextBox>
                 </StackPanel>
             </Grid>
         </GroupBox>
