@@ -142,7 +142,8 @@
                               HorizontalAlignment="Left"
                               VerticalContentAlignment="Center"
                               HorizontalContentAlignment="Center">
-                        <Button Height="25"
+                        <Button Style="{StaticResource ButtonDefaultStyle}"
+                                Height="25"
                                 Width="75"
                                 Content="Pick location">
                         </Button>
@@ -154,5 +155,45 @@
                 </StackPanel>
             </Grid>
         </GroupBox>
+        <Grid Grid.Row="3"
+              Grid.Column="0"
+              Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <Button Style="{StaticResource ButtonDefaultStyle}" 
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Margin="10"
+                    Width="150"
+                    Content="Start">
+            </Button>
+            <Button Style="{StaticResource ButtonDefaultStyle}" 
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Margin="10"
+                    Width="150"
+                    Content="Stop">
+            </Button>
+            <Button Style="{StaticResource ButtonDefaultStyle}" 
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Margin="10"
+                    Width="150"
+                    Content="Hotkey setting">
+            </Button>
+            <Button Style="{StaticResource ButtonDefaultStyle}" 
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="10"
+                    Width="150"
+                    Content="Record &amp; playback">
+            </Button>
+        </Grid>
     </Grid>
 </Window>
