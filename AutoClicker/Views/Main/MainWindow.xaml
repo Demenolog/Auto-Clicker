@@ -9,8 +9,6 @@
         Title="Auto clicker"
         ResizeMode="NoResize"
         Height="400" Width="500">
-    <Window.Resources>
-    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="0.75*"></RowDefinition>
@@ -30,13 +28,17 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center">
                 <Label Style="{DynamicResource LabelDefaultStyle}">Hours:</Label>
-                <TextBox Style="{DynamicResource TextBoxDefaultStyle}" />
+                <TextBox Style="{DynamicResource TextBoxDefaultStyle}"
+                         Text="{Binding HoursTextBox}"/>
                 <Label Style="{DynamicResource LabelDefaultStyle}">Minutes:</Label>
-                <TextBox Style="{DynamicResource TextBoxDefaultStyle}" />
+                <TextBox Style="{DynamicResource TextBoxDefaultStyle}" 
+                         Text="{Binding MinutesTextBox}"/>
                 <Label Style="{DynamicResource LabelDefaultStyle}">Seconds:</Label>
-                <TextBox Style="{DynamicResource TextBoxDefaultStyle}" />
+                <TextBox Style="{DynamicResource TextBoxDefaultStyle}"
+                         Text="{Binding SecondsTextBox}"/>
                 <Label Style="{DynamicResource LabelDefaultStyle}">Milliseconds:</Label>
-                <TextBox Style="{DynamicResource TextBoxDefaultStyle}" />
+                <TextBox Style="{DynamicResource TextBoxDefaultStyle}" 
+                         Text="{Binding MillisecondsTextBox}"/>
             </StackPanel>
         </GroupBox>
         <GroupBox Style="{StaticResource GroupBoxDefaultStyle}"
