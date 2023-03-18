@@ -29,16 +29,16 @@
                         VerticalAlignment="Center">
                 <Label Style="{DynamicResource LabelDefaultStyle}">Hours:</Label>
                 <TextBox Style="{DynamicResource TextBoxDefaultStyle}"
-                         Text="{Binding HoursTextBox}"/>
+                         Text="{Binding HoursTextBox, UpdateSourceTrigger=PropertyChanged}"/>
                 <Label Style="{DynamicResource LabelDefaultStyle}">Minutes:</Label>
                 <TextBox Style="{DynamicResource TextBoxDefaultStyle}" 
-                         Text="{Binding MinutesTextBox}"/>
+                         Text="{Binding MinutesTextBox, UpdateSourceTrigger=PropertyChanged}"/>
                 <Label Style="{DynamicResource LabelDefaultStyle}">Seconds:</Label>
                 <TextBox Style="{DynamicResource TextBoxDefaultStyle}"
-                         Text="{Binding SecondsTextBox}"/>
+                         Text="{Binding SecondsTextBox, UpdateSourceTrigger=PropertyChanged}"/>
                 <Label Style="{DynamicResource LabelDefaultStyle}">Milliseconds:</Label>
                 <TextBox Style="{DynamicResource TextBoxDefaultStyle}" 
-                         Text="{Binding MillisecondsTextBox}"/>
+                         Text="{Binding MillisecondsTextBox, UpdateSourceTrigger=PropertyChanged}"/>
             </StackPanel>
         </GroupBox>
         <GroupBox Style="{StaticResource GroupBoxDefaultStyle}"
