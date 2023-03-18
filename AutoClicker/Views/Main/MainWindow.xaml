@@ -96,7 +96,8 @@
                           Content="Repeat"
                           Margin="6"
                           HorizontalAlignment="Left"
-                          VerticalAlignment="Center">
+                          VerticalAlignment="Center"
+                          IsChecked="{Binding IsRepeatTimesSelected, UpdateSourceTrigger=PropertyChanged}">
                 </CheckBox>
                 <StackPanel Grid.Row="0"
                             Grid.Column="1"
@@ -117,7 +118,7 @@
                           Margin="6"
                           HorizontalAlignment="Left"
                           VerticalAlignment="Center"
-                          IsChecked="True">
+                          IsChecked="{Binding IsRepeatUntilStoppedSelected, UpdateSourceTrigger=PropertyChanged}">
                 </CheckBox>
             </Grid>
         </GroupBox>
