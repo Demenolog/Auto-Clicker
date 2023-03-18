@@ -85,6 +85,38 @@ namespace AutoClicker.ViewModels
 
         #endregion [Cilick interval]
 
+        #region [Click options]
+
+        #region Fields
+
+        #region Selected Mouse Button : string - Selected button from combobox
+
+        private string _mouseButton = "Left";
+
+        public string SelectedMouseButton
+        {
+            get => _mouseButton;
+            set => SetField(ref _mouseButton, value);
+        }
+
+        #endregion Selected Mouse Button : string - Selected button from combobox
+
+        #region Selected Mouse Button Mode : string - Selected click type from combobox
+
+        private string _selectedMouseButtonMode = "Single";
+
+        public string SelectedMouseButtonMode
+        {
+            get => _selectedMouseButtonMode;
+            set => SetField(ref _selectedMouseButtonMode, value);
+        }
+
+        #endregion Selected Mouse Button Mode : string - Selected click type from combobox
+
+        #endregion Fields
+
+        #endregion [Click options]
+
         public MainWindowViewModel()
         {
         }

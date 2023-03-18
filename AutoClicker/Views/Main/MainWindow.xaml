@@ -29,16 +29,16 @@
                         VerticalAlignment="Center">
                 <Label Style="{DynamicResource LabelDefaultStyle}">Hours:</Label>
                 <TextBox Style="{DynamicResource TextBoxDefaultStyle}"
-                         Text="{Binding HoursTextBox, UpdateSourceTrigger=PropertyChanged}"/>
+                         Text="{Binding HoursTextBox, UpdateSourceTrigger=PropertyChanged}" />
                 <Label Style="{DynamicResource LabelDefaultStyle}">Minutes:</Label>
-                <TextBox Style="{DynamicResource TextBoxDefaultStyle}" 
-                         Text="{Binding MinutesTextBox, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Style="{DynamicResource TextBoxDefaultStyle}"
+                         Text="{Binding MinutesTextBox, UpdateSourceTrigger=PropertyChanged}" />
                 <Label Style="{DynamicResource LabelDefaultStyle}">Seconds:</Label>
                 <TextBox Style="{DynamicResource TextBoxDefaultStyle}"
-                         Text="{Binding SecondsTextBox, UpdateSourceTrigger=PropertyChanged}"/>
+                         Text="{Binding SecondsTextBox, UpdateSourceTrigger=PropertyChanged}" />
                 <Label Style="{DynamicResource LabelDefaultStyle}">Milliseconds:</Label>
-                <TextBox Style="{DynamicResource TextBoxDefaultStyle}" 
-                         Text="{Binding MillisecondsTextBox, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Style="{DynamicResource TextBoxDefaultStyle}"
+                         Text="{Binding MillisecondsTextBox, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
         </GroupBox>
         <GroupBox Style="{StaticResource GroupBoxDefaultStyle}"
@@ -61,18 +61,18 @@
                 <ComboBox Grid.Row="0"
                           Grid.Column="1"
                           Margin="2"
-                          SelectedItem="Left">
+                          SelectedItem="{Binding SelectedMouseButton}">
                     <sys:String>Left</sys:String>
                     <sys:String>Right</sys:String>
                 </ComboBox>
                 <Label Grid.Row="1"
                        Grid.Column="0"
-                       Content="Click type:">
+                       Content="Click mode:">
                 </Label>
                 <ComboBox Grid.Row="1"
                           Grid.Column="1"
                           Margin="2"
-                          SelectedItem="Single">
+                          SelectedItem="{Binding SelectedMouseButtonMode}">
                     <sys:String>Single</sys:String>
                     <sys:String>Double</sys:String>
                 </ComboBox>
@@ -168,28 +168,28 @@
                 <RowDefinition></RowDefinition>
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
-            <Button Style="{StaticResource ButtonDefaultStyle}" 
+            <Button Style="{StaticResource ButtonDefaultStyle}"
                     Grid.Row="0"
                     Grid.Column="0"
                     Margin="10"
                     Width="150"
                     Content="Start">
             </Button>
-            <Button Style="{StaticResource ButtonDefaultStyle}" 
+            <Button Style="{StaticResource ButtonDefaultStyle}"
                     Grid.Row="0"
                     Grid.Column="1"
                     Margin="10"
                     Width="150"
                     Content="Stop">
             </Button>
-            <Button Style="{StaticResource ButtonDefaultStyle}" 
+            <Button Style="{StaticResource ButtonDefaultStyle}"
                     Grid.Row="1"
                     Grid.Column="0"
                     Margin="10"
                     Width="150"
                     Content="Hotkey setting">
             </Button>
-            <Button Style="{StaticResource ButtonDefaultStyle}" 
+            <Button Style="{StaticResource ButtonDefaultStyle}"
                     Grid.Row="1"
                     Grid.Column="1"
                     Margin="10"
