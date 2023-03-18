@@ -1,4 +1,5 @@
-﻿using AutoClicker.ViewModels.Base;
+﻿using AutoClicker.Models.Other;
+using AutoClicker.ViewModels.Base;
 
 namespace AutoClicker.ViewModels
 {
@@ -15,10 +16,16 @@ namespace AutoClicker.ViewModels
         public string HoursTextBox
         {
             get => _hours;
-            set => SetField(ref _hours, value);
+            set
+            {
+                if (TextBoxValidation.IsNumber(value))
+                {
+                    SetField(ref _hours, value);
+                }
+            }
         }
 
-        #endregion
+        #endregion HoursTextBox : string - TextBox with hours values
 
         #region MinutesTextBox : string - TextBox with minutes values
 
@@ -27,10 +34,16 @@ namespace AutoClicker.ViewModels
         public string MinutesTextBox
         {
             get => _minutes;
-            set => SetField(ref _minutes, value);
+            set
+            {
+                if (TextBoxValidation.IsNumber(value))
+                {
+                    SetField(ref _minutes, value);
+                }
+            }
         }
 
-        #endregion
+        #endregion MinutesTextBox : string - TextBox with minutes values
 
         #region SecondsTextBox : string - TextBox with seconds values
 
@@ -39,10 +52,16 @@ namespace AutoClicker.ViewModels
         public string SecondsTextBox
         {
             get => _secondsTextBox;
-            set => SetField(ref _secondsTextBox, value);
+            set
+            {
+                if (TextBoxValidation.IsNumber(value))
+                {
+                    SetField(ref _secondsTextBox, value);
+                }
+            }
         }
 
-        #endregion
+        #endregion SecondsTextBox : string - TextBox with seconds values
 
         #region MillisecondsTextBox : string - TextBox with msec values
 
@@ -51,13 +70,23 @@ namespace AutoClicker.ViewModels
         public string MillisecondsTextBox
         {
             get => _milliseconds;
-            set => SetField(ref _milliseconds, value);
+            set
+            {
+                if (TextBoxValidation.IsNumber(value))
+                {
+                    SetField(ref _milliseconds, value);
+                }
+            }
         }
 
-        #endregion
+        #endregion MillisecondsTextBox : string - TextBox with msec values
 
-        #endregion
+        #endregion Fileds
 
-        #endregion
+        #endregion [Cilick interval]
+
+        public MainWindowViewModel()
+        {
+        }
     }
 }
