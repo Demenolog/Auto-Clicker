@@ -101,13 +101,15 @@
                 </CheckBox>
                 <StackPanel Grid.Row="0"
                             Grid.Column="1"
-                            Orientation="Horizontal">
+                            Orientation="Horizontal"
+                            IsEnabled="{Binding IsRepeatTimesSelected}">
                     <TextBox Style="{StaticResource TextBoxDefaultStyle}"
                              HorizontalContentAlignment="Center"
                              VerticalContentAlignment="Center"
                              Margin="2"
                              Width="40"
-                             Text="1">
+                             Text="1"
+                             MaxLength="5">
                     </TextBox>
                     <Label Style="{StaticResource LabelDefaultStyle}">times</Label>
                 </StackPanel>

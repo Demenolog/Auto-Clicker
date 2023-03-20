@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using AutoClicker.Models.Other;
+﻿using AutoClicker.Models.Other;
 using AutoClicker.ViewModels.Base;
 
 namespace AutoClicker.ViewModels
@@ -129,10 +128,15 @@ namespace AutoClicker.ViewModels
         public bool IsRepeatTimesSelected
         {
             get => _isRepeatTimes;
-            set => SetField(ref _isRepeatTimes, value);
+            set
+            {
+                SetField(ref _isRepeatTimes, value);
+                SetField(ref _isRepeatUntilStopped, !_isRepeatTimes);
+                OnPropertyChanged(nameof(IsRepeatUntilStoppedSelected));
+            }
         }
 
-        #endregion
+        #endregion Is Repeat Times Selected : bool - check if repeat checkbox selected
 
         #region Is Repeat Until Stopped Selected : bool - Check if repeat until stopped checkbox selected
 
@@ -141,14 +145,19 @@ namespace AutoClicker.ViewModels
         public bool IsRepeatUntilStoppedSelected
         {
             get => _isRepeatUntilStopped;
-            set => SetField(ref _isRepeatUntilStopped, value);
+            set
+            {
+                SetField(ref _isRepeatUntilStopped, value);
+                SetField(ref _isRepeatTimes, !_isRepeatUntilStopped);
+                OnPropertyChanged(nameof(IsRepeatTimesSelected));
+            }
         }
 
-        #endregion
+        #endregion Is Repeat Until Stopped Selected : bool - Check if repeat until stopped checkbox selected
 
-        #endregion
+        #endregion Fields
 
-        #endregion
+        #endregion [Click repeat]
 
         public MainWindowViewModel()
         {
