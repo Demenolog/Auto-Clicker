@@ -217,7 +217,7 @@ namespace AutoClicker.ViewModels
 
         #region YAxisTextBox : string - Get\Set text value from Y-axis textBox
 
-        private string _yAxis = "0.0";
+        private string _yAxis = "0";
 
         public string YAxisTextBox
         {
