@@ -6,7 +6,7 @@ namespace AutoClicker.Models.Other
     {
         public static bool IsIntegerNumber(string text)
         {
-            return Int32.TryParse(text, out _) || text.Length == 0;
+            return int.TryParse(text, out _) || text.Length == 0;
         }
     }
 }
