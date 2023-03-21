@@ -132,12 +132,12 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="0.85*"></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <CheckBox Content="Current location"
                           VerticalAlignment="Center"
                           HorizontalAlignment="Left"
-                          IsChecked="True">
+                          IsChecked="{Binding IsCurrentLocationSelected, UpdateSourceTrigger=PropertyChanged}">
                 </CheckBox>
                 <StackPanel Grid.Row="0"
                            Grid.Column="1"
@@ -146,17 +146,22 @@
                     <CheckBox VerticalAlignment="Center"
                               HorizontalAlignment="Left"
                               VerticalContentAlignment="Center"
-                              HorizontalContentAlignment="Center">
+                              HorizontalContentAlignment="Center"
+                              IsChecked="{Binding IsPickLocationSelected, UpdateSourceTrigger=PropertyChanged}">
+                    </CheckBox>
+                    <StackPanel Orientation="Horizontal"
+                                Margin="5"
+                                IsEnabled="{Binding IsPickLocationSelected}">
                         <Button Style="{StaticResource ButtonDefaultStyle}"
                                 Height="25"
                                 Width="75"
                                 Content="Pick location">
                         </Button>
-                    </CheckBox>
-                    <Label Style="{StaticResource LabelDefaultStyle}">X:</Label>
-                    <TextBox Style="{StaticResource TextBoxDefaultStyle}"></TextBox>
-                    <Label Style="{StaticResource LabelDefaultStyle}">Y:</Label>
-                    <TextBox Style="{StaticResource TextBoxDefaultStyle}"></TextBox>
+                        <Label Style="{StaticResource LabelDefaultStyle}">X:</Label>
+                        <TextBox Style="{StaticResource TextBoxDefaultStyle}"></TextBox>
+                        <Label Style="{StaticResource LabelDefaultStyle}">Y:</Label>
+                        <TextBox Style="{StaticResource TextBoxDefaultStyle}"></TextBox>
+                    </StackPanel>
                 </StackPanel>
             </Grid>
         </GroupBox>

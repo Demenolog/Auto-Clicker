@@ -121,7 +121,7 @@ namespace AutoClicker.ViewModels
 
         #region Fields
 
-        #region Is Repeat Times Selected : bool - check if repeat checkbox selected
+        #region Is Repeat Times Selected : bool - checking if repeat checkbox selected
 
         private bool _isRepeatTimes;
 
@@ -136,9 +136,9 @@ namespace AutoClicker.ViewModels
             }
         }
 
-        #endregion Is Repeat Times Selected : bool - check if repeat checkbox selected
+        #endregion Is Repeat Times Selected : bool - checking if repeat checkbox selected
 
-        #region Is Repeat Until Stopped Selected : bool - Check if repeat until stopped checkbox selected
+        #region Is Repeat Until Stopped Selected : bool - checking if repeat until stopped checkbox selected
 
         private bool _isRepeatUntilStopped = true;
 
@@ -153,11 +153,53 @@ namespace AutoClicker.ViewModels
             }
         }
 
-        #endregion Is Repeat Until Stopped Selected : bool - Check if repeat until stopped checkbox selected
+        #endregion Is Repeat Until Stopped Selected : bool - checking if repeat until stopped checkbox selected
 
         #endregion Fields
 
         #endregion [Click repeat]
+
+        #region [Cursor position]
+
+        #region Fields
+
+        #region IsCurrentLocationSelected : bool - checking if current location checkbox selected
+
+        private bool _isCurrentLocation = true;
+
+        public bool IsCurrentLocationSelected
+        {
+            get => _isCurrentLocation;
+            set
+            {
+                SetField(ref _isCurrentLocation, value);
+                SetField(ref _isPickLocation, !_isCurrentLocation);
+                OnPropertyChanged(nameof(IsPickLocationSelected));
+            }
+        }
+
+        #endregion
+
+        #region IsPickLocationSelected : bool - checking if pick location checkbox selected
+
+        private bool _isPickLocation;
+
+        public bool IsPickLocationSelected
+        {
+            get => _isPickLocation;
+            set
+            {
+                SetField(ref _isPickLocation, value);
+                SetField(ref _isCurrentLocation, !_isPickLocation);
+                OnPropertyChanged(nameof(IsCurrentLocationSelected));
+            }
+        }
+
+        #endregion
+
+        #endregion
+
+        #endregion
 
         public MainWindowViewModel()
         {
