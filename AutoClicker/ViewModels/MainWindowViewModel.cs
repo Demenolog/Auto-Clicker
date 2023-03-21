@@ -197,29 +197,41 @@ namespace AutoClicker.ViewModels
 
         #endregion IsPickLocationSelected : bool - checking if pick location checkbox selected
 
-        #region XAxisTextBox : double - Get\Set text value of X-axis textBox
+        #region XAxisTextBox : string - Get\Set text value of X-axis textBox
 
-        private double _xAxis;
+        private string _xAxis = "0";
 
-        public double XAxisTextBox
+        public string XAxisTextBox
         {
             get => _xAxis;
-            set => SetField(ref _xAxis, value);
+            set
+            {
+                if (TextBoxValidation.IsIntegerNumber(value))
+                {
+                    SetField(ref _xAxis, value);
+                }
+            }
         }
 
-        #endregion
+        #endregion XAxisTextBox : string - Get\Set text value of X-axis textBox
 
-        #region YAxisTextBox : double - Get\Set text value from Y-axis textBox
+        #region YAxisTextBox : string - Get\Set text value from Y-axis textBox
 
-        private double _yAxis;
+        private string _yAxis = "0.0";
 
-        public double YAxisTextBox
+        public string YAxisTextBox
         {
             get => _yAxis;
-            set => SetField(ref _yAxis, value);
+            set
+            {
+                if (TextBoxValidation.IsIntegerNumber(value))
+                {
+                    SetField(ref _yAxis, value);
+                }
+            }
         }
 
-        #endregion
+        #endregion YAxisTextBox : double - Get\Set text value from Y-axis textBox
 
         #endregion Fields
 
