@@ -158,9 +158,11 @@
                                 Content="Pick location">
                         </Button>
                         <Label Style="{StaticResource LabelDefaultStyle}">X:</Label>
-                        <TextBox Style="{StaticResource TextBoxDefaultStyle}"></TextBox>
+                        <TextBox Style="{StaticResource TextBoxDefaultStyle}"
+                                 Text="{Binding XAxisTextBox, UpdateSourceTrigger=PropertyChanged}"></TextBox>
                         <Label Style="{StaticResource LabelDefaultStyle}">Y:</Label>
-                        <TextBox Style="{StaticResource TextBoxDefaultStyle}"></TextBox>
+                        <TextBox Style="{StaticResource TextBoxDefaultStyle}"
+                                 Text="{Binding YAxisTextBox}"></TextBox>
                     </StackPanel>
                 </StackPanel>
             </Grid>

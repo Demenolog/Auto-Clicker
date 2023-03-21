@@ -178,7 +178,7 @@ namespace AutoClicker.ViewModels
             }
         }
 
-        #endregion
+        #endregion IsCurrentLocationSelected : bool - checking if current location checkbox selected
 
         #region IsPickLocationSelected : bool - checking if pick location checkbox selected
 
@@ -195,11 +195,35 @@ namespace AutoClicker.ViewModels
             }
         }
 
-        #endregion
+        #endregion IsPickLocationSelected : bool - checking if pick location checkbox selected
+
+        #region XAxisTextBox : double - Get\Set text value of X-axis textBox
+
+        private double _xAxis;
+
+        public double XAxisTextBox
+        {
+            get => _xAxis;
+            set => SetField(ref _xAxis, value);
+        }
 
         #endregion
 
+        #region YAxisTextBox : double - Get\Set text value from Y-axis textBox
+
+        private double _yAxis;
+
+        public double YAxisTextBox
+        {
+            get => _yAxis;
+            set => SetField(ref _yAxis, value);
+        }
+
         #endregion
+
+        #endregion Fields
+
+        #endregion [Cursor position]
 
         public MainWindowViewModel()
         {
