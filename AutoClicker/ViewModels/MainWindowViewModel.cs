@@ -18,7 +18,7 @@ namespace AutoClicker.ViewModels
             get => _hours;
             set
             {
-                if (TextBoxValidation.IsNumber(value))
+                if (TextBoxValidation.IsIntegerNumber(value))
                 {
                     SetField(ref _hours, value);
                 }
@@ -36,7 +36,7 @@ namespace AutoClicker.ViewModels
             get => _minutes;
             set
             {
-                if (TextBoxValidation.IsNumber(value))
+                if (TextBoxValidation.IsIntegerNumber(value))
                 {
                     SetField(ref _minutes, value);
                 }
@@ -54,7 +54,7 @@ namespace AutoClicker.ViewModels
             get => _secondsTextBox;
             set
             {
-                if (TextBoxValidation.IsNumber(value))
+                if (TextBoxValidation.IsIntegerNumber(value))
                 {
                     SetField(ref _secondsTextBox, value);
                 }
@@ -72,7 +72,7 @@ namespace AutoClicker.ViewModels
             get => _milliseconds;
             set
             {
-                if (TextBoxValidation.IsNumber(value))
+                if (TextBoxValidation.IsIntegerNumber(value))
                 {
                     SetField(ref _milliseconds, value);
                 }
