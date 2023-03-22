@@ -14,14 +14,14 @@ namespace AutoClicker.Models.MouseClass
         [Flags]
         public enum MouseEventFlags
         {
-            Leftdown = 0x00000002,
-            Leftup = 0x00000004,
-            Middledown = 0x00000020,
-            Middleup = 0x00000040,
-            Move = 0x00000001,
-            Absolute = 0x00008000,
-            Rightdown = 0x00000008,
-            Rightup = 0x00000010
+            Leftdown = 0x02,
+            Leftup = 0x04,
+            Middledown = 0x020,
+            Middleup = 0x40,
+            Move = 0x01,
+            Absolute = 0x8000,
+            Rightdown = 0x08,
+            Rightup = 0x10
         }
 
         public static void LeftClick(int x, int y)
