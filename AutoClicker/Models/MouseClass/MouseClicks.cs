@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
 
 namespace AutoClicker.Models.MouseClass
 {
     internal class MouseClicks
-    {
+    { 
         [DllImport("user32.dll")]
         private static extern bool SetCursorPosition(int x, int y);
 
