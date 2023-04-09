@@ -1,29 +1,15 @@
-﻿using System;
-using System.Drawing;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
+using static AutoClicker.Infrastructure.Constans.MouseClass.MouseConstans;
 
 namespace AutoClicker.Models.MouseClass
 {
     internal class MouseClicks
-    { 
+    {
         [DllImport("user32.dll")]
         private static extern bool SetCursorPosition(int x, int y);
 
         [DllImport("user32.dll")]
         private static extern void MouseEventHandler(int dwFlags, int xAxis, int yAxis, int dwData, int dwExtraInfo);
-
-        [Flags]
-        public enum MouseEventFlags
-        {
-            Leftdown = 0x02,
-            Leftup = 0x04,
-            Middledown = 0x020,
-            Middleup = 0x40,
-            Move = 0x01,
-            Absolute = 0x8000,
-            Rightdown = 0x08,
-            Rightup = 0x10
-        }
 
         public static void LeftClick(int x, int y)
         {
