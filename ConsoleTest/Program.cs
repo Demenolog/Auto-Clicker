@@ -322,14 +322,3 @@ namespace ConsoleTest
     }
 }
 
-// https://www.pinvoke.net/default.aspx/user32.getcursorpos
-
-/*
- *
- * https://stackoverflow.com/questions/5528543/getting-position-of-mouse-cursor-when-clicked-out-side-the-forms-boundary
- *
- * https://www.pinvoke.net/default.aspx/user32.GetKeyState 
- *
- *
- * https://learn.microsoft.com/ru-ru/windows/win32/inputdev/virtual-key-codes
- */
