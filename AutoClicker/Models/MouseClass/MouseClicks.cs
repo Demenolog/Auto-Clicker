@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Drawing;
+using System.Runtime.InteropServices;
 using static AutoClicker.Infrastructure.Constans.MouseClass.MouseConstans;
 
 namespace AutoClicker.Models.MouseClass
@@ -6,16 +7,20 @@ namespace AutoClicker.Models.MouseClass
     internal class MouseClicks
     {
         [DllImport("user32.dll")]
-        private static extern bool SetCursorPosition(int x, int y);
+        private static extern short GetKeyState(VirtualKeyStates nVirtKey);
 
         [DllImport("user32.dll")]
-        private static extern void MouseEventHandler(int dwFlags, int xAxis, int yAxis, int dwData, int dwExtraInfo);
+        private static extern bool GetCursorPos(out Point point);
+
+        [DllImport("user32.dll")]
+        private static extern bool SetCursorPos(int x, int y);
+
+        [DllImport("user32.dll")]
+        private static extern void mouse_event(int dwFlags, int xAxis, int yAxis, int dwData, int dwExtraInfo);
 
         public static void LeftClick(int x, int y)
         {
-            SetCursorPosition(x, y);
-            MouseEventHandler((int)MouseEventFlags.Leftdown, x, y, 0, 0);
-            MouseEventHandler((int)MouseEventFlags.Leftup, x, y, 0, 0);
+            
         }
     }
 }
