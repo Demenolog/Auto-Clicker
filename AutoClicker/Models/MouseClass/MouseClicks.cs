@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 using System.Runtime.InteropServices;
-using static AutoClicker.Infrastructure.Constans.MouseClass.MouseConstans;
+using static AutoClicker.Infrastructure.Constans.MouseClass.MouseClassConstans;
 
 namespace AutoClicker.Models.MouseClass
 {
