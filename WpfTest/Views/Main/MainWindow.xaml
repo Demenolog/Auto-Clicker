@@ -8,6 +8,7 @@
         Title="{Binding Title}"
         Height="450" Width="800">
     <Grid>
-        
+        <Button Content="HIT THE BUTTON" HorizontalAlignment="Center" VerticalAlignment="Center" Height="130" Width="254"/>
+
     </Grid>
 </Window>
