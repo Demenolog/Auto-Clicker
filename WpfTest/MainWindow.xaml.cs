@@ -26,10 +26,5 @@ namespace WpfTest
             InitializeComponent();
 
         }
-
-        public void Test()
-        {
-            
-        }
     }
 }
