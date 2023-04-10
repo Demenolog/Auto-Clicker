@@ -1,4 +1,9 @@
-﻿using AutoClicker.Models.Other;
+﻿using System;
+using System.Threading.Channels;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using AutoClicker.Infrastructure.Commands;
+using AutoClicker.Models.Other;
 using AutoClicker.ViewModels.Base;
 
 namespace AutoClicker.ViewModels
@@ -235,10 +240,15 @@ namespace AutoClicker.ViewModels
 
         #endregion Fields
 
+        #region Commands
+
+        #endregion
+
         #endregion [Cursor position]
 
         public MainWindowViewModel()
         {
+            
         }
     }
 }
