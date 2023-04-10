@@ -7,43 +7,19 @@ namespace ConsoleTest
     {
         private static void Main(string[] args)
         {
-            for (int i = 0; i < 10; i++)
-            {
-                var result = MouseClicks.IsPressed();
-                Console.WriteLine(result);
-                Thread.Sleep(2000);
-            }
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    var result = MouseClicks.IsPressed();
+            //    Console.WriteLine(result);
+            //    Thread.Sleep(2000);
+            //}
 
-            //Console.WriteLine("Start");
-
-            //var task = new Task<Point>(MouseClicks.PickLocation);
-
-            //task.Start();
-
-            //Console.WriteLine("Wait to pick");
-
-            //var result = task.WaitAsync(CancellationToken.None).Result;
-
-            //Console.WriteLine("Area picked");
-
-            //Console.WriteLine($"{result.X} and {result.Y}");
+            MouseClicks.LeftClick();
         }
     }
 
     internal class MouseClicks
     {
-        [DllImport("user32.dll")]
-        private static extern short GetKeyState(VirtualKeyStates nVirtKey);
-
-        [DllImport("user32.dll")]
-        private static extern bool GetCursorPos(out Point point);
-
-        [DllImport("user32.dll")]
-        private static extern bool SetCursorPos(int x, int y);
-
-        [DllImport("user32.dll")]
-        private static extern void mouse_event(int dwFlags, int xAxis, int yAxis, int dwData, int dwExtraInfo);
-
         private const int KEY_PRESSED = 0x8000;
 
         [Flags]
@@ -58,35 +34,6 @@ namespace ConsoleTest
             Rightdown = 0x08,
             Rightup = 0x10
         }
-
-        public static void LeftClick(int x, int y)
-        {
-            Point pos = new();
-            GetCursorPos(out pos);
-
-            Console.WriteLine($"{pos.X} and {pos.Y}");
-
-            SetCursorPos(x, y);
-            mouse_event((int)MouseEventFlags.Leftdown, x, y, 0, 0);
-            mouse_event((int)MouseEventFlags.Leftup, x, y, 0, 0);
-        }
-
-        public static Point PickLocation()
-        {
-            Thread.Sleep(5000);
-
-            Point pos = new();
-
-            GetCursorPos(out pos);
-
-            return pos;
-        }
-
-        public static bool IsPressed()
-        {
-            return Convert.ToBoolean(GetKeyState(VirtualKeyStates.VK_LBUTTON) & KEY_PRESSED);
-        }
-
 
         private enum VirtualKeyStates
         {
@@ -319,6 +266,53 @@ namespace ConsoleTest
             VK_PA1 = 0xFD,
             VK_OEM_CLEAR = 0xFE
         }
+
+        public static bool IsPressed()
+        {
+            return Convert.ToBoolean(GetKeyState(VirtualKeyStates.VK_LBUTTON) & KEY_PRESSED);
+        }
+
+        public static void LeftClick()
+        {
+            Point pos = new();
+            GetCursorPos(out pos);
+
+            Console.WriteLine($"{pos.X} and {pos.Y}");
+
+            var x = pos.X;
+            var y = pos.Y;
+
+            Thread.Sleep(5000);
+
+            SetCursorPos(x, y);
+            mouse_event((int)MouseEventFlags.Leftdown, x, y, 0, 0);
+            mouse_event((int)MouseEventFlags.Leftup, x, y, 0, 0);
+        }
+
+        public static Point PickLocation()
+        {
+            Thread.Sleep(5000);
+
+            Point pos = new();
+
+            GetCursorPos(out pos);
+
+            return pos;
+        }
+
+        //[DllImport("user32.dll")]
+        //static extern bool ScreenToClient(IntPtr hWnd, ref POINT lpPoint);
+
+        [DllImport("user32.dll")]
+        private static extern bool GetCursorPos(out Point point);
+
+        [DllImport("user32.dll")]
+        private static extern short GetKeyState(VirtualKeyStates nVirtKey);
+        [DllImport("user32.dll")]
+        private static extern void mouse_event(int dwFlags, int xAxis, int yAxis, int dwData, int dwExtraInfo);
+
+        [DllImport("user32.dll")]
+        private static extern bool SetCursorPos(int x, int y);
     }
 }
 
