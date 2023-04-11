@@ -20,8 +20,10 @@ namespace AutoClicker.Models.MouseClass
         [DllImport("user32.dll")]
         private static extern void mouse_event(int dwFlags, int xAxis, int yAxis, int dwData, int dwExtraInfo);
 
-        public static async Task<Point> GetCursorPosition(Point point)
+        public static Point GetCursorPosition()
         {
+            var point = new Point();
+
             while (true)
             {
                 if (Convert.ToBoolean(GetKeyState(VirtualKeyStates.VK_LBUTTON) & KEY_PRESSED))
