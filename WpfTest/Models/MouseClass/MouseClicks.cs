@@ -22,18 +22,14 @@ namespace AutoClicker.Models.MouseClass
 
         public static Point GetCursorPosition()
         {
-            var point = new Point();
-
             while (true)
             {
                 if (Convert.ToBoolean(GetKeyState(VirtualKeyStates.VK_LBUTTON) & KEY_PRESSED))
                 {
-                    GetCursorPos(out point);
-                    break;
+                    GetCursorPos(out Point point);
+                    return point;
                 }
             }
-            
-            return point;
         }
     }
 }

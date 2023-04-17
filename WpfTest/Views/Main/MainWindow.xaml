@@ -13,6 +13,7 @@
                 VerticalAlignment="Center" 
                 Height="130" 
                 Width="254"
+                IsEnabled="{Binding IsButtonEnable}"
                 Command="{Binding TestAsync}"/>
         <TextBox HorizontalAlignment="Left" 
                  Margin="273,331,0,0" 

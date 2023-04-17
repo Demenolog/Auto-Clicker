@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using AutoClicker.Models.MouseClass;
+﻿using AutoClicker.Models.MouseClass;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using WpfTest.Infrastructure.Commands;
@@ -20,6 +19,18 @@ namespace WpfTest.ViewModels
         }
 
         #endregion TextBoxOne : string - test
+
+        #region ButtonVisible : bool - test
+
+        private bool _isButtonEnable = true;
+
+        public bool IsButtonEnable
+        {
+            get => _isButtonEnable;
+            set => SetField(ref _isButtonEnable, value);
+        }
+
+        #endregion ButtonVisible : bool - test
 
         #region TextBoxTwo : string - test
 
@@ -45,27 +56,51 @@ namespace WpfTest.ViewModels
 
         #endregion Title : string - string
 
+        #region Async Command
+
         public ICommand TestAsync { get; }
 
         private bool CanTestExecutedAsync(object p) => true;
 
-        private async Task<Point> OnTestExecuteAsync(object p)
+        private async Task OnTestExecuteAsync(object p)
         {
-            var task = new Task<Point>((() => MouseClicks.GetCursorPosition()));
-            
-            task.Start(); 
-            
-            var point = await task;
-            
-            TextBoxOne = point.X.ToString();
-            TextBoxTwo = point.Y.ToString();
+            await Task.Run((() =>
+            {
+                var point = MouseClicks.GetCursorPosition();
 
-            return new Point();
+                TextBoxOne = point.X.ToString();
+                TextBoxTwo = point.Y.ToString();
+            }));
+
+            IsButtonEnable = true;
+        }
+
+        #endregion Async Command
+
+        public ICommand Test { get; }
+
+        private bool CanTestExecuted(object p) => true;
+
+        private async void OnTestExecute(object p)
+        {
+            IsButtonEnable = false;
+
+            await Task.Run((() =>
+            {
+                var point = MouseClicks.GetCursorPosition();
+
+                TextBoxOne = point.X.ToString();
+                TextBoxTwo = point.Y.ToString();
+            }));
+
+            IsButtonEnable = true;
         }
 
         public MainWindowViewModel()
         {
             TestAsync = new LambdaCommandAsync(OnTestExecuteAsync, CanTestExecutedAsync);
+
+            Test = new LambdaCommand(OnTestExecute, CanTestExecuted);
         }
     }
 }
