@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AutoClicker.Infrastructure.Constans.MouseClass
+namespace WpfTest.Infrastructure.Constans.MouseClass
 {
     public static class MouseClassConstans
     {

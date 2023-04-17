@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using static AutoClicker.Infrastructure.Constans.MouseClass.MouseClassConstans;
+using static WpfTest.Infrastructure.Constans.MouseClass.MouseClassConstans;
 
 namespace AutoClicker.Models.MouseClass
 {
