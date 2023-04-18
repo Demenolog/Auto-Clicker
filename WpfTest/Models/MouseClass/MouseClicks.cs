@@ -7,7 +7,7 @@ using static WpfTest.Infrastructure.Constans.MouseClass.MouseClassConstans;
 
 namespace AutoClicker.Models.MouseClass
 {
-    internal class MouseClicks
+    internal static class MouseClicks
     {
         [DllImport("user32.dll")]
         private static extern short GetKeyState(VirtualKeyStates nVirtKey);
