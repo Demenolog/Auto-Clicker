@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using static WpfTest.Infrastructure.Constans.MouseClass.MouseClassConstans;
 
@@ -22,11 +23,13 @@ namespace AutoClicker.Models.MouseClass
 
         public static Point GetCursorPosition()
         {
+            Point point;
+
             while (true)
             {
                 if (Convert.ToBoolean(GetKeyState(VirtualKeyStates.VK_LBUTTON) & KEY_PRESSED))
                 {
-                    GetCursorPos(out Point point);
+                    GetCursorPos(out point);
                     return point;
                 }
             }

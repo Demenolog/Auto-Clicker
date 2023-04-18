@@ -14,7 +14,7 @@
                 Height="130" 
                 Width="254"
                 IsEnabled="{Binding IsButtonEnable}"
-                Command="{Binding TestAsync}"/>
+                Command="{Binding Test}"/>
         <TextBox HorizontalAlignment="Left" 
                  Margin="273,331,0,0" 
                  TextWrapping="Wrap" 

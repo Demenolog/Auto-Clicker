@@ -1,4 +1,6 @@
-﻿using AutoClicker.Models.MouseClass;
+﻿using System.Drawing;
+using System.Threading;
+using AutoClicker.Models.MouseClass;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using WpfTest.Infrastructure.Commands;
@@ -56,27 +58,6 @@ namespace WpfTest.ViewModels
 
         #endregion Title : string - string
 
-        #region Async Command
-
-        public ICommand TestAsync { get; }
-
-        private bool CanTestExecutedAsync(object p) => true;
-
-        private async Task OnTestExecuteAsync(object p)
-        {
-            await Task.Run((() =>
-            {
-                var point = MouseClicks.GetCursorPosition();
-
-                TextBoxOne = point.X.ToString();
-                TextBoxTwo = point.Y.ToString();
-            }));
-
-            IsButtonEnable = true;
-        }
-
-        #endregion Async Command
-
         public ICommand Test { get; }
 
         private bool CanTestExecuted(object p) => true;
@@ -85,21 +66,25 @@ namespace WpfTest.ViewModels
         {
             IsButtonEnable = false;
 
-            await Task.Run((() =>
+            try
             {
-                var point = MouseClicks.GetCursorPosition();
+                await Task.Run((() =>
+                {
+                    var point = MouseClicks.GetCursorPosition();
 
-                TextBoxOne = point.X.ToString();
-                TextBoxTwo = point.Y.ToString();
-            }));
-
-            IsButtonEnable = true;
+                    TextBoxOne = point.X.ToString();
+                    TextBoxTwo = point.Y.ToString();
+                }));
+            }
+            finally
+            {
+                IsButtonEnable = true;
+            }
         }
+
 
         public MainWindowViewModel()
         {
-            TestAsync = new LambdaCommandAsync(OnTestExecuteAsync, CanTestExecutedAsync);
-
             Test = new LambdaCommand(OnTestExecute, CanTestExecuted);
         }
     }
