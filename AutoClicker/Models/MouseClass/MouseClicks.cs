@@ -1,10 +1,11 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
 using static AutoClicker.Infrastructure.Constans.MouseClass.MouseClassConstans;
 
 namespace AutoClicker.Models.MouseClass
 {
-    internal class MouseClicks
+    internal static class MouseClicks
     {
         [DllImport("user32.dll")]
         private static extern short GetKeyState(VirtualKeyStates nVirtKey);
@@ -18,9 +19,16 @@ namespace AutoClicker.Models.MouseClass
         [DllImport("user32.dll")]
         private static extern void mouse_event(int dwFlags, int xAxis, int yAxis, int dwData, int dwExtraInfo);
 
-        public static void LeftClick(int x, int y)
+        public static Point GetCursorPosition()
         {
-            
+            while (true)
+            {
+                if (Convert.ToBoolean(GetKeyState(VirtualKeyStates.VK_LBUTTON) & KEY_PRESSED))
+                {
+                    GetCursorPos(out Point point);
+                    return point;
+                }
+            }
         }
     }
 }

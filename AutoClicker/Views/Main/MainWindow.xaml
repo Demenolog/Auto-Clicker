@@ -155,7 +155,9 @@
                         <Button Style="{StaticResource ButtonDefaultStyle}"
                                 Height="25"
                                 Width="75"
-                                Content="Pick location">
+                                Content="Pick location"
+                                Command="{Binding GetCursorPosition}"
+                                IsEnabled="{Binding IsPickLocationBtnEnable}">
                         </Button>
                         <Label Style="{StaticResource LabelDefaultStyle}">X:</Label>
                         <TextBox Style="{StaticResource TextBoxDefaultStyle}"

@@ -3,6 +3,7 @@ using System.Threading.Channels;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using AutoClicker.Infrastructure.Commands;
+using AutoClicker.Models.MouseClass;
 using AutoClicker.Models.Other;
 using AutoClicker.ViewModels.Base;
 
@@ -238,9 +239,50 @@ namespace AutoClicker.ViewModels
 
         #endregion YAxisTextBox : double - Get\Set text value from Y-axis textBox
 
+        #region IsPickLockationEnable
+
+        #region IsPickLocationBtnEnable : bool - checked if pick location button is enable
+
+        private bool _isPickLocationBtnEnable = true;
+
+        public bool IsPickLocationBtnEnable
+        {
+            get => _isPickLocationBtnEnable;
+            set => SetField(ref _isPickLocationBtnEnable, value);
+        }
+
+        #endregion
+
+        #endregion
+
         #endregion Fields
 
         #region Commands
+
+        public ICommand GetCursorPosition { get; }
+
+        private bool CanGetCursorPositionExecuted(object p) => true;
+
+        private async void OnGetCursorPositionExecute(object p)
+        {
+            IsPickLocationBtnEnable = false;
+
+            try
+            {
+                await Task.Run((() =>
+                {
+                    var point = MouseClicks.GetCursorPosition();
+
+                    XAxisTextBox = point.X.ToString();
+                    YAxisTextBox = point.Y.ToString();
+                }));
+            }
+            finally
+            {
+                IsPickLocationBtnEnable = true;
+            }
+        }
+
 
         #endregion
 
@@ -248,7 +290,8 @@ namespace AutoClicker.ViewModels
 
         public MainWindowViewModel()
         {
-            
+            GetCursorPosition = new LambdaCommand(OnGetCursorPositionExecute, CanGetCursorPositionExecuted);
+
         }
     }
 }
