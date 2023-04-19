@@ -30,5 +30,11 @@ namespace AutoClicker.Models.MouseClass
                 }
             }
         }
+
+        public static Point GetCurrentCursorPosition()
+        {
+            GetCursorPos(out Point result);
+            return result;
+        }
     }
 }
