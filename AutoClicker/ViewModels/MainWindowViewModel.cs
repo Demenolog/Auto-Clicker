@@ -13,7 +13,7 @@ namespace AutoClicker.ViewModels
     {
         #region [Cilick interval]
 
-        #region Fileds
+        #region Properties
 
         #region HoursTextBox : string - TextBox with hours values
 
@@ -87,13 +87,13 @@ namespace AutoClicker.ViewModels
 
         #endregion MillisecondsTextBox : string - TextBox with msec values
 
-        #endregion Fileds
+        #endregion Properties
 
         #endregion [Cilick interval]
 
         #region [Click options]
 
-        #region Fields
+        #region Properties
 
         #region Selected Mouse Button : string - Selected button from combobox
 
@@ -119,13 +119,13 @@ namespace AutoClicker.ViewModels
 
         #endregion Selected Mouse Button Mode : string - Selected click type from combobox
 
-        #endregion Fields
+        #endregion Properties
 
         #endregion [Click options]
 
         #region [Click repeat]
 
-        #region Fields
+        #region Properties
 
         #region Is Repeat Times Selected : bool - checking if repeat checkbox selected
 
@@ -161,13 +161,13 @@ namespace AutoClicker.ViewModels
 
         #endregion Is Repeat Until Stopped Selected : bool - checking if repeat until stopped checkbox selected
 
-        #endregion Fields
+        #endregion Properties
 
         #endregion [Click repeat]
 
         #region [Cursor position]
 
-        #region Fields
+        #region Properties
 
         #region IsCurrentLocationSelected : bool - checking if current location checkbox selected
 
@@ -255,7 +255,7 @@ namespace AutoClicker.ViewModels
 
         #endregion
 
-        #endregion Fields
+        #endregion Properties
 
         #region Commands
 
