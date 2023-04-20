@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace AutoClicker.Models.Other
 {
-    internal static class TimeCounter
+    internal static class IntervalCounter
     {
-        public static int GetTotalTime(string hours, string minutes, string seconds, string milliseconds) =>
+        public static int GetTotalIntervalTime(string hours, string minutes, string seconds, string milliseconds) =>
             (int)new TimeSpan(0,
                 int.Parse(hours),
                 int.Parse(minutes),
