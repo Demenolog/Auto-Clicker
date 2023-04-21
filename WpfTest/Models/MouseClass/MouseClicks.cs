@@ -1,9 +1,11 @@
 ﻿using System;
-using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Threading;
 using static WpfTest.Infrastructure.Constans.MouseClass.MouseClassConstans;
+using Point = System.Drawing.Point;
 
 namespace AutoClicker.Models.MouseClass
 {
@@ -23,16 +25,19 @@ namespace AutoClicker.Models.MouseClass
 
         public static Point GetCursorPosition()
         {
-            Point point;
+            var timer = new DispatcherTimer();
+            timer.Tick += new EventHandler(timer_Tick);
+            timer.Interval = new TimeSpan(0, 0, 1);
+            timer.Start();
 
-            while (true)
-            {
-                if (Convert.ToBoolean(GetKeyState(VirtualKeyStates.VK_LBUTTON) & KEY_PRESSED))
-                {
-                    GetCursorPos(out point);
-                    return point;
-                }
-            }
+            Thread.Sleep(TimeSpan.FromSeconds(5));
+
+            return new Point(0, 0);
+        }
+
+        private static void timer_Tick(object sender, EventArgs e)
+        {
+            MessageBox.Show("Test");
         }
     }
 }

@@ -1,10 +1,13 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Threading;
 using AutoClicker.Models.MouseClass;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Windows.Threading;
 using WpfTest.Infrastructure.Commands;
 using WpfTest.ViewModels.Base;
+using System.Windows;
 
 namespace WpfTest.ViewModels
 {
@@ -68,6 +71,11 @@ namespace WpfTest.ViewModels
 
             try
             {
+                var timer = new DispatcherTimer();
+                timer.Tick += new EventHandler(timer_Tick);
+                timer.Interval = new TimeSpan(0, 0, 1);
+                timer.Start();
+
                 await Task.Run((() =>
                 {
                     var point = MouseClicks.GetCursorPosition();
@@ -82,6 +90,10 @@ namespace WpfTest.ViewModels
             }
         }
 
+        private static void timer_Tick(object sender, EventArgs e)
+        {
+            MessageBox.Show("Test");
+        }
 
         public MainWindowViewModel()
         {
