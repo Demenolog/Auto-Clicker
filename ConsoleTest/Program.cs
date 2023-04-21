@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Windows;
 using System.Runtime.InteropServices;
 
 namespace ConsoleTest
@@ -7,9 +8,7 @@ namespace ConsoleTest
     {
         private static void Main(string[] args)
         {
-            var result = TimeCounter.GetTotalTime("0", "0", "0", "100");
-
-            Console.WriteLine(result);
+            
         }
 
         internal class MouseClicks
