@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 using AutoClicker.Infrastructure.Commands;
 using AutoClicker.Models.MouseClass;
 using AutoClicker.Models.Other;
 using AutoClicker.ViewModels.Base;
+using Point = System.Drawing.Point;
 
 namespace AutoClicker.ViewModels
 {
@@ -95,7 +99,7 @@ namespace AutoClicker.ViewModels
 
         #region Properties
 
-        #region Selected Mouse Button : string - Selected button from combobox
+        #region Selected Mouse Button : string - Selected mouse button from combobox
 
         private string _mouseButton = "Left";
 
@@ -105,7 +109,7 @@ namespace AutoClicker.ViewModels
             set => SetField(ref _mouseButton, value);
         }
 
-        #endregion Selected Mouse Button : string - Selected button from combobox
+        #endregion Selected Mouse Button : string - Selected mouse button from combobox
 
         #region Selected Mouse Button Mode : string - Selected click type from combobox
 
@@ -126,6 +130,24 @@ namespace AutoClicker.ViewModels
         #region [Click repeat]
 
         #region Properties
+
+        #region RepeatTimesTextBox : string - get repeat times amount
+
+        private string _repeatTimes = "1";
+
+        public string RepeatTimesTextBox
+        {
+            get => _repeatTimes;
+            set
+            {
+                if (TextBoxValidation.IsIntegerNumber(value))
+                {
+                    SetField(ref _repeatTimes, value);
+                }
+            }
+        }
+
+        #endregion
 
         #region Is Repeat Times Selected : bool - checking if repeat checkbox selected
 
@@ -288,10 +310,56 @@ namespace AutoClicker.ViewModels
 
         #endregion [Cursor position]
 
+        #region [Buttons section]
+
+        #region Commands
+
+        public ICommand StartClicking { get; }
+
+        private bool CanStartClickingExecuted(object p) => true;
+
+        private void OnStartClickingExecute(object p)
+        {
+            try
+            {
+                // Get total amount of time # 1
+
+                var intervalTime =
+                    IntervalCounter.GetTotalIntervalTime(HoursTextBox, MinutesTextBox, SecondsTextBox, MillisecondsTextBox);
+
+                // Get mouse button and click mode options # 2
+
+                var selectedButton = SelectedMouseButton;
+                var selectedButtonMode = SelectedMouseButtonMode;
+
+                // Get click repeat mode # 3
+
+                var repeatMode = IsRepeatUntilStoppedSelected ? -1 : int.Parse(RepeatTimesTextBox);
+
+                // Get Cursor position # 4
+
+                var cursorPosition = IsCurrentLocationSelected ? MouseClicks.GetCurrentCursorPosition() : new Point(int.Parse(XAxisTextBox), int.Parse(YAxisTextBox));
+
+                // Run a task\thread # 5
+
+                MouseClicks.StartClicking(intervalTime, selectedButton, selectedButtonMode, repeatMode, cursorPosition);
+            }
+            finally
+            {
+                
+            }
+        }
+
+
+        #endregion
+
+        #endregion
+
         public MainWindowViewModel()
         {
-            GetCursorPosition = new LambdaCommand(OnGetCursorPositionExecute, CanGetCursorPositionExecuted);
+            StartClicking = new LambdaCommand(OnStartClickingExecute, CanStartClickingExecuted);
 
+            GetCursorPosition = new LambdaCommand(OnGetCursorPositionExecute, CanGetCursorPositionExecuted);
         }
     }
 }

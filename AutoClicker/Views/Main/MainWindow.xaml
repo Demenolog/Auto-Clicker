@@ -108,7 +108,7 @@
                              VerticalContentAlignment="Center"
                              Margin="2"
                              Width="40"
-                             Text="1"
+                             Text="{Binding RepeatTimesTextBox}"
                              MaxLength="5">
                     </TextBox>
                     <Label Style="{StaticResource LabelDefaultStyle}">times</Label>
@@ -185,7 +185,8 @@
                     Grid.Column="0"
                     Margin="10"
                     Width="150"
-                    Content="Start">
+                    Content="Start"
+                    Command="{Binding StartClicking}">
             </Button>
             <Button Style="{StaticResource ButtonDefaultStyle}"
                     Grid.Row="0"
