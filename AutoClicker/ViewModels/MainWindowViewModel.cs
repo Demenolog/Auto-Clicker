@@ -322,7 +322,7 @@ namespace AutoClicker.ViewModels
         {
             try
             {
-                // Get total amount of time # 1
+                // Get interval amount of time # 1
 
                 var intervalTime =
                     IntervalCounter.GetTotalIntervalTime(HoursTextBox, MinutesTextBox, SecondsTextBox, MillisecondsTextBox);
@@ -330,7 +330,7 @@ namespace AutoClicker.ViewModels
                 // Get mouse button and click mode options # 2
 
                 var selectedButton = SelectedMouseButton;
-                var selectedButtonMode = SelectedMouseButtonMode;
+                var selectedButtonMode = MouseClicks.GetClickMode(SelectedMouseButtonMode);
 
                 // Get click repeat mode # 3
 

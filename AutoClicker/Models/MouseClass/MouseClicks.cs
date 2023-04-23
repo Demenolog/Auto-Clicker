@@ -8,6 +8,18 @@ namespace AutoClicker.Models.MouseClass
 {
     internal static class MouseClicks
     {
+        private enum ClickModes
+        {
+            Single = 1,
+            Double = 2,
+            Triple = 3
+        }
+
+        public static int GetClickMode(string clickMode)
+        {
+            return (int)Enum.Parse(typeof(ClickModes), clickMode);
+        }
+
         public static Point GetCurrentCursorPosition()
         {
             GetCursorPos(out Point result);
@@ -26,26 +38,14 @@ namespace AutoClicker.Models.MouseClass
             }
         }
 
-        public static void StartClicking(int intervalTime, string selectedBtn, string selectedBtnMode, int repeatMode, Point cursorPosition)
+        public static void StartClicking(int intervalTime, string selectedBtn, int selectedBtnMode, int repeatMode, Point cursorPosition)
         {
             if (selectedBtn == "Left")
             {
-                if (selectedBtnMode == "Single")
+                for (int i = 0; i < repeatMode; i++)
                 {
-                    for (int i = 0; i < repeatMode; i++)
-                    {
-                        RunLeftClicking(cursorPosition);
-                        Thread.Sleep(intervalTime);
-                    }
-                }
-                else if (selectedBtnMode == "Double")
-                {
-                    for (int i = 0; i < repeatMode; i++)
-                    {
-                        RunLeftClicking(cursorPosition);
-                        RunLeftClicking(cursorPosition);
-                        Thread.Sleep(intervalTime);
-                    }
+                    RunLeftClicking(cursorPosition, selectedBtnMode);
+                    Thread.Sleep(intervalTime);
                 }
             }
             else if (selectedBtn == "Right")
@@ -58,26 +58,30 @@ namespace AutoClicker.Models.MouseClass
             mouse_event((int)action, x, y, dwData, dwExtraInfo);
         }
 
-        private static void RunLeftClicking(Point cursorPosition)
+        private static void RunLeftClicking(Point cursorPosition, int clicksNumber)
         {
             int x = cursorPosition.X;
             int y = cursorPosition.Y;
 
-            SetCursorPos(x, y);
-
-            Click(MouseEventFlags.Leftdown);
-            Click(MouseEventFlags.Leftup);
+            for (int i = 0; i < clicksNumber; i++)
+            {
+                SetCursorPos(x, y);
+                Click(MouseEventFlags.Leftdown);
+                Click(MouseEventFlags.Leftup);
+            }
         }
 
-        private static void RunRightClicking(Point cursorPosition)
+        private static void RunRightClicking(Point cursorPosition, int clicksNumber)
         {
             int x = cursorPosition.X;
             int y = cursorPosition.Y;
 
-            SetCursorPos(x, y);
-
-            Click(MouseEventFlags.Rightdown);
-            Click(MouseEventFlags.Rightup);
+            for (int i = 0; i < clicksNumber; i++)
+            {
+                SetCursorPos(x, y);
+                Click(MouseEventFlags.Rightdown);
+                Click(MouseEventFlags.Rightup);
+            }
         }
 
         [DllImport("user32.dll")]
