@@ -318,7 +318,7 @@ namespace AutoClicker.ViewModels
 
         private bool CanStartClickingExecuted(object p) => true;
 
-        private void OnStartClickingExecute(object p)
+        private async void OnStartClickingExecute(object p)
         {
             try
             {
@@ -342,7 +342,7 @@ namespace AutoClicker.ViewModels
 
                 // Run a task\thread # 5
 
-                MouseClicks.StartClicking(intervalTime, selectedButton, selectedButtonMode, repeatMode, cursorPosition);
+                await MouseClicks.StartClicking(intervalTime, selectedButton, selectedButtonMode, repeatMode, cursorPosition);
             }
             finally
             {
@@ -359,7 +359,7 @@ namespace AutoClicker.ViewModels
 
         private void OnStopClickingExecute(object p)
         {
-
+            MouseClicks.StopClicking();
         }
 
         #endregion Stop clicking command

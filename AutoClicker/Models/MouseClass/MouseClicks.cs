@@ -2,12 +2,22 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using static AutoClicker.Infrastructure.Constans.MouseClass.MouseClassConstans;
 
 namespace AutoClicker.Models.MouseClass
 {
     internal static class MouseClicks
     {
+        private static string s_buttonToStop = "F5";
+
+        private static CancellationTokenSource s_cts;
+
+        public static void StopClicking()
+        {
+            s_cts.Cancel();
+        }
+
         public static int GetClickMode(string clickMode)
         {
             return (int)Enum.Parse(typeof(ClickModes), clickMode);
@@ -31,24 +41,46 @@ namespace AutoClicker.Models.MouseClass
             }
         }
 
-        public static void StartClicking(int intervalTime, string selectedBtn, int selectedBtnMode, int repeatMode, Point cursorPosition)
+        public static async Task StartClicking(int intervalTime, string selectedBtn, int selectedBtnMode, int repeatMode, Point cursorPosition)
         {
-            if (selectedBtn == "Left")
+            s_cts ??= new CancellationTokenSource();
+            
+            var token = s_cts.Token;
+
+            try
             {
-                for (int i = 0; i < repeatMode; i++)
+                await Task.Run(() =>
                 {
-                    RunLeftClicking(cursorPosition, selectedBtnMode);
-                    Thread.Sleep(intervalTime);
-                }
+                    if (selectedBtn == "Left")
+                    {
+                        for (int i = 0; i < repeatMode; i++)
+                        {
+                            RunLeftClicking(cursorPosition, selectedBtnMode);
+                            Thread.Sleep(intervalTime);
+                            token.ThrowIfCancellationRequested();
+                        }
+                    }
+                    else if (selectedBtn == "Right")
+                    {
+                        for (int i = 0; i < repeatMode; i++)
+                        {
+                            RunRightClicking(cursorPosition, selectedBtnMode);
+                            Thread.Sleep(intervalTime);
+                            token.ThrowIfCancellationRequested();
+                        }
+                    }
+                }, token);
             }
-            else if (selectedBtn == "Right")
+            catch (OperationCanceledException)
             {
-                for (int i = 0; i < repeatMode; i++)
-                {
-                    RunRightClicking(cursorPosition, selectedBtnMode);
-                    Thread.Sleep(intervalTime);
-                }
+                // Do nothing
             }
+            finally
+            {
+                s_cts = null;
+            }
+
+            
         }
 
         private static void Click(MouseEventFlags action, int x = 0, int y = 0, int dwData = 0, int dwExtraInfo = 0)
