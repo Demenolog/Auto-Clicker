@@ -8,13 +8,6 @@ namespace AutoClicker.Models.MouseClass
 {
     internal static class MouseClicks
     {
-        private enum ClickModes
-        {
-            Single = 1,
-            Double = 2,
-            Triple = 3
-        }
-
         public static int GetClickMode(string clickMode)
         {
             return (int)Enum.Parse(typeof(ClickModes), clickMode);

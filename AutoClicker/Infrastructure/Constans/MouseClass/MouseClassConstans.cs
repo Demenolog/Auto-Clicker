@@ -252,5 +252,12 @@ namespace AutoClicker.Infrastructure.Constans.MouseClass
             VK_PA1 = 0xFD,
             VK_OEM_CLEAR = 0xFE
         }
+
+        public enum ClickModes
+        {
+            Single = 1,
+            Double = 2,
+            Triple = 3
+        }
     }
 }
