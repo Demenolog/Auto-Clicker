@@ -75,6 +75,7 @@
                           SelectedItem="{Binding SelectedMouseButtonMode}">
                     <sys:String>Single</sys:String>
                     <sys:String>Double</sys:String>
+                    <sys:String>Triple</sys:String>
                 </ComboBox>
             </Grid>
         </GroupBox>
