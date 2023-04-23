@@ -334,14 +334,14 @@ namespace AutoClicker.ViewModels
 
                 // Get click repeat mode # 3
 
-                var repeatMode = IsRepeatUntilStoppedSelected ? -1 : int.Parse(RepeatTimesTextBox);
+                var repeatMode = IsRepeatUntilStoppedSelected ? -1 : int.Parse(RepeatTimesTextBox); //  ???
 
                 // Get Cursor position # 4
 
                 var cursorPosition = IsCurrentLocationSelected ? MouseClicks.GetCurrentCursorPosition() : new Point(int.Parse(XAxisTextBox), int.Parse(YAxisTextBox));
 
                 // Run a task\thread # 5
-
+                
                 await MouseClicks.StartClicking(intervalTime, selectedButton, selectedButtonMode, repeatMode, cursorPosition);
             }
             finally
@@ -355,7 +355,7 @@ namespace AutoClicker.ViewModels
 
         public ICommand StopClicking { get; }
 
-        private bool CanStopClickingExecuted(object p) => true;
+        private bool CanStopClickingExecuted(object p) => MouseClicks.Cts != null;
 
         private void OnStopClickingExecute(object p)
         {
