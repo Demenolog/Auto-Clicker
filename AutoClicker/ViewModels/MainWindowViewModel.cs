@@ -229,7 +229,7 @@ namespace AutoClicker.ViewModels
             get => _xAxis;
             set
             {
-                if (TextBoxValidation.IsPositiveIntNumber(value))
+                if (TextBoxValidation.IsIntNumber(value))
                 {
                     SetField(ref _xAxis, value);
                 }
@@ -247,7 +247,7 @@ namespace AutoClicker.ViewModels
             get => _yAxis;
             set
             {
-                if (TextBoxValidation.IsPositiveIntNumber(value))
+                if (TextBoxValidation.IsIntNumber(value))
                 {
                     SetField(ref _yAxis, value);
                 }
