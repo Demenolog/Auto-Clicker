@@ -50,6 +50,11 @@ namespace AutoClicker.Models.MouseClass
             }
             else if (selectedBtn == "Right")
             {
+                for (int i = 0; i < repeatMode; i++)
+                {
+                    RunRightClicking(cursorPosition, selectedBtnMode);
+                    Thread.Sleep(intervalTime);
+                }
             }
         }
 
@@ -58,12 +63,12 @@ namespace AutoClicker.Models.MouseClass
             mouse_event((int)action, x, y, dwData, dwExtraInfo);
         }
 
-        private static void RunLeftClicking(Point cursorPosition, int clicksNumber)
+        private static void RunLeftClicking(Point cursorPosition, int clicksMode)
         {
             int x = cursorPosition.X;
             int y = cursorPosition.Y;
 
-            for (int i = 0; i < clicksNumber; i++)
+            for (int i = 0; i < clicksMode; i++)
             {
                 SetCursorPos(x, y);
                 Click(MouseEventFlags.Leftdown);
@@ -71,12 +76,12 @@ namespace AutoClicker.Models.MouseClass
             }
         }
 
-        private static void RunRightClicking(Point cursorPosition, int clicksNumber)
+        private static void RunRightClicking(Point cursorPosition, int clicksMode)
         {
             int x = cursorPosition.X;
             int y = cursorPosition.Y;
 
-            for (int i = 0; i < clicksNumber; i++)
+            for (int i = 0; i < clicksMode; i++)
             {
                 SetCursorPos(x, y);
                 Click(MouseEventFlags.Rightdown);
