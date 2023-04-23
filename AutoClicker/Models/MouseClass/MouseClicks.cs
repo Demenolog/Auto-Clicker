@@ -10,8 +10,13 @@ namespace AutoClicker.Models.MouseClass
     internal static class MouseClicks
     {
         private static string s_buttonToStop = "F5";
+        private static CancellationTokenSource s_cts;
 
-        public static CancellationTokenSource Cts { get; private set; }
+        public static CancellationTokenSource Cts
+        {
+            get => s_cts;
+            private set => s_cts = value;
+        }
 
         public static void StopClicking()
         {
@@ -59,7 +64,6 @@ namespace AutoClicker.Models.MouseClass
         public static async Task StartClicking(int intervalTime, string selectedBtn, int selectedBtnMode, int repeatMode, Point cursorPosition)
         {
             Cts ??= new CancellationTokenSource();
-
             var token = Cts.Token;
 
             WatchToStopClicking();
@@ -72,18 +76,14 @@ namespace AutoClicker.Models.MouseClass
                     {
                         for (int i = 0; i < repeatMode; i++)
                         {
-                            RunLeftClicking(cursorPosition, selectedBtnMode);
-                            Thread.Sleep(intervalTime);
-                            token.ThrowIfCancellationRequested();
+                            RunLeftClicking(cursorPosition, selectedBtnMode, intervalTime, token);
                         }
                     }
                     else if (selectedBtn == "Right")
                     {
                         for (int i = 0; i < repeatMode; i++)
                         {
-                            RunRightClicking(cursorPosition, selectedBtnMode);
-                            Thread.Sleep(intervalTime);
-                            token.ThrowIfCancellationRequested();
+                            RunRightClicking(cursorPosition, selectedBtnMode, intervalTime, token);
                         }
                     }
                 }, token);
@@ -103,7 +103,7 @@ namespace AutoClicker.Models.MouseClass
             mouse_event((int)action, x, y, dwData, dwExtraInfo);
         }
 
-        private static void RunLeftClicking(Point cursorPosition, int clicksMode)
+        private static void RunLeftClicking(Point cursorPosition, int clicksMode, int intervalTime, CancellationToken token)
         {
             int x = cursorPosition.X;
             int y = cursorPosition.Y;
@@ -114,9 +114,13 @@ namespace AutoClicker.Models.MouseClass
                 Click(MouseEventFlags.Leftdown);
                 Click(MouseEventFlags.Leftup);
             }
+
+            Thread.Sleep(intervalTime);
+
+            token.ThrowIfCancellationRequested();
         }
 
-        private static void RunRightClicking(Point cursorPosition, int clicksMode)
+        private static void RunRightClicking(Point cursorPosition, int clicksMode, int intervalTime, CancellationToken token)
         {
             int x = cursorPosition.X;
             int y = cursorPosition.Y;
@@ -127,6 +131,10 @@ namespace AutoClicker.Models.MouseClass
                 Click(MouseEventFlags.Rightdown);
                 Click(MouseEventFlags.Rightup);
             }
+
+            Thread.Sleep(intervalTime);
+
+            token.ThrowIfCancellationRequested();
         }
 
         [DllImport("user32.dll")]

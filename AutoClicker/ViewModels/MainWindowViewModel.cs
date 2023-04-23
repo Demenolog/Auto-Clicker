@@ -23,7 +23,7 @@ namespace AutoClicker.ViewModels
             get => _hours;
             set
             {
-                if (TextBoxValidation.IsIntegerNumber(value))
+                if (TextBoxValidation.IsPositiveIntNumber(value))
                 {
                     SetField(ref _hours, value);
                 }
@@ -41,7 +41,7 @@ namespace AutoClicker.ViewModels
             get => _minutes;
             set
             {
-                if (TextBoxValidation.IsIntegerNumber(value))
+                if (TextBoxValidation.IsPositiveIntNumber(value))
                 {
                     SetField(ref _minutes, value);
                 }
@@ -59,7 +59,7 @@ namespace AutoClicker.ViewModels
             get => _secondsTextBox;
             set
             {
-                if (TextBoxValidation.IsIntegerNumber(value))
+                if (TextBoxValidation.IsPositiveIntNumber(value))
                 {
                     SetField(ref _secondsTextBox, value);
                 }
@@ -77,7 +77,7 @@ namespace AutoClicker.ViewModels
             get => _milliseconds;
             set
             {
-                if (TextBoxValidation.IsIntegerNumber(value))
+                if (TextBoxValidation.IsPositiveIntNumber(value))
                 {
                     SetField(ref _milliseconds, value);
                 }
@@ -135,7 +135,7 @@ namespace AutoClicker.ViewModels
             get => _repeatTimes;
             set
             {
-                if (TextBoxValidation.IsIntegerNumber(value))
+                if (TextBoxValidation.IsPositiveIntNumber(value))
                 {
                     SetField(ref _repeatTimes, value);
                 }
@@ -229,7 +229,7 @@ namespace AutoClicker.ViewModels
             get => _xAxis;
             set
             {
-                if (TextBoxValidation.IsIntegerNumber(value))
+                if (TextBoxValidation.IsPositiveIntNumber(value))
                 {
                     SetField(ref _xAxis, value);
                 }
@@ -247,7 +247,7 @@ namespace AutoClicker.ViewModels
             get => _yAxis;
             set
             {
-                if (TextBoxValidation.IsIntegerNumber(value))
+                if (TextBoxValidation.IsPositiveIntNumber(value))
                 {
                     SetField(ref _yAxis, value);
                 }
