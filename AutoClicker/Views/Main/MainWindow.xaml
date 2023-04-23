@@ -194,7 +194,8 @@
                     Grid.Column="1"
                     Margin="10"
                     Width="150"
-                    Content="Stop">
+                    Content="Stop"
+                    Command="{Binding StopClicking}">
             </Button>
             <Button Style="{StaticResource ButtonDefaultStyle}"
                     Grid.Row="1"

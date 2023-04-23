@@ -1,14 +1,9 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Channels;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Input;
-using System.Windows.Media.Imaging;
-using AutoClicker.Infrastructure.Commands;
+﻿using AutoClicker.Infrastructure.Commands;
 using AutoClicker.Models.MouseClass;
 using AutoClicker.Models.Other;
 using AutoClicker.ViewModels.Base;
+using System.Threading.Tasks;
+using System.Windows.Input;
 using Point = System.Drawing.Point;
 
 namespace AutoClicker.ViewModels
@@ -147,7 +142,7 @@ namespace AutoClicker.ViewModels
             }
         }
 
-        #endregion
+        #endregion RepeatTimesTextBox : string - get repeat times amount
 
         #region Is Repeat Times Selected : bool - checking if repeat checkbox selected
 
@@ -259,7 +254,7 @@ namespace AutoClicker.ViewModels
             }
         }
 
-        #endregion YAxisTextBox : double - Get\Set text value from Y-axis textBox
+        #endregion YAxisTextBox : string - Get\Set text value from Y-axis textBox
 
         #region IsPickLockationEnable
 
@@ -273,13 +268,15 @@ namespace AutoClicker.ViewModels
             set => SetField(ref _isPickLocationBtnEnable, value);
         }
 
-        #endregion
+        #endregion IsPickLocationBtnEnable : bool - checked if pick location button is enable
 
-        #endregion
+        #endregion IsPickLockationEnable
 
         #endregion Properties
 
         #region Commands
+
+        #region Get cursor position command
 
         public ICommand GetCursorPosition { get; }
 
@@ -305,14 +302,17 @@ namespace AutoClicker.ViewModels
             }
         }
 
+        #endregion Get cursor position command
 
-        #endregion
+        #endregion Commands
 
         #endregion [Cursor position]
 
         #region [Buttons section]
 
         #region Commands
+
+        #region Start clicking command
 
         public ICommand StartClicking { get; }
 
@@ -346,18 +346,33 @@ namespace AutoClicker.ViewModels
             }
             finally
             {
-                
             }
         }
 
+        #endregion Start clicking command
 
-        #endregion
+        #region Stop clicking command
 
-        #endregion
+        public ICommand StopClicking { get; }
+
+        private bool CanStopClickingExecuted(object p) => true;
+
+        private void OnStopClickingExecute(object p)
+        {
+
+        }
+
+        #endregion Stop clicking command
+
+        #endregion Commands
+
+        #endregion [Buttons section]
 
         public MainWindowViewModel()
         {
             StartClicking = new LambdaCommand(OnStartClickingExecute, CanStartClickingExecuted);
+
+            StopClicking = new LambdaCommand(OnStopClickingExecute, CanStopClickingExecuted);
 
             GetCursorPosition = new LambdaCommand(OnGetCursorPositionExecute, CanGetCursorPositionExecuted);
         }
