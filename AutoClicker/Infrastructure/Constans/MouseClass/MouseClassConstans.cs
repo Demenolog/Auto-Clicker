@@ -6,6 +6,13 @@ namespace AutoClicker.Infrastructure.Constans.MouseClass
     {
         public const int KEY_PRESSED = 0x8000;
 
+        public enum ClickModes
+        {
+            Single = 1,
+            Double = 2,
+            Triple = 3
+        }
+
         [Flags]
         public enum MouseEventFlags
         {
@@ -251,13 +258,6 @@ namespace AutoClicker.Infrastructure.Constans.MouseClass
             VK_NONAME = 0xFC,
             VK_PA1 = 0xFD,
             VK_OEM_CLEAR = 0xFE
-        }
-
-        public enum ClickModes
-        {
-            Single = 1,
-            Double = 2,
-            Triple = 3
         }
     }
 }
