@@ -11,11 +11,26 @@ namespace AutoClicker.Models.MouseClass
     {
         private static string s_buttonToStop = "F5";
 
-        private static CancellationTokenSource s_cts;
+        public static CancellationTokenSource Cts { get; private set; }
 
         public static void StopClicking()
         {
-            s_cts.Cancel();
+            Cts.Cancel();
+        }
+
+        private static async void WatchToStopClicking()
+        {
+            await Task.Run(() =>
+            {
+                while (true)
+                {
+                    if (Convert.ToBoolean(GetKeyState(VirtualKeyStates.VK_F5) & KEY_PRESSED))
+                    {
+                        Cts.Cancel();
+                        break;
+                    }
+                }
+            });
         }
 
         public static int GetClickMode(string clickMode)
@@ -43,9 +58,11 @@ namespace AutoClicker.Models.MouseClass
 
         public static async Task StartClicking(int intervalTime, string selectedBtn, int selectedBtnMode, int repeatMode, Point cursorPosition)
         {
-            s_cts ??= new CancellationTokenSource();
-            
-            var token = s_cts.Token;
+            Cts ??= new CancellationTokenSource();
+
+            var token = Cts.Token;
+
+            WatchToStopClicking();
 
             try
             {
@@ -77,10 +94,8 @@ namespace AutoClicker.Models.MouseClass
             }
             finally
             {
-                s_cts = null;
+                Cts = null;
             }
-
-            
         }
 
         private static void Click(MouseEventFlags action, int x = 0, int y = 0, int dwData = 0, int dwExtraInfo = 0)
