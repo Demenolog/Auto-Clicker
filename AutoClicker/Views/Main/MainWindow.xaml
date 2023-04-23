@@ -109,7 +109,7 @@
                              VerticalContentAlignment="Center"
                              Margin="2"
                              Width="40"
-                             Text="{Binding RepeatTimesTextBox}"
+                             Text="{Binding RepeatTimesTextBox, UpdateSourceTrigger=PropertyChanged}"
                              MaxLength="5">
                     </TextBox>
                     <Label Style="{StaticResource LabelDefaultStyle}">times</Label>
