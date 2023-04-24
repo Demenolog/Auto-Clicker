@@ -8,7 +8,12 @@ namespace ConsoleTest
     {
         private static void Main(string[] args)
         {
-            
+            var zero = int.MinValue;
+
+            for (int i = 0; i < 3; i++)
+            {
+                Console.WriteLine(zero--);
+            }
         }
 
         internal class MouseClicks
