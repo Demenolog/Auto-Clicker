@@ -9,7 +9,10 @@ namespace AutoClicker.Models.MouseClass
 {
     internal static class MouseClicks
     {
+        #region [Properties]
+
         private static string s_buttonToStop = "F5";
+
         private static CancellationTokenSource s_cts;
 
         public static CancellationTokenSource Cts
@@ -18,25 +21,25 @@ namespace AutoClicker.Models.MouseClass
             private set => s_cts = value;
         }
 
-        public static void StopClicking()
-        {
-            Cts.Cancel();
-        }
+        #endregion [Properties]
 
-        private static async void WatchToStopClicking()
-        {
-            await Task.Run(() =>
-            {
-                while (true)
-                {
-                    if (Convert.ToBoolean(GetKeyState(VirtualKeyStates.VK_F5) & KEY_PRESSED))
-                    {
-                        Cts.Cancel();
-                        break;
-                    }
-                }
-            });
-        }
+        #region [Methods]
+
+        #region User32.dll methods
+
+        [DllImport("user32.dll")]
+        private static extern bool GetCursorPos(out Point point);
+
+        [DllImport("user32.dll")]
+        private static extern short GetKeyState(VirtualKeyStates nVirtKey);
+
+        [DllImport("user32.dll")]
+        private static extern void mouse_event(int dwFlags, int xAxis, int yAxis, int dwData, int dwExtraInfo);
+
+        [DllImport("user32.dll")]
+        private static extern bool SetCursorPos(int x, int y);
+
+        #endregion User32.dll methods
 
         public static int GetClickMode(string clickMode)
         {
@@ -74,16 +77,36 @@ namespace AutoClicker.Models.MouseClass
                 {
                     if (selectedBtn == "Left")
                     {
-                        for (int i = 0; i < repeatMode; i++)
+                        if (repeatMode >= 0)
                         {
-                            RunLeftClicking(cursorPosition, selectedBtnMode, intervalTime, token);
+                            for (int i = 0; i < repeatMode; i++)
+                            {
+                                RunLeftClicking(cursorPosition, selectedBtnMode, intervalTime, token);
+                            }
+                        }
+                        else
+                        {
+                            while (true)
+                            {
+                                RunLeftClicking(cursorPosition, selectedBtnMode, intervalTime, token);
+                            }
                         }
                     }
                     else if (selectedBtn == "Right")
                     {
-                        for (int i = 0; i < repeatMode; i++)
+                        if (repeatMode >= 0)
                         {
-                            RunRightClicking(cursorPosition, selectedBtnMode, intervalTime, token);
+                            for (int i = 0; i < repeatMode; i++)
+                            {
+                                RunRightClicking(cursorPosition, selectedBtnMode, intervalTime, token);
+                            }
+                        }
+                        else
+                        {
+                            while (true)
+                            {
+                                RunRightClicking(cursorPosition, selectedBtnMode, intervalTime, token);
+                            }
                         }
                     }
                 }, token);
@@ -96,6 +119,11 @@ namespace AutoClicker.Models.MouseClass
             {
                 Cts = null;
             }
+        }
+
+        public static void StopClicking()
+        {
+            Cts.Cancel();
         }
 
         private static void Click(MouseEventFlags action, int x = 0, int y = 0, int dwData = 0, int dwExtraInfo = 0)
@@ -137,16 +165,21 @@ namespace AutoClicker.Models.MouseClass
             token.ThrowIfCancellationRequested();
         }
 
-        [DllImport("user32.dll")]
-        private static extern bool GetCursorPos(out Point point);
+        private static async void WatchToStopClicking()
+        {
+            await Task.Run(() =>
+            {
+                while (true)
+                {
+                    if (Convert.ToBoolean(GetKeyState(VirtualKeyStates.VK_F4) & KEY_PRESSED))
+                    {
+                        Cts.Cancel();
+                        break;
+                    }
+                }
+            });
+        }
 
-        [DllImport("user32.dll")]
-        private static extern short GetKeyState(VirtualKeyStates nVirtKey);
-
-        [DllImport("user32.dll")]
-        private static extern void mouse_event(int dwFlags, int xAxis, int yAxis, int dwData, int dwExtraInfo);
-
-        [DllImport("user32.dll")]
-        private static extern bool SetCursorPos(int x, int y);
+        #endregion [Methods]
     }
 }
