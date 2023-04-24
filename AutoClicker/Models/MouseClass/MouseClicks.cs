@@ -1,9 +1,9 @@
-﻿using AutoClicker.Models.MouseClass.DllImport;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
 using static AutoClicker.Infrastructure.Constans.MouseClass.MouseClassConstans;
+using static AutoClicker.Models.MouseClass.DllImport.User32;
 
 namespace AutoClicker.Models.MouseClass
 {
@@ -32,7 +32,7 @@ namespace AutoClicker.Models.MouseClass
 
         public static Point GetCurrentCursorPosition()
         {
-            User32.GetCursorPos(out Point result);
+            GetCursorPos(out Point result);
             return result;
         }
 
@@ -40,9 +40,9 @@ namespace AutoClicker.Models.MouseClass
         {
             while (true)
             {
-                if (Convert.ToBoolean(User32.GetKeyState(VirtualKeyStates.VK_LBUTTON) & KEY_PRESSED))
+                if (Convert.ToBoolean(GetKeyState(VirtualKeyStates.VK_LBUTTON) & KEY_PRESSED))
                 {
-                    User32.GetCursorPos(out Point point);
+                    GetCursorPos(out Point point);
                     return point;
                 }
             }
@@ -112,7 +112,7 @@ namespace AutoClicker.Models.MouseClass
 
         private static void Click(MouseEventFlags action, int x = 0, int y = 0, int dwData = 0, int dwExtraInfo = 0)
         {
-            User32.mouse_event((int)action, x, y, dwData, dwExtraInfo);
+            mouse_event((int)action, x, y, dwData, dwExtraInfo);
         }
 
         private static void RunLeftClicking(Point cursorPosition, int clicksMode, int intervalTime, CancellationToken token)
@@ -122,7 +122,7 @@ namespace AutoClicker.Models.MouseClass
 
             for (int i = 0; i < clicksMode; i++)
             {
-                User32.SetCursorPos(x, y);
+                SetCursorPos(x, y);
                 Click(MouseEventFlags.Leftdown);
                 Click(MouseEventFlags.Leftup);
             }
@@ -139,7 +139,7 @@ namespace AutoClicker.Models.MouseClass
 
             for (int i = 0; i < clicksMode; i++)
             {
-                User32.SetCursorPos(x, y);
+                SetCursorPos(x, y);
                 Click(MouseEventFlags.Rightdown);
                 Click(MouseEventFlags.Rightup);
             }
