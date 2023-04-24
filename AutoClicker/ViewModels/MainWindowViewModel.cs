@@ -334,7 +334,7 @@ namespace AutoClicker.ViewModels
 
                 // Get click repeat mode # 3
 
-                var repeatMode = IsRepeatUntilStoppedSelected ? -1 : int.Parse(RepeatTimesTextBox); //  ???
+                var repeatMode = IsRepeatUntilStoppedSelected ? -1 : int.Parse(RepeatTimesTextBox);
 
                 // Get Cursor position # 4
 

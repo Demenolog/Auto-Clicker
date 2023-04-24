@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using AutoClicker.Infrastructure.Constans.MouseClass;
-using AutoClicker.Models.MouseClass.DllImport;
 using static AutoClicker.Infrastructure.Constans.MouseClass.MouseClassConstans;
+using static AutoClicker.Models.MouseClass.DllImport.User32;
 
 namespace AutoClicker.Models.MouseClass
 {
@@ -17,7 +13,7 @@ namespace AutoClicker.Models.MouseClass
             {
                 while (true)
                 {
-                    if (Convert.ToBoolean(User32.GetKeyState(VirtualKeyStates.VK_F4) & KEY_PRESSED))
+                    if (Convert.ToBoolean(GetKeyState(VirtualKeyStates.VK_F4) & KEY_PRESSED))
                     {
                         MouseClicks.Cts.Cancel();
                         break;
