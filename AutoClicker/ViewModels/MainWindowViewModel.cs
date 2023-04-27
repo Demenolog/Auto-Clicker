@@ -318,7 +318,7 @@ namespace AutoClicker.ViewModels
 
         private bool CanStartClickingExecuted(object p) => true;
 
-        private async void OnStartClickingExecute(object p)
+        internal async void OnStartClickingExecute(object p)
         {
             try
             {
