@@ -7,7 +7,7 @@
         DataContext="{Binding Path=MainWindowModel, Source={StaticResource Locator}}"
         Title="{Binding Title}"
         Height="450" Width="800">
-    <Window.InputBindings>
+   <Window.InputBindings>
         <KeyBinding Command="{Binding Test}"
                     Gesture="F4"></KeyBinding>
     </Window.InputBindings>
@@ -17,6 +17,7 @@
                 VerticalAlignment="Center" 
                 Height="130" 
                 Width="254"
+                Focusable="True"
                 IsEnabled="{Binding IsButtonEnable}"
                 Command="{Binding Test}"
                 />
