@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoClicker.ViewModels;
 using static AutoClicker.Infrastructure.Constans.MouseClass.MouseClassConstans;
@@ -13,9 +14,11 @@ namespace AutoClicker.Models.MouseClass
 
         public static async void WatchToStopClicking()
         {
-            await Task.Run(() =>
+            Task.Run(() =>
             {
                 IsStopped = false;
+
+                Thread.Sleep(500);
 
                 while (true)
                 {
@@ -26,7 +29,6 @@ namespace AutoClicker.Models.MouseClass
                         break;
                     }
                 }
-
             });
         }
 

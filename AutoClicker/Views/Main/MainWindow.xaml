@@ -6,9 +6,14 @@
         xmlns:sys="clr-namespace:System;assembly=System.Runtime"
         mc:Ignorable="d"
         DataContext="{Binding Path=MainWindowModel, Source={StaticResource Locator}}"
-        Title="Auto clicker"
+        Title="Auto-clicker"
         ResizeMode="NoResize"
         Height="400" Width="500">
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding StartClicking}"
+                    Gesture="F4">
+        </KeyBinding>
+    </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="0.75*"></RowDefinition>
