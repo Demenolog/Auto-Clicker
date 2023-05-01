@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Threading;
+using WpfTest.ViewModels;
 using static WpfTest.Infrastructure.Constans.MouseClass.MouseClassConstans;
 using Point = System.Drawing.Point;
 
@@ -11,6 +12,11 @@ namespace AutoClicker.Models.MouseClass
 {
     internal static class MouseClicks
     {
+        private static bool IsStopped { get; set; }
+
+        [DllImport("user32.dll")]
+        public static extern int GetKeyboardState(byte[] keystate);
+
         [DllImport("user32.dll")]
         private static extern short GetKeyState(VirtualKeyStates nVirtKey);
 
@@ -38,6 +44,23 @@ namespace AutoClicker.Models.MouseClass
         private static void timer_Tick(object sender, EventArgs e)
         {
             MessageBox.Show("Test");
+        }
+
+        public static void WatchToStartClicking()
+        {
+            while (true)
+            {
+                var pressedF4 = GetKeyState(VirtualKeyStates.VK_F4);
+                var pressedKey = KEY_PRESSED;
+                var status = Convert.ToBoolean(pressedF4 & pressedKey);
+
+                //if (Convert.ToBoolean(GetKeyState(VirtualKeyStates.VK_F4) & KEY_PRESSED) && !IsStopped)
+                if (status && !IsStopped)
+                {
+                    new MainWindowViewModel().OnTestExecute(null);
+                    IsStopped = true;
+                }
+            }
         }
     }
 }

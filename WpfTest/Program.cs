@@ -1,6 +1,9 @@
 ﻿using Microsoft.Extensions.Hosting;
+using mrousavy;
 using System;
-using WpfTest.ViewModels;
+using System.Threading;
+using System.Windows;
+using System.Windows.Input;
 
 namespace WpfTest
 {
@@ -12,6 +15,7 @@ namespace WpfTest
             var app = new App();
             app.InitializeComponent();
             app.Run();
+
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

@@ -65,35 +65,11 @@ namespace WpfTest.ViewModels
 
         private bool CanTestExecuted(object p) => true;
 
-        private async void OnTestExecute(object p)
+        internal void OnTestExecute(object p)
         {
-            IsButtonEnable = false;
-
-            try
-            {
-                var timer = new DispatcherTimer();
-                timer.Tick += new EventHandler(timer_Tick);
-                timer.Interval = new TimeSpan(0, 0, 1);
-                timer.Start();
-
-                await Task.Run((() =>
-                {
-                    var point = MouseClicks.GetCursorPosition();
-
-                    TextBoxOne = point.X.ToString();
-                    TextBoxTwo = point.Y.ToString();
-                }));
-            }
-            finally
-            {
-                IsButtonEnable = true;
-            }
+            MessageBox.Show("kEK");
         }
 
-        private static void timer_Tick(object sender, EventArgs e)
-        {
-            MessageBox.Show("Test");
-        }
 
         public MainWindowViewModel()
         {

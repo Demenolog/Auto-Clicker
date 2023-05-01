@@ -7,6 +7,10 @@
         DataContext="{Binding Path=MainWindowModel, Source={StaticResource Locator}}"
         Title="{Binding Title}"
         Height="450" Width="800">
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding Test}"
+                    Gesture="F4"></KeyBinding>
+    </Window.InputBindings>
     <Grid>
         <Button Content="HIT THE BUTTON" 
                 HorizontalAlignment="Center" 
@@ -14,7 +18,8 @@
                 Height="130" 
                 Width="254"
                 IsEnabled="{Binding IsButtonEnable}"
-                Command="{Binding Test}"/>
+                Command="{Binding Test}"
+                />
         <TextBox HorizontalAlignment="Left" 
                  Margin="273,331,0,0" 
                  TextWrapping="Wrap" 
