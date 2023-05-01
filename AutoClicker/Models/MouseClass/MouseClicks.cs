@@ -13,9 +13,9 @@ namespace AutoClicker.Models.MouseClass
 
         private static string s_buttonToStop = "F5";
 
-        private static CancellationTokenSource s_cts;
+        private static CancellationTokenSource? s_cts;
 
-        public static CancellationTokenSource Cts
+        public static CancellationTokenSource? Cts
         {
             get => s_cts;
             private set => s_cts = value;
@@ -40,7 +40,7 @@ namespace AutoClicker.Models.MouseClass
         {
             while (true)
             {
-                if (Convert.ToBoolean(GetKeyState(VirtualKeyStates.VK_LBUTTON) & KEY_PRESSED))
+                if (Convert.ToBoolean(GetKeyState(VirtualKeyStates.VK_LBUTTON) & KeyPressed))
                 {
                     GetCursorPos(out Point point);
                     return point;
@@ -107,7 +107,8 @@ namespace AutoClicker.Models.MouseClass
 
         public static void StopClicking()
         {
-            Cts.Cancel();
+            Cts?.Cancel();
+            Cts = null;
         }
 
         private static void Click(MouseEventFlags action, int x = 0, int y = 0, int dwData = 0, int dwExtraInfo = 0)

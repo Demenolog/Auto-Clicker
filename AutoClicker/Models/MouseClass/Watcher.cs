@@ -12,7 +12,7 @@ namespace AutoClicker.Models.MouseClass
     {
         private static bool IsStopped { get; set; }
 
-        public static async void WatchToStopClicking()
+        public static void WatchToStopClicking()
         {
             Task.Run(() =>
             {
@@ -22,9 +22,9 @@ namespace AutoClicker.Models.MouseClass
 
                 while (true)
                 {
-                    if (Convert.ToBoolean(GetKeyState(VirtualKeyStates.VK_F4) & KEY_PRESSED))
+                    if (Convert.ToBoolean(GetKeyState(VirtualKeyStates.VK_F4) & KeyPressed))
                     {
-                        MouseClicks.Cts.Cancel();
+                        MouseClicks.StopClicking();
                         IsStopped = true;
                         break;
                     }
@@ -38,7 +38,7 @@ namespace AutoClicker.Models.MouseClass
             {
                 while (true)
                 {
-                    if (Convert.ToBoolean(GetKeyState(VirtualKeyStates.VK_F4) & KEY_PRESSED) && !IsStopped)
+                    if (Convert.ToBoolean(GetKeyState(VirtualKeyStates.VK_F4) & KeyPressed) && !IsStopped)
                     {
                         new MainWindowViewModel().OnStartClickingExecute(null);
                         IsStopped = true;

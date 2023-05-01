@@ -4,7 +4,7 @@ namespace AutoClicker.Infrastructure.Constans.MouseClass
 {
     public static class MouseClassConstans
     {
-        public const int KEY_PRESSED = 0x8000;
+        public const int KeyPressed = 0x8000;
 
         public enum ClickModes
         {

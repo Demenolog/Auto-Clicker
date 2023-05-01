@@ -316,7 +316,7 @@ namespace AutoClicker.ViewModels
 
         public ICommand StartClicking { get; }
 
-        private bool CanStartClickingExecuted(object p) => true;
+        private bool CanStartClickingExecuted(object p) => MouseClicks.Cts == null;
 
         internal async void OnStartClickingExecute(object p)
         {
@@ -346,6 +346,7 @@ namespace AutoClicker.ViewModels
             }
             finally
             {
+                
             }
         }
 
