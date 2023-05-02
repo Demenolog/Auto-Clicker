@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoClicker.ViewModels;
 using static AutoClicker.Infrastructure.Constans.MouseClass.MouseClassConstans;
-using static AutoClicker.Models.MouseClass.DllImport.User32;
+using static AutoClicker.Models.MouseClass.UnsafeCode.User32;
 
 namespace AutoClicker.Models.MouseClass
 {

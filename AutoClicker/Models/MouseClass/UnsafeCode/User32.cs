@@ -1,8 +1,8 @@
-﻿using AutoClicker.Infrastructure.Constans.MouseClass;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Runtime.InteropServices;
+using AutoClicker.Infrastructure.Constans.MouseClass;
 
-namespace AutoClicker.Models.MouseClass.DllImport
+namespace AutoClicker.Models.MouseClass.UnsafeCode
 {
     internal static class User32
     {
