@@ -14,7 +14,6 @@ namespace WpfTest
             var app = new App();
             app.InitializeComponent();
             app.Run();
-
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

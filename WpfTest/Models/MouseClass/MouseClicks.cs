@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Threading;
 using WpfTest.ViewModels;
 using static WpfTest.Infrastructure.Constans.MouseClass.MouseClassConstans;
@@ -44,23 +45,6 @@ namespace AutoClicker.Models.MouseClass
         private static void timer_Tick(object sender, EventArgs e)
         {
             MessageBox.Show("Test");
-        }
-
-        public static void WatchToStartClicking()
-        {
-            while (true)
-            {
-                var pressedF4 = GetKeyState(VirtualKeyStates.VK_F4);
-                var pressedKey = KEY_PRESSED;
-                var status = Convert.ToBoolean(pressedF4 & pressedKey);
-
-                //if (Convert.ToBoolean(GetKeyState(VirtualKeyStates.VK_F4) & KEY_PRESSED) && !IsStopped)
-                if (status && !IsStopped)
-                {
-                    new MainWindowViewModel().OnTestExecute(null);
-                    IsStopped = true;
-                }
-            }
         }
     }
 }
