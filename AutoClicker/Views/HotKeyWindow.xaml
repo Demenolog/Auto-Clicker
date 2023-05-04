@@ -18,7 +18,8 @@
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Center"
                         Margin="5">
-                <Label Content="Start hotkey:">
+                <Label Style="{StaticResource LabelDefaultStyle}"
+                       Content="Start hotkey:">
                 </Label>
                 <TextBox Style="{StaticResource TextBoxHotKeysStyle}"
                          Text="{Binding StartHotkey}">
@@ -27,10 +28,11 @@
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Center"
                         Margin="5">
-                <Label Content="Stop hotkey:"></Label>
+                <Label Style="{StaticResource LabelDefaultStyle}"
+                       Content="Stop hotkey:">
+                </Label>
                 <TextBox Style="{StaticResource TextBoxHotKeysStyle}"
                          Text="{Binding StopHotKey}">
-
                 </TextBox>
             </StackPanel>
         </StackPanel>
@@ -42,12 +44,15 @@
                     Width="80"
                     Margin="10"
                     Content="Accept"
-                    Command="{Binding ChangeHotKeys}"></Button>
+                    Command="{Binding ChangeHotKeys}">
+
+            </Button>
             <Button Height="25"
                     Width="80"
                     Margin="10"
                     Content="Reset"
-                    Command="{Binding  ResetHotKeys}"></Button>
+                    Command="{Binding  ResetHotKeys}">
+            </Button>
         </StackPanel>
     </Grid>
 </Window>
