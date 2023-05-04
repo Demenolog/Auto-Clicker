@@ -1,10 +1,8 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 using WpfTest.Infrastructure.Commands;
-using WpfTest.Models.Hotkeys;
+using WpfTest.Services;
 using WpfTest.ViewModels.Base;
-using WpfTest.Views;
 
 namespace WpfTest.ViewModels
 {
@@ -69,20 +67,7 @@ namespace WpfTest.ViewModels
             MessageBox.Show("kEK");
         }
 
-        #endregion
-
-        #region ChangeHotKeys command
-
-        public ICommand ChangeHotKeys { get; }
-
-        private bool CanChangeHotKeysExecuted(object p) => true;
-
-        private void OnChangeHotKeysExecute(object p)
-        {
-            GlobalHotKey.ChangeHotKeys(TextBoxOne, TextBoxTwo);
-        }
-
-        #endregion
+        #endregion Test command
 
         public ICommand OpenChangeHotKeysWindow { get; }
 
@@ -90,18 +75,14 @@ namespace WpfTest.ViewModels
 
         private void OnOpenChangeHotKeysWindowExecute(object p)
         {
-            var newWindow = new HotKeyWindow();
+            HotKeysWindowService.Create();
 
-            newWindow.Show();
+            HotKeysWindowService.Show();
         }
-
-
 
         public MainWindowViewModel()
         {
             Test = new LambdaCommand(OnTestExecute, CanTestExecuted);
-
-            ChangeHotKeys = new LambdaCommand(OnChangeHotKeysExecute, CanChangeHotKeysExecuted);
 
             OpenChangeHotKeysWindow = new LambdaCommand(OnOpenChangeHotKeysWindowExecute, CanOpenChangeHotKeysWindowExecuted);
         }

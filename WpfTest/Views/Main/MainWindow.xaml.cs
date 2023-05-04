@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Windows;
 using System.Windows.Interop;
 using WpfTest.Models.Hotkeys;
+using WpfTest.Services;
 
 namespace WpfTest.Views.Main
 {
@@ -14,6 +16,8 @@ namespace WpfTest.Views.Main
 
         private HwndSource? _source;
 
+        #region Life cycle
+
         protected override void OnSourceInitialized(EventArgs e)
         {
             base.OnSourceInitialized(e);
@@ -24,5 +28,16 @@ namespace WpfTest.Views.Main
 
             GlobalHotKey.RegisterHotKey(handle);
         }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            _source!.RemoveHook(GlobalHotKey.HwndHook);
+
+            ChildWindowsService.CloseAll();
+
+            base.OnClosed(e);
+        }
+
+        #endregion
     }
 }

@@ -6,30 +6,49 @@
         xmlns:local="clr-namespace:WpfTest.Views"
         DataContext="{Binding Path= HotKeyWindowModel, Source={StaticResource Locator}}"
         mc:Ignorable="d"
-        Title="HotKeyWindow" Height="175" Width="200" ResizeMode="CanResize">
+        Title="HotKeys" Height="175" Width="225" ResizeMode="NoResize">
     <Grid>
-        <StackPanel Orientation="Vertical">
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" 
+                    Orientation="Vertical"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Center"
                         Margin="5">
-                <Label Content="Start:"></Label>
+                <Label Content="Start hotkey:"></Label>
                 <TextBox Height="20"
                          Width="80"
+                         HorizontalContentAlignment="Center"
                          Text="{Binding StartHotkey}"></TextBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Center"
                         Margin="5">
-                <Label Content="Stop:"></Label>
+                <Label Content="Stop hotkey:"></Label>
                 <TextBox Height="20"
                          Width="80"
+                         HorizontalContentAlignment="Center"
                          Text="{Binding StopHotKey}"></TextBox>
             </StackPanel>
-            <Button Height="30"
-                    Width="100"
+        </StackPanel>
+        <StackPanel Grid.Row="1"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+            <Button Height="25"
+                    Width="80"
                     Margin="10"
                     Content="Accept"
                     Command="{Binding ChangeHotKeys}"></Button>
+            <Button Height="25"
+                    Width="80"
+                    Margin="10"
+                    Content="Reset"
+                    Command="{Binding  ResetHotKeys}"></Button>
         </StackPanel>
     </Grid>
 </Window>

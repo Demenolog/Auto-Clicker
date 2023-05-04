@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Input;
+using WpfTest.Infrastructure.Constans.MouseClass;
 using WpfTest.Models.UnsafeCode;
 using WpfTest.ViewModels;
 
@@ -18,7 +19,7 @@ namespace WpfTest.Models.Hotkeys
         private const uint MOD_SHIFT = 0x0004; //SHIFT
         private const uint MOD_WIN = 0x0008; //WINDOWS
 
-        private static ViewModelLocator _locator = new();
+        private static ViewModelLocator s_locator = new();
         private static IntPtr s_handle;
 
         public static int StartHotkey;
@@ -26,9 +27,9 @@ namespace WpfTest.Models.Hotkeys
 
         static GlobalHotKey()
         {
-            StartHotkey = GetVirtualKeyStates(_locator.HotKeyWindowModel.StartHotkey);
+            StartHotkey = GetVirtualKeyStates(s_locator.HotKeyWindowModel.StartHotkey);
 
-            StopHotkey = GetVirtualKeyStates(_locator.HotKeyWindowModel.StopHotKey);
+            StopHotkey = GetVirtualKeyStates(s_locator.HotKeyWindowModel.StopHotKey);
         }
 
         public static int GetVirtualKeyStates(string str)
@@ -40,20 +41,28 @@ namespace WpfTest.Models.Hotkeys
             return virtualKey;
         }
 
-        public static void ChangeHotKeys(string startButton, string stopButton)
+        public static void ChangeHotKeys()
         {
             User32.UnregisterHotKey(s_handle, HOTKEY_ID);
 
-            User32.RegisterHotKey(s_handle, HOTKEY_ID, MOD_NONE, (uint)GetVirtualKeyStates(_locator.HotKeyWindowModel.StartHotkey));
-            User32.RegisterHotKey(s_handle, HOTKEY_ID, MOD_NONE, (uint)GetVirtualKeyStates(_locator.HotKeyWindowModel.StopHotKey));
+            User32.RegisterHotKey(s_handle, HOTKEY_ID, MOD_NONE, (uint)GetVirtualKeyStates(s_locator.HotKeyWindowModel.StartHotkey));
+            User32.RegisterHotKey(s_handle, HOTKEY_ID, MOD_NONE, (uint)GetVirtualKeyStates(s_locator.HotKeyWindowModel.StopHotKey));
         }
 
         public static void RegisterHotKey(IntPtr handle)
         {
             s_handle = handle;
 
-            User32.RegisterHotKey(handle, HOTKEY_ID, MOD_NONE, (uint)GetVirtualKeyStates(_locator.HotKeyWindowModel.StartHotkey)); 
-            User32.RegisterHotKey(handle, HOTKEY_ID, MOD_NONE, (uint)GetVirtualKeyStates(_locator.HotKeyWindowModel.StopHotKey));
+            User32.RegisterHotKey(handle, HOTKEY_ID, MOD_NONE, (uint)GetVirtualKeyStates(s_locator.HotKeyWindowModel.StartHotkey));
+            User32.RegisterHotKey(handle, HOTKEY_ID, MOD_NONE, (uint)GetVirtualKeyStates(s_locator.HotKeyWindowModel.StopHotKey));
+        }
+
+        public static void ResetHotKeys()
+        {
+            User32.UnregisterHotKey(s_handle, HOTKEY_ID);
+
+            User32.RegisterHotKey(s_handle, HOTKEY_ID, MOD_NONE, (uint)GetVirtualKeyStates(s_locator.HotKeyWindowModel.StartHotkey));
+            User32.RegisterHotKey(s_handle, HOTKEY_ID, MOD_NONE, (uint)GetVirtualKeyStates(s_locator.HotKeyWindowModel.StopHotKey));
         }
 
         public static IntPtr HwndHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
@@ -68,17 +77,17 @@ namespace WpfTest.Models.Hotkeys
                         case HOTKEY_ID:
 
                             int vkey = (((int)lParam >> 16) & 0xFFFF);
-                            
-                            if (vkey == GetVirtualKeyStates(_locator.HotKeyWindowModel.StartHotkey))
+
+                            if (vkey == GetVirtualKeyStates(s_locator.HotKeyWindowModel.StartHotkey))
                             {
-                                //_locator.HotKeyWindowModel.OnTestExecute(null);
+                                //s_locator.HotKeyWindowModel.OnTestExecute(null);
                                 MessageBox.Show("Start hotkey was pressed");
                             }
-                            else if (vkey == GetVirtualKeyStates(_locator.HotKeyWindowModel.StopHotKey))
+                            else if (vkey == GetVirtualKeyStates(s_locator.HotKeyWindowModel.StopHotKey))
                             {
                                 MessageBox.Show("Stop hotkey was pressed");
                             }
-                            
+
                             handled = true;
                             break;
                     }

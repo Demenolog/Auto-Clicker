@@ -32,9 +32,6 @@
                  Width="120"/>
         <Label Content="Start" Margin="55,147,697,260"/>
         <Label Content="Stop" Margin="55,194,697,212"/>
-        <Button Content="Accept" 
-                Command="{Binding ChangeHotKeys}"
-                Margin="126,234,587,142"/>
         <Button Content="Create window" 
                 Command="{Binding OpenChangeHotKeysWindow}"
                 Margin="626,32,55,335"/>
