@@ -20,9 +20,7 @@
                         Margin="5">
                 <Label Content="Start hotkey:">
                 </Label>
-                <TextBox Height="20"
-                         Width="80"
-                         HorizontalContentAlignment="Center"
+                <TextBox Style="{StaticResource TextBoxHotKeysStyle}"
                          Text="{Binding StartHotkey}">
                 </TextBox>
             </StackPanel>
@@ -30,7 +28,7 @@
                         HorizontalAlignment="Center"
                         Margin="5">
                 <Label Content="Stop hotkey:"></Label>
-                <TextBox Style="{StaticResource TextBoxDefaultStyle}"
+                <TextBox Style="{StaticResource TextBoxHotKeysStyle}"
                          Text="{Binding StopHotKey}">
 
                 </TextBox>
