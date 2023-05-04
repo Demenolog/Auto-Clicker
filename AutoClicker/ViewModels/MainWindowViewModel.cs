@@ -1,6 +1,7 @@
 ﻿using AutoClicker.Infrastructure.Commands;
 using AutoClicker.Models.MouseClass;
 using AutoClicker.Models.Other;
+using AutoClicker.Services;
 using AutoClicker.ViewModels.Base;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -365,6 +366,22 @@ namespace AutoClicker.ViewModels
 
         #endregion Stop clicking command
 
+        #region Open hotKeys Window
+
+        public ICommand OpenHotKeysWindow { get; }
+
+        private bool CanOpenHotKeysWindowExecuted(object p) => true;
+
+        private void OnOpenHotKeysWindowExecute(object p)
+        {
+            HotKeysWindowService.Create();
+
+            HotKeysWindowService.Show();
+        }
+
+
+        #endregion
+
         #endregion Commands
 
         #endregion [Buttons section]
@@ -376,6 +393,9 @@ namespace AutoClicker.ViewModels
             StopClicking = new LambdaCommand(OnStopClickingExecute, CanStopClickingExecuted);
 
             GetCursorPosition = new LambdaCommand(OnGetCursorPositionExecute, CanGetCursorPositionExecuted);
+
+            OpenHotKeysWindow = new LambdaCommand(OnOpenHotKeysWindowExecute, CanOpenHotKeysWindowExecuted);
+
         }
     }
 }

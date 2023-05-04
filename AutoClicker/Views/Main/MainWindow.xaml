@@ -202,7 +202,8 @@
                     Grid.Column="0"
                     Margin="10"
                     Width="150"
-                    Content="Hotkey setting">
+                    Content="Hotkey setting"
+                    Command="{Binding OpenHotKeysWindow}">
             </Button>
             <Button Style="{StaticResource ButtonDefaultStyle}"
                     Grid.Row="1"
