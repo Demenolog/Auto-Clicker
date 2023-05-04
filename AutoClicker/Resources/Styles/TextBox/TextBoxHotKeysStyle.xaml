@@ -5,7 +5,7 @@
     <SolidColorBrush x:Key="TextBox.MouseOver.Border" Color="#FF7EB4EA" />
     <SolidColorBrush x:Key="TextBox.Focus.Border" Color="#FF569DE5" />
 
-    <Style x:Key="TextBoxDefaultStyle" TargetType="{x:Type TextBox}">
+    <Style x:Key="TextBoxHotKeysStyle" TargetType="{x:Type TextBox}">
         <Setter Property="MaxLength" Value="7"></Setter>
         <Setter Property="Text" Value="0" />
         <Setter Property="Width" Value="80" />
