@@ -7,11 +7,14 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
+                <!--Main Window styles-->
                 <ResourceDictionary Source="Resources/Styles/GroupBox/GroupBoxDefaultStyle.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Button/ButtonDefaultStyle.xaml" />
                 <ResourceDictionary Source="Resources/Styles/TextBox/TextBoxDefaultStyle.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Label/LabelDefaultStyle.xaml" />
+                <!--HotKeys Window styles-->
                 <ResourceDictionary Source="Resources/Styles/TextBox/TextBoxHotKeysStyle.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Button/ButtonHotKeysStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <vm:ViewModelLocator x:Key="Locator" />
         </ResourceDictionary>

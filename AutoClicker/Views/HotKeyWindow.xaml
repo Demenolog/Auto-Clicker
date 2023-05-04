@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         DataContext="{Binding Path= HotKeyWindowModel, Source={StaticResource Locator}}"
         mc:Ignorable="d"
-        Title="HotKeys" Height="175" Width="225" ResizeMode="NoResize">
+        Title="HotKeys" 
+        Height="175" Width="225" ResizeMode="NoResize">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition></RowDefinition>
@@ -40,16 +41,11 @@
                     Orientation="Horizontal"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center">
-            <Button Height="25"
-                    Width="80"
-                    Margin="10"
+            <Button Style="{StaticResource ButtonHotKeysStyle}"
                     Content="Accept"
                     Command="{Binding ChangeHotKeys}">
-
             </Button>
-            <Button Height="25"
-                    Width="80"
-                    Margin="10"
+            <Button Style="{StaticResource ButtonHotKeysStyle}"
                     Content="Reset"
                     Command="{Binding  ResetHotKeys}">
             </Button>
