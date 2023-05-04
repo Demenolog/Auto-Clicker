@@ -10,6 +10,7 @@
                 <ResourceDictionary Source="Resources/Styles/Button/ButtonDefaultStyle.xaml" />
                 <ResourceDictionary Source="Resources/Styles/TextBox/TextBoxDefaultStyle.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Label/LabelDefaultStyle.xaml" />
+                <ResourceDictionary Source="Resources/Styles/TextBox/TextBoxHotKeysStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <vm:ViewModelLocator x:Key="Locator" />
         </ResourceDictionary>
