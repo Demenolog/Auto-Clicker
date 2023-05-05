@@ -210,7 +210,9 @@
                     Grid.Column="1"
                     Margin="10"
                     Width="150"
-                    Content="Record &amp; playback">
+                    Content="[In progress]"
+                    IsEnabled="False">
+                <!--Content: [Record &amp; playback]-->
             </Button>
         </Grid>
     </Grid>
