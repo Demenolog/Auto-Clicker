@@ -359,7 +359,7 @@ namespace AutoClicker.ViewModels
 
         private bool CanStopClickingExecuted(object p) => MouseClicks.Cts != null;
 
-        private void OnStopClickingExecute(object p)
+        internal void OnStopClickingExecute(object p)
         {
             MouseClicks.StopClicking();
         }
