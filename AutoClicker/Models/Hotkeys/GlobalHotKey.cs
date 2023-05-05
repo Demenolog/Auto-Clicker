@@ -18,40 +18,43 @@ namespace AutoClicker.Models.Hotkeys
         private const uint MOD_SHIFT = 0x0004; //SHIFT
         private const uint MOD_WIN = 0x0008; //WINDOWS
 
-        private static readonly ViewModelLocator s_locator = new();
+        private static readonly ViewModelLocator Locator = new();
         private static IntPtr s_handle;
         
-        public static int GetVirtualKeyStates(string str)
+        public static uint GetVirtualKeyStates(string str)
         {
             Key key = (Key)Enum.Parse(typeof(Key), str, true);
 
             var virtualKey = KeyInterop.VirtualKeyFromKey(key);
 
-            return virtualKey;
+            return (uint)virtualKey;
         }
 
         public static void ChangeHotKeys()
         {
             User32.UnregisterHotKey(s_handle, HOTKEY_ID);
 
-            User32.RegisterHotKey(s_handle, HOTKEY_ID, MOD_NONE, (uint)GetVirtualKeyStates(s_locator.HotKeyWindowModel.StartHotkey));
-            User32.RegisterHotKey(s_handle, HOTKEY_ID, MOD_NONE, (uint)GetVirtualKeyStates(s_locator.HotKeyWindowModel.StopHotKey));
+            User32.RegisterHotKey(s_handle, HOTKEY_ID, MOD_NONE, GetVirtualKeyStates(Locator.HotKeyWindowModel.StartHotkey));
+            User32.RegisterHotKey(s_handle, HOTKEY_ID, MOD_NONE, GetVirtualKeyStates(Locator.HotKeyWindowModel.StopHotKey));
         }
 
         public static void RegisterHotKey(IntPtr handle)
         {
             s_handle = handle;
 
-            User32.RegisterHotKey(handle, HOTKEY_ID, MOD_NONE, (uint)GetVirtualKeyStates(s_locator.HotKeyWindowModel.StartHotkey));
-            User32.RegisterHotKey(handle, HOTKEY_ID, MOD_NONE, (uint)GetVirtualKeyStates(s_locator.HotKeyWindowModel.StopHotKey));
+            User32.RegisterHotKey(handle, HOTKEY_ID, MOD_NONE, GetVirtualKeyStates(Locator.HotKeyWindowModel.StartHotkey));
+            User32.RegisterHotKey(handle, HOTKEY_ID, MOD_NONE, GetVirtualKeyStates(Locator.HotKeyWindowModel.StopHotKey));
         }
 
         public static void ResetHotKeys()
         {
             User32.UnregisterHotKey(s_handle, HOTKEY_ID);
 
-            User32.RegisterHotKey(s_handle, HOTKEY_ID, MOD_NONE, (uint)GetVirtualKeyStates(s_locator.HotKeyWindowModel.StartHotkey));
-            User32.RegisterHotKey(s_handle, HOTKEY_ID, MOD_NONE, (uint)GetVirtualKeyStates(s_locator.HotKeyWindowModel.StopHotKey));
+            Locator.HotKeyWindowModel.StartHotkey = "F3";
+            Locator.HotKeyWindowModel.StopHotKey= "F4";
+
+            User32.RegisterHotKey(s_handle, HOTKEY_ID, MOD_NONE, GetVirtualKeyStates(Locator.HotKeyWindowModel.StartHotkey));
+            User32.RegisterHotKey(s_handle, HOTKEY_ID, MOD_NONE, GetVirtualKeyStates(Locator.HotKeyWindowModel.StopHotKey));
         }
 
         public static IntPtr HwndHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
@@ -67,13 +70,13 @@ namespace AutoClicker.Models.Hotkeys
 
                             int vkey = (((int)lParam >> 16) & 0xFFFF);
 
-                            if (vkey == GetVirtualKeyStates(s_locator.HotKeyWindowModel.StartHotkey))
+                            if (vkey == GetVirtualKeyStates(Locator.HotKeyWindowModel.StartHotkey))
                             {
-                                s_locator.MainWindowModel.OnStartClickingExecute(null);
+                                Locator.MainWindowModel.OnStartClickingExecute(null);
                             }
-                            else if (vkey == GetVirtualKeyStates(s_locator.HotKeyWindowModel.StopHotKey))
+                            else if (vkey == GetVirtualKeyStates(Locator.HotKeyWindowModel.StopHotKey))
                             {
-                                s_locator.MainWindowModel.OnStopClickingExecute(null);
+                                Locator.MainWindowModel.OnStopClickingExecute(null);
                             }
 
                             handled = true;

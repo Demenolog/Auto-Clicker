@@ -50,9 +50,6 @@ namespace AutoClicker.ViewModels
 
         private void OnResetHotKeysExecute(object p)
         {
-            StartHotkey = "F3";
-            StopHotKey = "F4";
-
             GlobalHotKey.ResetHotKeys();
         }
 
