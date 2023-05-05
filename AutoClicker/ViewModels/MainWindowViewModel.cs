@@ -5,6 +5,7 @@ using AutoClicker.Services;
 using AutoClicker.ViewModels.Base;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using AutoClicker.Models.Mouse;
 using Point = System.Drawing.Point;
 
 namespace AutoClicker.ViewModels

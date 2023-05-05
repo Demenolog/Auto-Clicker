@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Input;
+using AutoClicker.Models.Mouse;
 using AutoClicker.Models.MouseClass;
 using AutoClicker.Models.MouseClass.UnsafeCode;
 using AutoClicker.ViewModels;

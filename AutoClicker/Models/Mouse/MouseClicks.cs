@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using static AutoClicker.Infrastructure.Constans.MouseClass.MouseClassConstans;
 using static AutoClicker.Models.MouseClass.UnsafeCode.User32;
 
-namespace AutoClicker.Models.MouseClass
+namespace AutoClicker.Models.Mouse
 {
     internal static class MouseClicks
     {
