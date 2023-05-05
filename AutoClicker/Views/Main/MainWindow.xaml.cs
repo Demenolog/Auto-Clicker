@@ -22,7 +22,7 @@ namespace AutoClicker.Views.Main
             _source = HwndSource.FromHwnd(handle)!;
             _source.AddHook(GlobalHotKey.HwndHook);
 
-            GlobalHotKey.RegisterHotKey(handle);
+            GlobalHotKey.RegisterHotKeys(handle);
         }
 
         protected override void OnClosed(EventArgs e)
