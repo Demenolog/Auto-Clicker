@@ -20,17 +20,7 @@ namespace AutoClicker.Models.Hotkeys
 
         private static readonly ViewModelLocator s_locator = new();
         private static IntPtr s_handle;
-
-        public static int StartHotkey;
-        public static int StopHotkey;
-
-        static GlobalHotKey()
-        {
-            StartHotkey = GetVirtualKeyStates(s_locator.HotKeyWindowModel.StartHotkey);
-
-            StopHotkey = GetVirtualKeyStates(s_locator.HotKeyWindowModel.StopHotKey);
-        }
-
+        
         public static int GetVirtualKeyStates(string str)
         {
             Key key = (Key)Enum.Parse(typeof(Key), str, true);
@@ -79,12 +69,11 @@ namespace AutoClicker.Models.Hotkeys
 
                             if (vkey == GetVirtualKeyStates(s_locator.HotKeyWindowModel.StartHotkey))
                             {
-                                //s_locator.HotKeyWindowModel.OnTestExecute(null);
-                                MessageBox.Show("Start hotkey was pressed");
+                                s_locator.MainWindowModel.OnStartClickingExecute(null);
                             }
                             else if (vkey == GetVirtualKeyStates(s_locator.HotKeyWindowModel.StopHotKey))
                             {
-                                MessageBox.Show("Stop hotkey was pressed");
+                                s_locator.MainWindowModel.OnStopClickingExecute(null);
                             }
 
                             handled = true;
