@@ -33,6 +33,8 @@ namespace AutoClicker.Infrastructure.Constans.MouseClass
             VK_RBUTTON = 0x02,
             VK_CANCEL = 0x03,
             VK_MBUTTON = 0x04,
+
+            VK_ESCAPE = 0x1B
         }
     }
 }
