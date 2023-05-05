@@ -25,16 +25,14 @@ namespace AutoClicker.Models.Hotkeys
         {
             User32.UnregisterHotKey(s_handle, HOTKEY_ID);
 
-            User32.RegisterHotKey(s_handle, HOTKEY_ID, MOD_NONE, GetVirtualKeyStates(Locator.HotKeyWindowModel.StartHotkey));
-            User32.RegisterHotKey(s_handle, HOTKEY_ID, MOD_NONE, GetVirtualKeyStates(Locator.HotKeyWindowModel.StopHotKey));
+            Registration();
         }
 
         public static void RegisterHotKeys(IntPtr handle)
         {
             s_handle = handle;
 
-            User32.RegisterHotKey(handle, HOTKEY_ID, MOD_NONE, GetVirtualKeyStates(Locator.HotKeyWindowModel.StartHotkey));
-            User32.RegisterHotKey(handle, HOTKEY_ID, MOD_NONE, GetVirtualKeyStates(Locator.HotKeyWindowModel.StopHotKey));
+            Registration();
         }
 
         public static void ResetHotKeys()
@@ -44,6 +42,11 @@ namespace AutoClicker.Models.Hotkeys
             Locator.HotKeyWindowModel.StartHotkey = "F3";
             Locator.HotKeyWindowModel.StopHotKey= "F4";
 
+            Registration();
+        }
+
+        private static void Registration()
+        {
             User32.RegisterHotKey(s_handle, HOTKEY_ID, MOD_NONE, GetVirtualKeyStates(Locator.HotKeyWindowModel.StartHotkey));
             User32.RegisterHotKey(s_handle, HOTKEY_ID, MOD_NONE, GetVirtualKeyStates(Locator.HotKeyWindowModel.StopHotKey));
         }
