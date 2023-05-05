@@ -1,5 +1,6 @@
 ﻿using System.Windows.Input;
 using AutoClicker.Infrastructure.Commands;
+using AutoClicker.Models.Hotkeys;
 using AutoClicker.ViewModels.Base;
 
 namespace AutoClicker.ViewModels
@@ -38,7 +39,7 @@ namespace AutoClicker.ViewModels
 
         private void OnChangeHotKeysExecute(object p)
         {
-            //GlobalHotKey.ChangeHotKeys();
+            GlobalHotKey.ChangeHotKeys();
         }
 
         #endregion Accept command
@@ -52,7 +53,7 @@ namespace AutoClicker.ViewModels
             StartHotkey = "F3";
             StopHotKey = "F4";
 
-            //GlobalHotKey.ResetHotKeys();
+            GlobalHotKey.ResetHotKeys();
         }
 
 
