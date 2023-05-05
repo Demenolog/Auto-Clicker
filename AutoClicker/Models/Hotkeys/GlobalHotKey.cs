@@ -3,24 +3,15 @@ using System.Windows;
 using System.Windows.Input;
 using AutoClicker.Models.MouseClass.UnsafeCode;
 using AutoClicker.ViewModels;
+using static AutoClicker.Infrastructure.Constans.HotkeysClass.GlobalHotKeyConstance;
 
 namespace AutoClicker.Models.Hotkeys
 {
     internal static class GlobalHotKey
     {
-        public const int HOTKEY_ID = 9000;
-
-        //Modifiers:
-        private const uint MOD_NONE = 0x0000; //[NONE]
-
-        private const uint MOD_ALT = 0x0001; //ALT
-        private const uint MOD_CONTROL = 0x0002; //CTRL
-        private const uint MOD_SHIFT = 0x0004; //SHIFT
-        private const uint MOD_WIN = 0x0008; //WINDOWS
-
         private static readonly ViewModelLocator Locator = new();
         private static IntPtr s_handle;
-        
+
         public static uint GetVirtualKeyStates(string str)
         {
             Key key = (Key)Enum.Parse(typeof(Key), str, true);
@@ -38,7 +29,7 @@ namespace AutoClicker.Models.Hotkeys
             User32.RegisterHotKey(s_handle, HOTKEY_ID, MOD_NONE, GetVirtualKeyStates(Locator.HotKeyWindowModel.StopHotKey));
         }
 
-        public static void RegisterHotKey(IntPtr handle)
+        public static void RegisterHotKeys(IntPtr handle)
         {
             s_handle = handle;
 
@@ -59,7 +50,6 @@ namespace AutoClicker.Models.Hotkeys
 
         public static IntPtr HwndHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
-            const int WM_HOTKEY = 0x0312;
 
             switch (msg)
             {
