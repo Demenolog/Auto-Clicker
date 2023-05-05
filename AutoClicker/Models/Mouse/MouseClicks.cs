@@ -45,9 +45,9 @@ namespace AutoClicker.Models.Mouse
             Cts ??= new CancellationTokenSource();
             var token = Cts.Token;
 
-            var clickMethod = selectedBtn == "Left" ? 
-                new Action(() => RunLeftClicking(cursorPosition, selectedBtnMode, intervalTime, token)) : 
-                new Action(() => RunRightClicking(cursorPosition, selectedBtnMode, intervalTime, token));
+            Action clickMethod = selectedBtn == "Left" ? 
+                () => RunLeftClicking(cursorPosition, selectedBtnMode, intervalTime, token) : 
+                () => RunRightClicking(cursorPosition, selectedBtnMode, intervalTime, token);
 
             try
             {

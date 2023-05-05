@@ -380,7 +380,6 @@ namespace AutoClicker.ViewModels
             HotKeysWindowService.Show();
         }
 
-
         #endregion
 
         #endregion Commands
@@ -396,7 +395,6 @@ namespace AutoClicker.ViewModels
             GetCursorPosition = new LambdaCommand(OnGetCursorPositionExecute, CanGetCursorPositionExecuted);
 
             OpenHotKeysWindow = new LambdaCommand(OnOpenHotKeysWindowExecute, CanOpenHotKeysWindowExecuted);
-
         }
     }
 }
