@@ -1,11 +1,10 @@
 ﻿using AutoClicker.Infrastructure.Commands;
-using AutoClicker.Models.MouseClass;
+using AutoClicker.Models.Mouse;
 using AutoClicker.Models.Other;
 using AutoClicker.Services;
 using AutoClicker.ViewModels.Base;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using AutoClicker.Models.Mouse;
 using Point = System.Drawing.Point;
 
 namespace AutoClicker.ViewModels
@@ -322,34 +321,17 @@ namespace AutoClicker.ViewModels
 
         internal async void OnStartClickingExecute(object p)
         {
-            try
-            {
-                // Get interval amount of time # 1
+            var intervalTime =
+                IntervalCounter.GetTotalIntervalTime(HoursTextBox, MinutesTextBox, SecondsTextBox, MillisecondsTextBox);
 
-                var intervalTime =
-                    IntervalCounter.GetTotalIntervalTime(HoursTextBox, MinutesTextBox, SecondsTextBox, MillisecondsTextBox);
+            var selectedButton = SelectedMouseButton;
+            var selectedButtonMode = MouseClicks.GetClickMode(SelectedMouseButtonMode);
 
-                // Get mouse button and click mode options # 2
+            var repeatMode = IsRepeatUntilStoppedSelected ? -1 : int.Parse(RepeatTimesTextBox);
 
-                var selectedButton = SelectedMouseButton;
-                var selectedButtonMode = MouseClicks.GetClickMode(SelectedMouseButtonMode);
+            var cursorPosition = IsCurrentLocationSelected ? MouseClicks.GetCurrentCursorPosition() : new Point(int.Parse(XAxisTextBox), int.Parse(YAxisTextBox));
 
-                // Get click repeat mode # 3
-
-                var repeatMode = IsRepeatUntilStoppedSelected ? -1 : int.Parse(RepeatTimesTextBox);
-
-                // Get Cursor position # 4
-
-                var cursorPosition = IsCurrentLocationSelected ? MouseClicks.GetCurrentCursorPosition() : new Point(int.Parse(XAxisTextBox), int.Parse(YAxisTextBox));
-
-                // Run a task\thread # 5
-                
-                await MouseClicks.StartClicking(intervalTime, selectedButton, selectedButtonMode, repeatMode, cursorPosition);
-            }
-            finally
-            {
-                
-            }
+            await MouseClicks.StartClicking(intervalTime, selectedButton, selectedButtonMode, repeatMode, cursorPosition);
         }
 
         #endregion Start clicking command
@@ -380,7 +362,7 @@ namespace AutoClicker.ViewModels
             HotKeysWindowService.Show();
         }
 
-        #endregion
+        #endregion Open hotKeys Window
 
         #endregion Commands
 
