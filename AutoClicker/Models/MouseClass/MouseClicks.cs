@@ -52,9 +52,7 @@ namespace AutoClicker.Models.MouseClass
         {
             Cts ??= new CancellationTokenSource();
             var token = Cts.Token;
-
-            Watcher.WatchToStopClicking();
-
+            
             try
             {
                 await Task.Run(() =>
