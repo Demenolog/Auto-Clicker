@@ -44,43 +44,27 @@ namespace AutoClicker.Models.MouseClass
         {
             Cts ??= new CancellationTokenSource();
             var token = Cts.Token;
-            
+
+            var clickMethod = selectedBtn == "Left" ? 
+                new Action(() => RunLeftClicking(cursorPosition, selectedBtnMode, intervalTime, token)) : 
+                new Action(() => RunRightClicking(cursorPosition, selectedBtnMode, intervalTime, token));
+
             try
             {
                 await Task.Run(() =>
                 {
-                    if (selectedBtn == "Left")
+                    if (repeatMode >= 0)
                     {
-                        if (repeatMode >= 0)
+                        for (int i = 0; i < repeatMode; i++)
                         {
-                            for (int i = 0; i < repeatMode; i++)
-                            {
-                                RunLeftClicking(cursorPosition, selectedBtnMode, intervalTime, token);
-                            }
-                        }
-                        else
-                        {
-                            while (true)
-                            {
-                                RunLeftClicking(cursorPosition, selectedBtnMode, intervalTime, token);
-                            }
+                            clickMethod();
                         }
                     }
-                    else if (selectedBtn == "Right")
+                    else
                     {
-                        if (repeatMode >= 0)
+                        while (true)
                         {
-                            for (int i = 0; i < repeatMode; i++)
-                            {
-                                RunRightClicking(cursorPosition, selectedBtnMode, intervalTime, token);
-                            }
-                        }
-                        else
-                        {
-                            while (true)
-                            {
-                                RunRightClicking(cursorPosition, selectedBtnMode, intervalTime, token);
-                            }
+                            clickMethod();
                         }
                     }
                 }, token);
