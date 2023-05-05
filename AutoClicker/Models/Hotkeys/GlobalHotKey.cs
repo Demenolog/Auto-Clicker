@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Input;
+using AutoClicker.Models.MouseClass;
 using AutoClicker.Models.MouseClass.UnsafeCode;
 using AutoClicker.ViewModels;
 using static AutoClicker.Infrastructure.Constans.HotkeysClass.GlobalHotKeyConstance;
@@ -12,6 +13,13 @@ namespace AutoClicker.Models.Hotkeys
         private static readonly ViewModelLocator Locator = new();
         private static IntPtr s_handle;
 
+        public static void ChangeHotKeys()
+        {
+            User32.UnregisterHotKey(s_handle, HOTKEY_ID);
+
+            Registration();
+        }
+
         public static uint GetVirtualKeyStates(string str)
         {
             Key key = (Key)Enum.Parse(typeof(Key), str, true);
@@ -21,11 +29,32 @@ namespace AutoClicker.Models.Hotkeys
             return (uint)virtualKey;
         }
 
-        public static void ChangeHotKeys()
+        public static IntPtr HwndHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
-            User32.UnregisterHotKey(s_handle, HOTKEY_ID);
+            switch (msg)
+            {
+                case WM_HOTKEY:
+                    switch (wParam.ToInt32())
+                    {
+                        case HOTKEY_ID:
 
-            Registration();
+                            int vkey = (((int)lParam >> 16) & 0xFFFF);
+
+                            if (vkey == GetVirtualKeyStates(Locator.HotKeyWindowModel.StartHotkey) && MouseClicks.Cts == null)
+                            {
+                                Locator.MainWindowModel.OnStartClickingExecute(null);
+                            }
+                            else if (vkey == GetVirtualKeyStates(Locator.HotKeyWindowModel.StopHotKey) && MouseClicks.Cts != null)
+                            {
+                                Locator.MainWindowModel.OnStopClickingExecute(null);
+                            }
+
+                            handled = true;
+                            break;
+                    }
+                    break;
+            }
+            return IntPtr.Zero;
         }
 
         public static void RegisterHotKeys(IntPtr handle)
@@ -49,35 +78,6 @@ namespace AutoClicker.Models.Hotkeys
         {
             User32.RegisterHotKey(s_handle, HOTKEY_ID, MOD_NONE, GetVirtualKeyStates(Locator.HotKeyWindowModel.StartHotkey));
             User32.RegisterHotKey(s_handle, HOTKEY_ID, MOD_NONE, GetVirtualKeyStates(Locator.HotKeyWindowModel.StopHotKey));
-        }
-
-        public static IntPtr HwndHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
-        {
-
-            switch (msg)
-            {
-                case WM_HOTKEY:
-                    switch (wParam.ToInt32())
-                    {
-                        case HOTKEY_ID:
-
-                            int vkey = (((int)lParam >> 16) & 0xFFFF);
-
-                            if (vkey == GetVirtualKeyStates(Locator.HotKeyWindowModel.StartHotkey))
-                            {
-                                Locator.MainWindowModel.OnStartClickingExecute(null);
-                            }
-                            else if (vkey == GetVirtualKeyStates(Locator.HotKeyWindowModel.StopHotKey))
-                            {
-                                Locator.MainWindowModel.OnStopClickingExecute(null);
-                            }
-
-                            handled = true;
-                            break;
-                    }
-                    break;
-            }
-            return IntPtr.Zero;
         }
     }
 }

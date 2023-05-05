@@ -11,15 +11,7 @@ namespace AutoClicker.Models.MouseClass
     {
         #region [Properties]
 
-        private static string s_buttonToStop = "F5";
-
-        private static CancellationTokenSource? s_cts;
-
-        public static CancellationTokenSource? Cts
-        {
-            get => s_cts;
-            private set => s_cts = value;
-        }
+        public static CancellationTokenSource? Cts { get; private set; }
 
         #endregion [Properties]
 
