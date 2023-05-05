@@ -37,6 +37,10 @@ namespace AutoClicker.Models.Mouse
                     GetCursorPos(out Point point);
                     return point;
                 }
+                else if (Convert.ToBoolean(GetKeyState(VirtualKeyStates.VK_ESCAPE) & KeyPressed))
+                {
+                    return new Point(0, 0);
+                }
             }
         }
 
@@ -46,8 +50,8 @@ namespace AutoClicker.Models.Mouse
             var token = Cts.Token;
 
             Action clickMethod = selectedBtn == "Left" ? 
-                () => RunLeftClicking(cursorPosition, selectedBtnMode, intervalTime, token) : 
-                () => RunRightClicking(cursorPosition, selectedBtnMode, intervalTime, token);
+                () => RunClicking(cursorPosition, selectedBtnMode, intervalTime, MouseEventFlags.Leftdown, MouseEventFlags.Leftup, token) : 
+                () => RunClicking(cursorPosition, selectedBtnMode, intervalTime, MouseEventFlags.Rightdown, MouseEventFlags.Rightup, token);
 
             try
             {
@@ -90,40 +94,20 @@ namespace AutoClicker.Models.Mouse
             mouse_event((int)action, x, y, dwData, dwExtraInfo);
         }
 
-        private static void RunLeftClicking(Point cursorPosition, int clicksMode, int intervalTime, CancellationToken token)
+        private static void RunClicking(Point cursorPosition, int clicksMode, int intervalTime, MouseEventFlags downFlag, MouseEventFlags upFlag, CancellationToken token)
         {
-            int x = cursorPosition.X;
-            int y = cursorPosition.Y;
-
             for (int i = 0; i < clicksMode; i++)
             {
-                SetCursorPos(x, y);
-                Click(MouseEventFlags.Leftdown);
-                Click(MouseEventFlags.Leftup);
+                SetCursorPos(cursorPosition.X, cursorPosition.Y);
+                Click(downFlag);
+                Click(upFlag);
             }
 
             Thread.Sleep(intervalTime);
 
             token.ThrowIfCancellationRequested();
         }
-
-        private static void RunRightClicking(Point cursorPosition, int clicksMode, int intervalTime, CancellationToken token)
-        {
-            int x = cursorPosition.X;
-            int y = cursorPosition.Y;
-
-            for (int i = 0; i < clicksMode; i++)
-            {
-                SetCursorPos(x, y);
-                Click(MouseEventFlags.Rightdown);
-                Click(MouseEventFlags.Rightup);
-            }
-
-            Thread.Sleep(intervalTime);
-
-            token.ThrowIfCancellationRequested();
-        }
-
+        
         #endregion [Methods]
     }
 }
