@@ -29,6 +29,7 @@ namespace AutoClicker.Services
             if (HotKeyWindow != null)
             {
                 HotKeyWindow.Show();
+                HotKeyWindow.Focus();
                 return true;
             }
 
