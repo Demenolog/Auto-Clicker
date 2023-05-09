@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         DataContext="{Binding Path=MainWindowModel, Source={StaticResource Locator}}"
         Title="Auto-clicker"
-        ResizeMode="NoResize"
+        ResizeMode="CanMinimize"
         Height="400" Width="500">
     <Grid>
         <Grid.RowDefinitions>
