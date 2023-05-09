@@ -50,8 +50,8 @@ namespace AutoClicker.Models.Mouse
             var token = Cts.Token;
 
             Action clickMethod = selectedBtn == "Left" ? 
-                () => RunClicking(cursorPosition, selectedBtnMode, intervalTime, MouseEventFlags.Leftdown, MouseEventFlags.Leftup, token) : 
-                () => RunClicking(cursorPosition, selectedBtnMode, intervalTime, MouseEventFlags.Rightdown, MouseEventFlags.Rightup, token);
+                () => ExecuteClicking(cursorPosition, selectedBtnMode, intervalTime, MouseEventFlags.Leftdown, MouseEventFlags.Leftup, token) : 
+                () => ExecuteClicking(cursorPosition, selectedBtnMode, intervalTime, MouseEventFlags.Rightdown, MouseEventFlags.Rightup, token);
 
             try
             {
@@ -94,7 +94,7 @@ namespace AutoClicker.Models.Mouse
             mouse_event((int)action, x, y, dwData, dwExtraInfo);
         }
 
-        private static void RunClicking(Point cursorPosition, int clicksMode, int intervalTime, MouseEventFlags downFlag, MouseEventFlags upFlag, CancellationToken token)
+        private static void ExecuteClicking(Point cursorPosition, int clicksMode, int intervalTime, MouseEventFlags downFlag, MouseEventFlags upFlag, CancellationToken token)
         {
             for (int i = 0; i < clicksMode; i++)
             {
