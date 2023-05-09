@@ -1,4 +1,7 @@
-﻿using AutoClicker.Views;
+﻿using System;
+using System.IO;
+using System.Windows.Media.Imaging;
+using AutoClicker.Views;
 
 namespace AutoClicker.Services
 {
@@ -20,6 +23,7 @@ namespace AutoClicker.Services
 
             HotKeyWindow = new HotKeyWindow();
             HotKeyWindow.Closed += (o, args) => HotKeyWindow = null;
+            HotKeyWindow.Icon = new BitmapImage(new Uri("pack://application:,,,/Resources/Icons/Secondary/Gear.ico"));
 
             ChildWindowsService.Add(HotKeyWindow);
         }

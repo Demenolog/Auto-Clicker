@@ -10,7 +10,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Icons\Secondary\Gear.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Resources\Icons\Main\Cursor.ico" />
+    <Resource Include="Resources\Icons\Secondary\Gear.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,10 +35,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Resources\Icons\Secondary\" />
   </ItemGroup>
 
 </Project>
