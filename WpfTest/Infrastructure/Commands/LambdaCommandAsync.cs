@@ -1,8 +1,8 @@
-﻿using AutoClicker.Infrastructure.Commands.Base;
-using System;
+﻿using System;
 using System.Threading.Tasks;
+using WpfTest.Infrastructure.Commands.Base;
 
-namespace AutoClicker.Infrastructure.Commands
+namespace WpfTest.Infrastructure.Commands
 {
     internal class LambdaCommandAsync : CommandAsync
     {

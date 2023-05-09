@@ -1,14 +1,18 @@
-﻿using AutoClicker.Services;
-using System.Windows.Interop;
+﻿using Microsoft.VisualBasic;
 using System;
 using System.Windows;
-using AutoClicker.Models.Hotkeys;
+using System.Windows.Interop;
+using WpfTest.Models.Hotkeys;
+using WpfTest.Services;
 
-namespace AutoClicker.Views.Main
+namespace WpfTest.Views.Main
 {
     public partial class MainWindow : Window
     {
-        public MainWindow() => InitializeComponent();
+        public MainWindow()
+        {
+            InitializeComponent();
+        }
 
         private HwndSource? _source;
 
@@ -22,7 +26,7 @@ namespace AutoClicker.Views.Main
             _source = HwndSource.FromHwnd(handle)!;
             _source.AddHook(GlobalHotKey.HwndHook);
 
-            GlobalHotKey.RegisterHotKeys(handle);
+            GlobalHotKey.RegisterHotKey(handle);
         }
 
         protected override void OnClosed(EventArgs e)
@@ -35,6 +39,5 @@ namespace AutoClicker.Views.Main
         }
 
         #endregion
-
     }
 }

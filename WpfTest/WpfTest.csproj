@@ -5,18 +5,8 @@
     <TargetFramework>net7.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
-    <StartupObject>AutoClicker.Program</StartupObject>
-    <ApplicationIcon>Resources\Icons\Main\Cursor.ico</ApplicationIcon>
+    <StartupObject>WpfTest.Program</StartupObject>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="Resources\Icons\Secondary\Gear.ico" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Resources\Icons\Main\Cursor.ico" />
-    <Resource Include="Resources\Icons\Secondary\Gear.ico" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />

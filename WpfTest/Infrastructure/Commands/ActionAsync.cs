@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace AutoClicker.Infrastructure.Commands
+namespace WpfTest.Infrastructure.Commands
 {
     internal delegate Task ActionAsync();
 

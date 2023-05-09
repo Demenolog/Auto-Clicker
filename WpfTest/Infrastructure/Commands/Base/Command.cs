@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace AutoClicker.Infrastructure.Commands.Base
+namespace WpfTest.Infrastructure.Commands.Base
 {
-    internal abstract class CommandAsync : ICommand
-
+    internal abstract class Command : ICommand
     {
         private bool _executable = true;
 
@@ -17,7 +15,6 @@ namespace AutoClicker.Infrastructure.Commands.Base
                 if (_executable == value) return;
                 _executable = value;
                 ExecutableChanged?.Invoke(this, EventArgs.Empty);
-                CommandManager.InvalidateRequerySuggested();
             }
         }
 
@@ -31,23 +28,14 @@ namespace AutoClicker.Infrastructure.Commands.Base
 
         bool ICommand.CanExecute(object parameter) => _executable && CanExecute(parameter);
 
-        async void ICommand.Execute(object parameter)
+        void ICommand.Execute(object parameter)
         {
             if (!((ICommand)this).CanExecute(parameter)) return;
-            try
-            {
-                Executable = false;
-                await ExecuteAsync(parameter);
-            }
-            catch
-            {
-                Executable = true;
-                throw;
-            }
+            Execute(parameter);
         }
 
         protected virtual bool CanExecute(object p) => true;
 
-        protected abstract Task ExecuteAsync(object p);
+        protected abstract void Execute(object p);
     }
 }

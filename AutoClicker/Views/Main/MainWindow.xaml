@@ -1,13 +1,219 @@
-﻿<Window x:Class="AutoClicker.MainWindow"
+﻿<Window x:Class="AutoClicker.Views.Main.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:sys="clr-namespace:System;assembly=System.Runtime"
         mc:Ignorable="d"
         DataContext="{Binding Path=MainWindowModel, Source={StaticResource Locator}}"
-        Title="{Binding Title}"
-        Height="450" Width="800">
+        Title="Auto-clicker"
+        ResizeMode="CanMinimize"
+        Height="400" Width="500">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.75*"></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <GroupBox Style="{StaticResource GroupBoxDefaultStyle}"
+                  Grid.Row="0"
+                  Grid.ColumnSpan="2"
+                  Header="Click interval">
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                <Label Style="{DynamicResource LabelDefaultStyle}">Hours:</Label>
+                <TextBox Style="{DynamicResource TextBoxDefaultStyle}"
+                         Text="{Binding HoursTextBox, UpdateSourceTrigger=PropertyChanged}" />
+                <Label Style="{DynamicResource LabelDefaultStyle}">Minutes:</Label>
+                <TextBox Style="{DynamicResource TextBoxDefaultStyle}"
+                         Text="{Binding MinutesTextBox, UpdateSourceTrigger=PropertyChanged}" />
+                <Label Style="{DynamicResource LabelDefaultStyle}">Seconds:</Label>
+                <TextBox Style="{DynamicResource TextBoxDefaultStyle}"
+                         Text="{Binding SecondsTextBox, UpdateSourceTrigger=PropertyChanged}" />
+                <Label Style="{DynamicResource LabelDefaultStyle}">Milliseconds:</Label>
+                <TextBox Style="{DynamicResource TextBoxDefaultStyle}"
+                         Text="{Binding MillisecondsTextBox, UpdateSourceTrigger=PropertyChanged}" />
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Style="{StaticResource GroupBoxDefaultStyle}"
+                  Grid.Row="1"
+                  Grid.Column="0"
+                  Header="Click options">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Row="0"
+                       Grid.Column="0"
+                       Content="Mouse button:">
+                </Label>
+                <ComboBox Grid.Row="0"
+                          Grid.Column="1"
+                          Margin="2"
+                          SelectedItem="{Binding SelectedMouseButton}">
+                    <sys:String>Left</sys:String>
+                    <sys:String>Right</sys:String>
+                </ComboBox>
+                <Label Grid.Row="1"
+                       Grid.Column="0"
+                       Content="Click mode:">
+                </Label>
+                <ComboBox Grid.Row="1"
+                          Grid.Column="1"
+                          Margin="2"
+                          SelectedItem="{Binding SelectedMouseButtonMode}">
+                    <sys:String>Single</sys:String>
+                    <sys:String>Double</sys:String>
+                    <sys:String>Triple</sys:String>
+                </ComboBox>
+            </Grid>
+        </GroupBox>
+        <GroupBox Style="{StaticResource GroupBoxDefaultStyle}"
+                  Grid.Row="1"
+                  Grid.Column="1"
+                  Header="Click repeat">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <CheckBox Grid.Row="0"
+                          Grid.Column="0"
+                          Content="Repeat"
+                          Margin="6"
+                          HorizontalAlignment="Left"
+                          VerticalAlignment="Center"
+                          IsChecked="{Binding IsRepeatTimesSelected, UpdateSourceTrigger=PropertyChanged}">
+                </CheckBox>
+                <StackPanel Grid.Row="0"
+                            Grid.Column="1"
+                            Orientation="Horizontal"
+                            IsEnabled="{Binding IsRepeatTimesSelected}">
+                    <TextBox Style="{StaticResource TextBoxDefaultStyle}"
+                             HorizontalContentAlignment="Center"
+                             VerticalContentAlignment="Center"
+                             Margin="2"
+                             Width="40"
+                             Text="{Binding RepeatTimesTextBox, UpdateSourceTrigger=PropertyChanged}"
+                             MaxLength="5">
+                    </TextBox>
+                    <Label Style="{StaticResource LabelDefaultStyle}">times</Label>
+                </StackPanel>
+                <CheckBox Grid.Row="1"
+                          Grid.Column="0"
+                          Grid.ColumnSpan="2"
+                          Content="Repeat until stopped"
+                          Margin="6"
+                          HorizontalAlignment="Left"
+                          VerticalAlignment="Center"
+                          IsChecked="{Binding IsRepeatUntilStoppedSelected, UpdateSourceTrigger=PropertyChanged}">
+                </CheckBox>
+            </Grid>
+        </GroupBox>
+        <GroupBox Style="{StaticResource GroupBoxDefaultStyle}"
+                  Grid.Row="2"
+                  Grid.Column="0"
+                  Grid.ColumnSpan="2"
+                  Header="Cursor position">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.85*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <CheckBox Content="Current location"
+                          VerticalAlignment="Center"
+                          HorizontalAlignment="Left"
+                          IsChecked="{Binding IsCurrentLocationSelected, UpdateSourceTrigger=PropertyChanged}">
+                </CheckBox>
+                <StackPanel Grid.Row="0"
+                           Grid.Column="1"
+                           Orientation="Horizontal"
+                           VerticalAlignment="Center">
+                    <CheckBox VerticalAlignment="Center"
+                              HorizontalAlignment="Left"
+                              VerticalContentAlignment="Center"
+                              HorizontalContentAlignment="Center"
+                              IsChecked="{Binding IsPickLocationSelected, UpdateSourceTrigger=PropertyChanged}">
+                    </CheckBox>
+                    <StackPanel Orientation="Horizontal"
+                                Margin="5"
+                                IsEnabled="{Binding IsPickLocationSelected}">
+                        <Button Style="{StaticResource ButtonDefaultStyle}"
+                                Height="25"
+                                Width="75"
+                                Content="Pick location"
+                                Command="{Binding GetCursorPosition}"
+                                IsEnabled="{Binding IsPickLocationBtnEnable}">
+                        </Button>
+                        <Label Style="{StaticResource LabelDefaultStyle}">X:</Label>
+                        <TextBox Style="{StaticResource TextBoxDefaultStyle}"
+                                 Text="{Binding XAxisTextBox, UpdateSourceTrigger=PropertyChanged}" />
+                        <Label Style="{StaticResource LabelDefaultStyle}">Y:</Label>
+                        <TextBox Style="{StaticResource TextBoxDefaultStyle}"
+                                 Text="{Binding YAxisTextBox, UpdateSourceTrigger=PropertyChanged}" />
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </GroupBox>
+        <Grid Grid.Row="3"
+              Grid.Column="0"
+              Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <Button Style="{StaticResource ButtonDefaultStyle}"
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Margin="10"
+                    Width="150"
+                    Content="Start"
+                    Command="{Binding StartClicking}">
+            </Button>
+            <Button Style="{StaticResource ButtonDefaultStyle}"
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Margin="10"
+                    Width="150"
+                    Content="Stop"
+                    Command="{Binding StopClicking}">
+            </Button>
+            <Button Style="{StaticResource ButtonDefaultStyle}"
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Margin="10"
+                    Width="150"
+                    Content="Hotkeys"
+                    Command="{Binding OpenHotKeysWindow}">
+            </Button>
+            <Button Style="{StaticResource ButtonDefaultStyle}"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Margin="10"
+                    Width="150"
+                    Content="[In progress]"
+                    IsEnabled="False">
+                <!--Content: [Record &amp; playback]-->
+            </Button>
+        </Grid>
     </Grid>
 </Window>

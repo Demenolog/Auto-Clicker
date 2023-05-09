@@ -1,0 +1,54 @@
+﻿<Window x:Class="AutoClicker.Views.HotKeyWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        DataContext="{Binding Path= HotKeyWindowModel, Source={StaticResource Locator}}"
+        mc:Ignorable="d"
+        Title="HotKeys" 
+        Height="165" Width="225" ResizeMode="NoResize">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" 
+                    Orientation="Vertical"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        Margin="5">
+                <Label Style="{StaticResource LabelDefaultStyle}"
+                       Content="Start hotkey:">
+                </Label>
+                <TextBox Style="{StaticResource TextBoxHotKeysStyle}"
+                         Text="{Binding StartHotkey}">
+                </TextBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        Margin="5">
+                <Label Style="{StaticResource LabelDefaultStyle}"
+                       Content="Stop hotkey:">
+                </Label>
+                <TextBox Style="{StaticResource TextBoxHotKeysStyle}"
+                         Text="{Binding StopHotKey}">
+                </TextBox>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel Grid.Row="1"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+            <Button Style="{StaticResource ButtonHotKeysStyle}"
+                    Content="Accept"
+                    Command="{Binding ChangeHotKeys}">
+            </Button>
+            <Button Style="{StaticResource ButtonHotKeysStyle}"
+                    Content="Reset"
+                    Command="{Binding  ResetHotKeys}">
+            </Button>
+        </StackPanel>
+    </Grid>
+</Window>

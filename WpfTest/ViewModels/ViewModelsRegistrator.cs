@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AutoClicker.ViewModels
+namespace WpfTest.ViewModels
 {
     internal static class ViewModelsRegistrator
     {
