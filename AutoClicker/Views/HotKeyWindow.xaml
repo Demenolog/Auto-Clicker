@@ -6,7 +6,7 @@
         DataContext="{Binding Path= HotKeyWindowModel, Source={StaticResource Locator}}"
         mc:Ignorable="d"
         Title="HotKeys" 
-        Height="175" Width="225" ResizeMode="NoResize">
+        Height="165" Width="225" ResizeMode="NoResize">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition></RowDefinition>
