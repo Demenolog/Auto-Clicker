@@ -9,8 +9,6 @@ namespace AutoClicker.Models.Other
             var interval = (int)new TimeSpan(0, int.Parse(hours), int.Parse(minutes), int.Parse(seconds), int.Parse(milliseconds)).TotalMilliseconds;
 
             return interval;
-
-            //return interval == 0 ? (int)(TimeSpan.FromSeconds(1).TotalMilliseconds) : interval;
         }
     }
 }
