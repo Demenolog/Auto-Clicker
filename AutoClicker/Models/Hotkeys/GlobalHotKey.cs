@@ -1,10 +1,9 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Input;
-using AutoClicker.Models.Mouse;
-using AutoClicker.Models.MouseClass;
+﻿using AutoClicker.Models.Mouse;
 using AutoClicker.Models.MouseClass.UnsafeCode;
 using AutoClicker.ViewModels;
+using System;
+using System.Windows;
+using System.Windows.Input;
 using static AutoClicker.Infrastructure.Constans.HotkeysClass.GlobalHotKeyConstance;
 
 namespace AutoClicker.Models.Hotkeys
@@ -70,15 +69,23 @@ namespace AutoClicker.Models.Hotkeys
             User32.UnregisterHotKey(s_handle, HOTKEY_ID);
 
             Locator.HotKeyWindowModel.StartHotkey = "F3";
-            Locator.HotKeyWindowModel.StopHotKey= "F4";
+            Locator.HotKeyWindowModel.StopHotKey = "F4";
 
             Registration();
         }
 
         private static void Registration()
         {
-            User32.RegisterHotKey(s_handle, HOTKEY_ID, MOD_NONE, GetVirtualKeyStates(Locator.HotKeyWindowModel.StartHotkey));
-            User32.RegisterHotKey(s_handle, HOTKEY_ID, MOD_NONE, GetVirtualKeyStates(Locator.HotKeyWindowModel.StopHotKey));
+            try
+            {
+                User32.RegisterHotKey(s_handle, HOTKEY_ID, MOD_NONE, GetVirtualKeyStates(Locator.HotKeyWindowModel.StartHotkey));
+                User32.RegisterHotKey(s_handle, HOTKEY_ID, MOD_NONE, GetVirtualKeyStates(Locator.HotKeyWindowModel.StopHotKey));
+            }
+            catch (ArgumentException ex)
+            {
+                MessageBox.Show(ex.Message, ex.ParamName, MessageBoxButton.OK, MessageBoxImage.Error);
+                ResetHotKeys();
+            }
         }
     }
 }
