@@ -1,7 +1,7 @@
 # Auto-Clicker
 
 Auto-Clicker is a desktop application for automating mouse clicks.
-<br>Written in C# and WPF.
+<br>Written in C# and WPF (.NET 7.0)
 
 ## Features
 * Choose a custom interval to perform mouse tasks.
