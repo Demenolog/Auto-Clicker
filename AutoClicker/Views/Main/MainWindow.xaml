@@ -8,6 +8,7 @@
         DataContext="{Binding Path=MainWindowModel, Source={StaticResource Locator}}"
         Title="Auto-clicker"
         ResizeMode="CanMinimize"
+        WindowStartupLocation="CenterScreen"
         Height="400" Width="500">
     <Grid>
         <Grid.RowDefinitions>

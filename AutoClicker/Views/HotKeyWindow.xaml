@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         DataContext="{Binding Path= HotKeyWindowModel, Source={StaticResource Locator}}"
         mc:Ignorable="d"
-        Title="HotKeys" 
+        Title="HotKeys"
+        WindowStartupLocation="CenterScreen"
         Height="165" Width="225" ResizeMode="NoResize">
     <Grid>
         <Grid.RowDefinitions>
