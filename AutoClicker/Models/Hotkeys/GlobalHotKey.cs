@@ -12,6 +12,8 @@ namespace AutoClicker.Models.Hotkeys
     {
         private static readonly ViewModelLocator Locator = new();
         private static IntPtr s_handle;
+        internal const string DefaultStartHotKey = "F3";
+        internal const string DefaultStopHotKey = "F3";
 
         public static void ChangeHotKeys()
         {
@@ -68,8 +70,8 @@ namespace AutoClicker.Models.Hotkeys
         {
             User32.UnregisterHotKey(s_handle, HOTKEY_ID);
 
-            Locator.HotKeyWindowModel.StartHotkey = "F3";
-            Locator.HotKeyWindowModel.StopHotKey = "F4";
+            Locator.HotKeyWindowModel.StartHotkey = DefaultStartHotKey;
+            Locator.HotKeyWindowModel.StopHotKey = DefaultStopHotKey;
 
             Registration();
         }

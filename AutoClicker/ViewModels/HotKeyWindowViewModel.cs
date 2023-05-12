@@ -9,7 +9,7 @@ namespace AutoClicker.ViewModels
     {
         #region StartHotkey : string - definition for textbox with start hotkey
 
-        private string _startHotkey = "F3";
+        private string _startHotkey = GlobalHotKey.DefaultStartHotKey;
 
         public string StartHotkey
         {
@@ -21,7 +21,7 @@ namespace AutoClicker.ViewModels
 
         #region StopHotKey : string - Definition for textbox with stop hotkey
 
-        private string _stopHotkey = "F4";
+        private string _stopHotkey = GlobalHotKey.DefaultStopHotKey;
 
         public string StopHotKey
         {
