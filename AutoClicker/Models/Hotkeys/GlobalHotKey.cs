@@ -1,10 +1,9 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Input;
-using AutoClicker.Models.Mouse;
-using AutoClicker.Models.MouseClass;
+﻿using AutoClicker.Models.Mouse;
 using AutoClicker.Models.MouseClass.UnsafeCode;
 using AutoClicker.ViewModels;
+using System;
+using System.Windows;
+using System.Windows.Input;
 using static AutoClicker.Infrastructure.Constans.HotkeysClass.GlobalHotKeyConstance;
 
 namespace AutoClicker.Models.Hotkeys
@@ -13,6 +12,8 @@ namespace AutoClicker.Models.Hotkeys
     {
         private static readonly ViewModelLocator Locator = new();
         private static IntPtr s_handle;
+        internal const string DefaultStartHotKey = "F3";
+        internal const string DefaultStopHotKey = "F3";
 
         public static void ChangeHotKeys()
         {
@@ -69,16 +70,33 @@ namespace AutoClicker.Models.Hotkeys
         {
             User32.UnregisterHotKey(s_handle, HOTKEY_ID);
 
-            Locator.HotKeyWindowModel.StartHotkey = "F3";
-            Locator.HotKeyWindowModel.StopHotKey= "F4";
+            Locator.HotKeyWindowModel.StartHotkey = DefaultStartHotKey;
+            Locator.HotKeyWindowModel.StopHotKey = DefaultStopHotKey;
 
             Registration();
         }
 
         private static void Registration()
         {
-            User32.RegisterHotKey(s_handle, HOTKEY_ID, MOD_NONE, GetVirtualKeyStates(Locator.HotKeyWindowModel.StartHotkey));
-            User32.RegisterHotKey(s_handle, HOTKEY_ID, MOD_NONE, GetVirtualKeyStates(Locator.HotKeyWindowModel.StopHotKey));
+            try
+            {
+                User32.RegisterHotKey(s_handle, HOTKEY_ID, MOD_NONE, GetVirtualKeyStates(Locator.HotKeyWindowModel.StartHotkey));
+                User32.RegisterHotKey(s_handle, HOTKEY_ID, MOD_NONE, GetVirtualKeyStates(Locator.HotKeyWindowModel.StopHotKey));
+            }
+            catch (ArgumentException ex)
+            {
+
+                MessageBox.Show(ex.Message + "\n\nTo specify some keys, you need to write them using a specific name. Examples for some keys:\n" +
+                                "0-9 --> D0-D9\n" +
+                                "Num0-Num9 --> NumPad0-NumPad9\n" +
+                                "CTRL --> ControlKey\n" +
+                                "For more information google 'Keys Enum'", 
+                    ex.ParamName, 
+                    MessageBoxButton.OK, 
+                    MessageBoxImage.Error);
+
+                ResetHotKeys();
+            }
         }
     }
 }

@@ -6,8 +6,9 @@
         xmlns:sys="clr-namespace:System;assembly=System.Runtime"
         mc:Ignorable="d"
         DataContext="{Binding Path=MainWindowModel, Source={StaticResource Locator}}"
-        Title="Auto-clicker"
+        Title="Auto-Clicker"
         ResizeMode="CanMinimize"
+        WindowStartupLocation="CenterScreen"
         Height="400" Width="500">
     <Grid>
         <Grid.RowDefinitions>
@@ -200,19 +201,11 @@
             <Button Style="{StaticResource ButtonDefaultStyle}"
                     Grid.Row="1"
                     Grid.Column="0"
-                    Margin="10"
+                    Grid.ColumnSpan="2"
+                    Margin="10,5,10,15"
                     Width="150"
                     Content="Hotkeys"
                     Command="{Binding OpenHotKeysWindow}">
-            </Button>
-            <Button Style="{StaticResource ButtonDefaultStyle}"
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    Margin="10"
-                    Width="150"
-                    Content="[In progress]"
-                    IsEnabled="False">
-                <!--Content: [Record &amp; playback]-->
             </Button>
         </Grid>
     </Grid>
