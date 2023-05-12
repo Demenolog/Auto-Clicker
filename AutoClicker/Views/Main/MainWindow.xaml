@@ -6,7 +6,7 @@
         xmlns:sys="clr-namespace:System;assembly=System.Runtime"
         mc:Ignorable="d"
         DataContext="{Binding Path=MainWindowModel, Source={StaticResource Locator}}"
-        Title="Auto-clicker"
+        Title="Auto-Clicker"
         ResizeMode="CanMinimize"
         WindowStartupLocation="CenterScreen"
         Height="400" Width="500">
