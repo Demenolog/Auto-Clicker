@@ -85,7 +85,16 @@ namespace AutoClicker.Models.Hotkeys
             }
             catch (ArgumentException ex)
             {
-                MessageBox.Show(ex.Message, ex.ParamName, MessageBoxButton.OK, MessageBoxImage.Error);
+
+                MessageBox.Show(ex.Message + "\n\nTo specify some keys, you need to write them using a specific name. Examples for some keys:\n" +
+                                "0-9 --> D0-D9\n" +
+                                "Num0-Num9 --> NumPad0-NumPad9\n" +
+                                "CTRL --> ControlKey\n" +
+                                "For more information google 'Keys Enum'", 
+                    ex.ParamName, 
+                    MessageBoxButton.OK, 
+                    MessageBoxImage.Error);
+
                 ResetHotKeys();
             }
         }
