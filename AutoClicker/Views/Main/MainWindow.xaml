@@ -200,19 +200,11 @@
             <Button Style="{StaticResource ButtonDefaultStyle}"
                     Grid.Row="1"
                     Grid.Column="0"
+                    Grid.ColumnSpan="2"
                     Margin="10"
                     Width="150"
                     Content="Hotkeys"
                     Command="{Binding OpenHotKeysWindow}">
-            </Button>
-            <Button Style="{StaticResource ButtonDefaultStyle}"
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    Margin="10"
-                    Width="150"
-                    Content="[In progress]"
-                    IsEnabled="False">
-                <!--Content: [Record &amp; playback]-->
             </Button>
         </Grid>
     </Grid>
