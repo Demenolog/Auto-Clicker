@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
 using static AutoClicker.Infrastructure.Constans.MouseClass.MouseClassConstans;
-using static AutoClicker.Models.MouseClass.UnsafeCode.User32;
+using static AutoClicker.Infrastructure.UnsafeCode.User32;
 
 namespace AutoClicker.Models.Mouse
 {

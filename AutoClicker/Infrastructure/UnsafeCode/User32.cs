@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using AutoClicker.Infrastructure.Constans.MouseClass;
 
-namespace AutoClicker.Models.MouseClass.UnsafeCode
+namespace AutoClicker.Infrastructure.UnsafeCode
 {
     internal static class User32
     {
@@ -20,9 +20,9 @@ namespace AutoClicker.Models.MouseClass.UnsafeCode
         public static extern bool SetCursorPos(int x, int y);
 
         [DllImport("user32.dll")]
-        internal static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
-  
+        internal static extern bool RegisterHotKey(nint hWnd, int id, uint fsModifiers, uint vk);
+
         [DllImport("user32.dll")]
-        internal static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+        internal static extern bool UnregisterHotKey(nint hWnd, int id);
     }
 }
