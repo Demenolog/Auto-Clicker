@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoClicker.Models.Clicks;
 using static AutoClicker.Infrastructure.Constans.MouseClass.MouseClassConstans;
 using static AutoClicker.Infrastructure.UnsafeCode.User32;
 
@@ -44,22 +45,32 @@ namespace AutoClicker.Models.Mouse
             }
         }
 
-        public static async Task StartClicking(int intervalTime, string selectedBtn, int selectedBtnMode, int repeatMode, Point cursorPosition)
+        public static async Task StartClicking(Click click)
         {
             Cts ??= new CancellationTokenSource();
             var token = Cts.Token;
+            var repeats = click.Repeats.TotalTimes;
+            Action clickMethod;
 
-            Action clickMethod = selectedBtn == "Left" ? 
-                () => ExecuteClicking(cursorPosition, selectedBtnMode, intervalTime, MouseEventFlags.Leftdown, MouseEventFlags.Leftup, token) : 
-                () => ExecuteClicking(cursorPosition, selectedBtnMode, intervalTime, MouseEventFlags.Rightdown, MouseEventFlags.Rightup, token);
+            switch (click.Options.Button)
+            {
+                case "Left":
+                    clickMethod = () => ExecuteClicking(click, MouseEventFlags.Leftdown, MouseEventFlags.Leftup, token);
+                    break;
+                case "Right":
+                    clickMethod = () => ExecuteClicking(click, MouseEventFlags.Rightdown, MouseEventFlags.Rightup, token);
+                    break;
+                default:
+                    throw new ArgumentException();
+            }
 
             try
             {
                 await Task.Run(() =>
                 {
-                    if (repeatMode >= 0)
+                    if (repeats >= 0)
                     {
-                        for (int i = 0; i < repeatMode; i++)
+                        for (int i = 0; i < repeats; i++)
                         {
                             clickMethod();
                         }
@@ -89,25 +100,30 @@ namespace AutoClicker.Models.Mouse
             Cts = null;
         }
 
+        private static void ExecuteClicking(Click click, MouseEventFlags downFlag, MouseEventFlags upFlag, CancellationToken token)
+        {
+            var clicks = click.Options.GetButtonMode();
+            var sleepInterval = click.Interval.TotalTime;
+            var x = click.Position.CurrentPosition.X;
+            var y = click.Position.CurrentPosition.Y;
+
+            for (int i = 0; i < clicks; i++)
+            {
+                SetCursorPos(x, y);
+                Click(downFlag);
+                Click(upFlag);
+            }
+
+            Thread.Sleep(sleepInterval);
+
+            token.ThrowIfCancellationRequested();
+        }
+
         private static void Click(MouseEventFlags action, int x = 0, int y = 0, int dwData = 0, int dwExtraInfo = 0)
         {
             mouse_event((int)action, x, y, dwData, dwExtraInfo);
         }
 
-        private static void ExecuteClicking(Point cursorPosition, int clicksMode, int intervalTime, MouseEventFlags downFlag, MouseEventFlags upFlag, CancellationToken token)
-        {
-            for (int i = 0; i < clicksMode; i++)
-            {
-                SetCursorPos(cursorPosition.X, cursorPosition.Y);
-                Click(downFlag);
-                Click(upFlag);
-            }
-
-            Thread.Sleep(intervalTime);
-
-            token.ThrowIfCancellationRequested();
-        }
-        
         #endregion [Methods]
     }
 }
