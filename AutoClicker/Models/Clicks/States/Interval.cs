@@ -1,8 +1,8 @@
-﻿using AutoClicker.Services.WindowHelper;
+﻿using System;
+using AutoClicker.Services.WindowHelper;
 using AutoClicker.ViewModels;
-using System;
 
-namespace AutoClicker.Models.Click.States
+namespace AutoClicker.Models.Clicks.States
 {
     internal class Interval
     {

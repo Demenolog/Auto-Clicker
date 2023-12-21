@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoClicker.Models.Click.States;
+﻿using AutoClicker.Models.Clicks.States;
 
-namespace AutoClicker.Models.Click
+namespace AutoClicker.Models.Clicks
 {
     internal class Click
     {

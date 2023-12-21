@@ -1,9 +1,9 @@
-﻿using AutoClicker.Models.Mouse;
+﻿using System.Drawing;
+using AutoClicker.Models.Mouse;
 using AutoClicker.Services.WindowHelper;
 using AutoClicker.ViewModels;
-using System.Drawing;
 
-namespace AutoClicker.Models.Click.States
+namespace AutoClicker.Models.Clicks.States
 {
     internal class Position
     {

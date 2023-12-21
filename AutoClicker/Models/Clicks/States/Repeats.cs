@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoClicker.Services.WindowHelper;
+﻿using AutoClicker.Services.WindowHelper;
 using AutoClicker.ViewModels;
 
-namespace AutoClicker.Models.Click.States
+namespace AutoClicker.Models.Clicks.States
 {
     internal class Repeats
     {
