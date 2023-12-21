@@ -10,13 +10,15 @@ namespace AutoClicker.Models.Click.States
 {
     internal class Repeats
     {
-        private int _repeats;
+        private readonly int _repeats;
         private static readonly MainWindowViewModel MainWindow = ViewModelLocatorProvider.MainWindow;
 
         public Repeats()
         {
             _repeats = GetRepeats();
         }
+
+        public int TotalTimes => _repeats;
 
         private int GetRepeats()
         {

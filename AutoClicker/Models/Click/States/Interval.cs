@@ -6,10 +6,11 @@ namespace AutoClicker.Models.Click.States
 {
     internal class Interval
     {
-        private string _hours;
-        private string _minutes;
-        private string _seconds;
-        private string _milliseconds;
+        private readonly string _hours;
+        private readonly string _minutes;
+        private readonly string _seconds;
+        private readonly string _milliseconds;
+        private readonly int _totalTime;
         private static readonly MainWindowViewModel MainWindow = ViewModelLocatorProvider.MainWindow;
 
         public Interval()
@@ -18,9 +19,12 @@ namespace AutoClicker.Models.Click.States
             _minutes = MainWindow.MinutesTextBox;
             _seconds = MainWindow.SecondsTextBox;
             _milliseconds = MainWindow.MillisecondsTextBox;
+            _totalTime = GetIntervalTime();
         }
 
-        public int GetIntervalTime()
+        public int TotalTime => _totalTime;
+
+        private int GetIntervalTime()
         {
             var days = 0;
             var hours = int.Parse(_hours);

@@ -7,19 +7,23 @@ namespace AutoClicker.Models.Click.States
 {
     internal class Options
     {
-        private string _mouseButton;
-        private string _mouseButtonMode;
+        private readonly string _button;
+        private readonly string _buttonMode;
         private static readonly MainWindowViewModel MainWindow = ViewModelLocatorProvider.MainWindow;
 
         public Options()
         {
-            _mouseButton = MainWindow.SelectedMouseButton;
-            _mouseButtonMode = MainWindow.SelectedMouseButtonMode;
+            _button = MainWindow.SelectedMouseButton;
+            _buttonMode = MainWindow.SelectedMouseButtonMode;
         }
+
+        public string Button => _button;
+
+        public string ButtonMode => _buttonMode;
 
         public int GetButtonMode()
         {
-            return (int)Enum.Parse(typeof(ClickModes), _mouseButtonMode);
+            return (int)Enum.Parse(typeof(ClickModes), ButtonMode);
         }
     }
 }

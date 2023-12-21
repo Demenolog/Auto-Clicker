@@ -7,13 +7,15 @@ namespace AutoClicker.Models.Click.States
 {
     internal class Position
     {
-        private Point _position;
+        private readonly Point _position;
         private static readonly MainWindowViewModel MainWindow = ViewModelLocatorProvider.MainWindow;
 
         public Position()
         {
             _position = GetPosition();
         }
+
+        public Point CurrentPosition => _position;
 
         private Point GetPosition()
         {
