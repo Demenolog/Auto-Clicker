@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Automation;
 using AutoClicker.Models.Clicks;
 using static AutoClicker.Infrastructure.Constans.MouseClass.MouseClassConstans;
 using static AutoClicker.Infrastructure.UnsafeCode.User32;
@@ -17,11 +18,6 @@ namespace AutoClicker.Models.Mouse
         #endregion [Properties]
 
         #region [Methods]
-
-        public static int GetClickMode(string clickMode)
-        {
-            return (int)Enum.Parse(typeof(ClickModes), clickMode);
-        }
 
         public static Point GetCurrentCursorPosition()
         {
@@ -50,19 +46,6 @@ namespace AutoClicker.Models.Mouse
             Cts ??= new CancellationTokenSource();
             var token = Cts.Token;
             var repeats = click.Repeats.TotalTimes;
-            Action clickMethod;
-
-            switch (click.Options.Button)
-            {
-                case "Left":
-                    clickMethod = () => ExecuteClicking(click, MouseEventFlags.Leftdown, MouseEventFlags.Leftup, token);
-                    break;
-                case "Right":
-                    clickMethod = () => ExecuteClicking(click, MouseEventFlags.Rightdown, MouseEventFlags.Rightup, token);
-                    break;
-                default:
-                    throw new ArgumentException();
-            }
 
             try
             {
@@ -72,14 +55,14 @@ namespace AutoClicker.Models.Mouse
                     {
                         for (int i = 0; i < repeats; i++)
                         {
-                            clickMethod();
+                            ExecuteClicking(click, token);
                         }
                     }
                     else
                     {
                         while (true)
                         {
-                            clickMethod();
+                            ExecuteClicking(click, token);
                         }
                     }
                 }, token);
@@ -100,12 +83,14 @@ namespace AutoClicker.Models.Mouse
             Cts = null;
         }
 
-        private static void ExecuteClicking(Click click, MouseEventFlags downFlag, MouseEventFlags upFlag, CancellationToken token)
+        private static void ExecuteClicking(Click click, CancellationToken token)
         {
             var clicks = click.Options.GetButtonMode();
             var sleepInterval = click.Interval.TotalTime;
             var x = click.Position.CurrentPosition.X;
             var y = click.Position.CurrentPosition.Y;
+            var downFlag = click.Options.DownMouseEventFlag;
+            var upFlag = click.Options.UpMouseEventFlag;
 
             for (int i = 0; i < clicks; i++)
             {
@@ -119,9 +104,9 @@ namespace AutoClicker.Models.Mouse
             token.ThrowIfCancellationRequested();
         }
 
-        private static void Click(MouseEventFlags action, int x = 0, int y = 0, int dwData = 0, int dwExtraInfo = 0)
+        private static void Click(int action, int x = 0, int y = 0, int dwData = 0, int dwExtraInfo = 0)
         {
-            mouse_event((int)action, x, y, dwData, dwExtraInfo);
+            mouse_event(action, x, y, dwData, dwExtraInfo);
         }
 
         #endregion [Methods]
