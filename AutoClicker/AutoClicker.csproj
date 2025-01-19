@@ -6,7 +6,8 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <StartupObject>AutoClicker.Program</StartupObject>
-    <ApplicationIcon>Resources\Icons\Main\Cursor.ico</ApplicationIcon>
+	<MainEntryPoint>AutoClicker.Program</MainEntryPoint>
+	<ApplicationIcon>Resources\Icons\Main\Cursor.ico</ApplicationIcon>
     <AssemblyName>Auto-Clicker</AssemblyName>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
