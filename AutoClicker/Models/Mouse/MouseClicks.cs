@@ -1,9 +1,8 @@
-﻿using System;
+﻿using AutoClicker.Models.Clicks;
+using System;
 using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Automation;
-using AutoClicker.Models.Clicks;
 using static AutoClicker.Infrastructure.Constans.MouseClass.MouseClassConstans;
 using static AutoClicker.Infrastructure.UnsafeCode.User32;
 
@@ -13,6 +12,8 @@ namespace AutoClicker.Models.Mouse
     {
         #region [Properties]
 
+        private static readonly object LockObject = new(); // Lock for thread safety
+        private static bool isRunning; // Tracks if a task is running or stopping
         public static CancellationTokenSource? Cts { get; private set; }
 
         #endregion [Properties]
@@ -43,7 +44,13 @@ namespace AutoClicker.Models.Mouse
 
         public static async Task StartClicking(Click click)
         {
-            Cts ??= new CancellationTokenSource();
+            lock (LockObject)
+            {
+                if (isRunning) return; // Prevent multiple tasks
+                isRunning = true;
+                Cts = new CancellationTokenSource();
+            }
+
             var token = Cts.Token;
             var repeats = click.Repeats.TotalTimes;
 
@@ -69,18 +76,26 @@ namespace AutoClicker.Models.Mouse
             }
             catch (OperationCanceledException)
             {
-                // Do nothing
+                // Expected when stopping the task
             }
             finally
             {
-                Cts = null;
+                lock (LockObject)
+                {
+                    Cts = null;
+                    isRunning = false; // Allow new tasks to start
+                }
             }
         }
 
         public static void StopClicking()
         {
-            Cts?.Cancel();
-            Cts = null;
+            lock (LockObject)
+            {
+                if (!isRunning) return; // No task is running
+                Cts?.Cancel();
+                isRunning = false; // Mark as not running
+            }
         }
 
         private static void ExecuteClicking(Click click, CancellationToken token)
