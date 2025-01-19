@@ -1,5 +1,4 @@
-﻿using AutoClicker.ViewModels;
-using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.Hosting;
 using System;
 
 namespace AutoClicker
