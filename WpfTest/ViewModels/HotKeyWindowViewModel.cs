@@ -1,15 +1,15 @@
 ﻿using System.Windows.Input;
-using AutoClicker.Infrastructure.Commands;
-using AutoClicker.Models.Hotkeys;
-using AutoClicker.ViewModels.Base;
+using WpfTest.Infrastructure.Commands;
+using WpfTest.Models.Hotkeys;
+using WpfTest.ViewModels.Base;
 
-namespace AutoClicker.ViewModels
+namespace WpfTest.ViewModels
 {
     internal class HotKeyWindowViewModel : ViewModel
     {
         #region StartHotkey : string - definition for textbox with start hotkey
 
-        private string _startHotkey = GlobalHotKey.DefaultStartHotKey;
+        private string _startHotkey = "F3";
 
         public string StartHotkey
         {
@@ -21,7 +21,7 @@ namespace AutoClicker.ViewModels
 
         #region StopHotKey : string - Definition for textbox with stop hotkey
 
-        private string _stopHotkey = GlobalHotKey.DefaultStopHotKey;
+        private string _stopHotkey = "F4";
 
         public string StopHotKey
         {
@@ -50,6 +50,9 @@ namespace AutoClicker.ViewModels
 
         private void OnResetHotKeysExecute(object p)
         {
+            StartHotkey = "F3";
+            StopHotKey = "F4";
+
             GlobalHotKey.ResetHotKeys();
         }
 
@@ -59,6 +62,7 @@ namespace AutoClicker.ViewModels
             ChangeHotKeys = new LambdaCommand(OnChangeHotKeysExecute, CanChangeHotKeysExecuted);
 
             ResetHotKeys = new LambdaCommand(OnResetHotKeysExecute, CanResetHotKeysExecuted);
+
         }
     }
 }

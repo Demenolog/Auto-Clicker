@@ -1,0 +1,39 @@
+﻿<Window x:Class="WpfTest.Views.Main.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        DataContext="{Binding Path=MainWindowModel, Source={StaticResource Locator}}"
+        Title="{Binding Title}"
+        Height="450" Width="800">
+    <Grid>
+        <Button Content="HIT THE BUTTON" 
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center" 
+                Height="130" 
+                Width="254"
+                Focusable="True"
+                IsEnabled="{Binding IsButtonEnable}"
+                Command="{Binding Test}"
+                />
+
+        <TextBox HorizontalAlignment="Left" 
+                 Margin="108,152,0,0" 
+                 TextWrapping="Wrap" 
+                 Text="{Binding TextBoxOne}" 
+                 VerticalAlignment="Top"
+                 Width="120"/>
+        <TextBox HorizontalAlignment="Left" 
+                 Margin="108,199,0,0" 
+                 TextWrapping="Wrap" 
+                 Text="{Binding TextBoxTwo}" 
+                 VerticalAlignment="Top" 
+                 Width="120"/>
+        <Label Content="Start" Margin="55,147,697,260"/>
+        <Label Content="Stop" Margin="55,194,697,212"/>
+        <Button Content="Create window" 
+                Command="{Binding OpenChangeHotKeysWindow}"
+                Margin="626,32,55,335"/>
+    </Grid>
+</Window>

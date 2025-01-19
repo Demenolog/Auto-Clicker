@@ -5,7 +5,6 @@ using AutoClicker.Services;
 using AutoClicker.ViewModels.Base;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using AutoClicker.Models.Clicks;
 using Point = System.Drawing.Point;
 
 namespace AutoClicker.ViewModels
@@ -322,9 +321,17 @@ namespace AutoClicker.ViewModels
 
         internal async void OnStartClickingExecute(object p)
         {
-            var click = new Click();
+            var intervalTime =
+                IntervalCounter.GetTotalIntervalTime(HoursTextBox, MinutesTextBox, SecondsTextBox, MillisecondsTextBox);
 
-            await MouseClicks.StartClicking(click);
+            var selectedButton = SelectedMouseButton;
+            var selectedButtonMode = MouseClicks.GetClickMode(SelectedMouseButtonMode);
+
+            var repeatMode = IsRepeatUntilStoppedSelected ? -1 : int.Parse(RepeatTimesTextBox);
+
+            var cursorPosition = IsCurrentLocationSelected ? MouseClicks.GetCurrentCursorPosition() : new Point(int.Parse(XAxisTextBox), int.Parse(YAxisTextBox));
+
+            await MouseClicks.StartClicking(intervalTime, selectedButton, selectedButtonMode, repeatMode, cursorPosition);
         }
 
         #endregion Start clicking command

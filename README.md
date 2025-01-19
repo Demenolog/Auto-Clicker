@@ -11,14 +11,4 @@ Auto-Clicker is a desktop application for automating mouse clicks.
 * Perform clicks at the current cursor position, or choose a custom position. 
 
 ## Platform
-<<<<<<< HEAD
 Available for Windows OS. Should also work on macOS and Linux.
-=======
-Available for Windows OS.
-
-## Installation
-If you have .NET 7.0 installed on your PC then download WinX??_NE.rar. 
-<br>If you don't have it, and you don't want to install it, then download WinX??_NI.rar.
-<br>NE - .NET 7.0 Excluded.
-<br>NI - .NET 7.0 Included.
->>>>>>> master
