@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "TestWpf": {
+      "commandName": "Project"
+    }
+  }
+}

@@ -1,9 +1,10 @@
-﻿using System;
+﻿using AutoClicker.Models.Clicks;
+using System;
 using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
 using static AutoClicker.Infrastructure.Constans.MouseClass.MouseClassConstans;
-using static AutoClicker.Models.MouseClass.UnsafeCode.User32;
+using static AutoClicker.Infrastructure.UnsafeCode.User32;
 
 namespace AutoClicker.Models.Mouse
 {
@@ -11,16 +12,13 @@ namespace AutoClicker.Models.Mouse
     {
         #region [Properties]
 
+        private static readonly object LockObject = new(); // Lock for thread safety
+        private static bool isRunning; // Tracks if a task is running or stopping
         public static CancellationTokenSource? Cts { get; private set; }
 
         #endregion [Properties]
 
         #region [Methods]
-
-        public static int GetClickMode(string clickMode)
-        {
-            return (int)Enum.Parse(typeof(ClickModes), clickMode);
-        }
 
         public static Point GetCurrentCursorPosition()
         {
@@ -44,70 +42,88 @@ namespace AutoClicker.Models.Mouse
             }
         }
 
-        public static async Task StartClicking(int intervalTime, string selectedBtn, int selectedBtnMode, int repeatMode, Point cursorPosition)
+        public static async Task StartClicking(Click click)
         {
-            Cts ??= new CancellationTokenSource();
-            var token = Cts.Token;
+            lock (LockObject)
+            {
+                if (isRunning) return; // Prevent multiple tasks
+                isRunning = true;
+                Cts = new CancellationTokenSource();
+            }
 
-            Action clickMethod = selectedBtn == "Left" ? 
-                () => ExecuteClicking(cursorPosition, selectedBtnMode, intervalTime, MouseEventFlags.Leftdown, MouseEventFlags.Leftup, token) : 
-                () => ExecuteClicking(cursorPosition, selectedBtnMode, intervalTime, MouseEventFlags.Rightdown, MouseEventFlags.Rightup, token);
+            var token = Cts.Token;
+            var repeats = click.Repeats.TotalTimes;
 
             try
             {
                 await Task.Run(() =>
                 {
-                    if (repeatMode >= 0)
+                    if (repeats >= 0)
                     {
-                        for (int i = 0; i < repeatMode; i++)
+                        for (int i = 0; i < repeats; i++)
                         {
-                            clickMethod();
+                            ExecuteClicking(click, token);
                         }
                     }
                     else
                     {
                         while (true)
                         {
-                            clickMethod();
+                            ExecuteClicking(click, token);
                         }
                     }
                 }, token);
             }
             catch (OperationCanceledException)
             {
-                // Do nothing
+                // Expected when stopping the task
             }
             finally
             {
-                Cts = null;
+                lock (LockObject)
+                {
+                    Cts = null;
+                    isRunning = false; // Allow new tasks to start
+                }
             }
         }
 
         public static void StopClicking()
         {
-            Cts?.Cancel();
-            Cts = null;
-        }
-
-        private static void Click(MouseEventFlags action, int x = 0, int y = 0, int dwData = 0, int dwExtraInfo = 0)
-        {
-            mouse_event((int)action, x, y, dwData, dwExtraInfo);
-        }
-
-        private static void ExecuteClicking(Point cursorPosition, int clicksMode, int intervalTime, MouseEventFlags downFlag, MouseEventFlags upFlag, CancellationToken token)
-        {
-            for (int i = 0; i < clicksMode; i++)
+            lock (LockObject)
             {
-                SetCursorPos(cursorPosition.X, cursorPosition.Y);
+                if (!isRunning) return; // No task is running
+                Cts?.Cancel();
+                isRunning = false; // Mark as not running
+            }
+        }
+
+        private static void ExecuteClicking(Click click, CancellationToken token)
+        {
+            var clicks = click.Options.GetButtonMode();
+            var sleepInterval = click.Interval.TotalTime;
+            var x = click.Position.CurrentPosition.X;
+            var y = click.Position.CurrentPosition.Y;
+            var downFlag = click.Options.DownMouseEventFlag;
+            var upFlag = click.Options.UpMouseEventFlag;
+
+            for (int i = 0; i < clicks; i++)
+            {
+                SetCursorPos(x, y);
                 Click(downFlag);
                 Click(upFlag);
             }
 
-            Thread.Sleep(intervalTime);
+            Thread.Sleep(sleepInterval);
 
             token.ThrowIfCancellationRequested();
         }
-        
+
+        private static void Click(int action, int x = 0, int y = 0, int dwData = 0, int dwExtraInfo = 0)
+        {
+            mouse_event(action, x, y, dwData, dwExtraInfo);
+        }
+
         #endregion [Methods]
     }
 }
