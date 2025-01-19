@@ -11,6 +11,11 @@ namespace AutoClicker.Models.Mouse
     {
         #region [Properties]
 
+<<<<<<< HEAD
+=======
+        private static readonly object LockObject = new(); // Lock for thread safety
+        private static bool s_isRunning; // Tracks if a task is running or stopping
+>>>>>>> master
         public static CancellationTokenSource? Cts { get; private set; }
 
         #endregion [Properties]
@@ -46,7 +51,17 @@ namespace AutoClicker.Models.Mouse
 
         public static async Task StartClicking(int intervalTime, string selectedBtn, int selectedBtnMode, int repeatMode, Point cursorPosition)
         {
+<<<<<<< HEAD
             Cts ??= new CancellationTokenSource();
+=======
+            lock (LockObject)
+            {
+                if (s_isRunning) return; // Prevent multiple tasks
+                s_isRunning = true;
+                Cts = new CancellationTokenSource();
+            }
+
+>>>>>>> master
             var token = Cts.Token;
 
             Action clickMethod = selectedBtn == "Left" ? 
@@ -79,14 +94,31 @@ namespace AutoClicker.Models.Mouse
             }
             finally
             {
+<<<<<<< HEAD
                 Cts = null;
+=======
+                lock (LockObject)
+                {
+                    Cts = null;
+                    s_isRunning = false; // Allow new tasks to start
+                }
+>>>>>>> master
             }
         }
 
         public static void StopClicking()
         {
+<<<<<<< HEAD
             Cts?.Cancel();
             Cts = null;
+=======
+            lock (LockObject)
+            {
+                if (!s_isRunning) return; // No task is running
+                Cts?.Cancel();
+                s_isRunning = false; // Mark as not running
+            }
+>>>>>>> master
         }
 
         private static void Click(MouseEventFlags action, int x = 0, int y = 0, int dwData = 0, int dwExtraInfo = 0)
