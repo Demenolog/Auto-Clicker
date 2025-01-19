@@ -13,7 +13,7 @@ namespace AutoClicker.Models.Mouse
         #region [Properties]
 
         private static readonly object LockObject = new(); // Lock for thread safety
-        private static bool isRunning; // Tracks if a task is running or stopping
+        private static bool s_isRunning; // Tracks if a task is running or stopping
         public static CancellationTokenSource? Cts { get; private set; }
 
         #endregion [Properties]
@@ -46,8 +46,8 @@ namespace AutoClicker.Models.Mouse
         {
             lock (LockObject)
             {
-                if (isRunning) return; // Prevent multiple tasks
-                isRunning = true;
+                if (s_isRunning) return; // Prevent multiple tasks
+                s_isRunning = true;
                 Cts = new CancellationTokenSource();
             }
 
@@ -83,7 +83,7 @@ namespace AutoClicker.Models.Mouse
                 lock (LockObject)
                 {
                     Cts = null;
-                    isRunning = false; // Allow new tasks to start
+                    s_isRunning = false; // Allow new tasks to start
                 }
             }
         }
@@ -92,9 +92,9 @@ namespace AutoClicker.Models.Mouse
         {
             lock (LockObject)
             {
-                if (!isRunning) return; // No task is running
+                if (!s_isRunning) return; // No task is running
                 Cts?.Cancel();
-                isRunning = false; // Mark as not running
+                s_isRunning = false; // Mark as not running
             }
         }
 
