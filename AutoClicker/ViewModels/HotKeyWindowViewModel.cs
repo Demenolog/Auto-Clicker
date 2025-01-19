@@ -44,6 +44,8 @@ namespace AutoClicker.ViewModels
 
         #endregion Accept command
 
+        #region Reset Hotkeys command
+
         public ICommand ResetHotKeys { get; }
 
         private bool CanResetHotKeysExecuted(object p) => true;
@@ -53,6 +55,7 @@ namespace AutoClicker.ViewModels
             GlobalHotKey.ResetHotKeys();
         }
 
+        #endregion Reset Hotkeys command
 
         public HotKeyWindowViewModel()
         {

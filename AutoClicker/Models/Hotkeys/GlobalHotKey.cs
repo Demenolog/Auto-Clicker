@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 ﻿using AutoClicker.Models.Mouse;
 using AutoClicker.Models.MouseClass.UnsafeCode;
+=======
+﻿using AutoClicker.Infrastructure.UnsafeCode;
+using AutoClicker.Models.Mouse;
+>>>>>>> master
 using AutoClicker.ViewModels;
 using System;
 using System.Windows;
