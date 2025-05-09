@@ -13,7 +13,7 @@
             <RowDefinition></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" 
+        <StackPanel Grid.Row="0"
                     Orientation="Vertical"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center">
@@ -24,7 +24,7 @@
                        Content="Start hotkey:">
                 </Label>
                 <TextBox Style="{StaticResource TextBoxHotKeysStyle}"
-                         Text="{Binding StartHotkey}">
+                         Text="{Binding StartHotKey}">
                 </TextBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal"

@@ -7,17 +7,17 @@ namespace AutoClicker.ViewModels
 {
     internal class HotKeyWindowViewModel : ViewModel
     {
-        #region StartHotkey : string - definition for textbox with start hotkey
+        #region StartHotKey : string - definition for textbox with start hotkey
 
-        private string _startHotkey = GlobalHotKey.DefaultStartHotKey;
+        private string _startHotKey = GlobalHotKey.DefaultStartHotKey;
 
-        public string StartHotkey
+        public string StartHotKey
         {
-            get => _startHotkey;
-            set => SetField(ref _startHotkey, value);
+            get => _startHotKey;
+            set => SetField(ref _startHotKey, value);
         }
 
-        #endregion StartHotkey : string - definition for textbox with start hotkey
+        #endregion StartHotKey : string - definition for textbox with start hotkey
 
         #region StopHotKey : string - Definition for textbox with stop hotkey
 
