@@ -45,6 +45,4 @@
             </Setter.Value>
         </Setter>
     </Style>
-
-    <!-- Добавить стиль к  hotkey's label-->
 </ResourceDictionary>
