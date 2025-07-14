@@ -53,7 +53,7 @@ namespace AutoClicker.ViewModels
 
         #region SecondsTextBox : string - TextBox with seconds values
 
-        private string _secondsTextBox = "0";
+        private string _secondsTextBox = "1";
 
         public string SecondsTextBox
         {
