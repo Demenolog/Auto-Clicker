@@ -19,7 +19,10 @@ namespace AutoClicker.Models.Mouse
 
         public static int GetClickMode(string clickMode)
         {
-            return (int)Enum.Parse(typeof(ClickModes), clickMode);
+            if (Enum.TryParse<ClickModes>(clickMode, out var mode))
+                return (int)mode;
+
+            throw new ArgumentException($"Invalid click mode: {clickMode}", nameof(clickMode));
         }
 
         public static Point GetCurrentCursorPosition()
