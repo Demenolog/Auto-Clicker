@@ -1,4 +1,4 @@
-﻿namespace AutoClicker.Infrastructure.Constans.HotkeysClass
+﻿namespace AutoClicker.Infrastructure.Constants.HotkeysClass
 {
     public static class GlobalHotKeyConstance
     {

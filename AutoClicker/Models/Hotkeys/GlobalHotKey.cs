@@ -4,7 +4,7 @@ using AutoClicker.ViewModels;
 using System;
 using System.Windows;
 using System.Windows.Input;
-using static AutoClicker.Infrastructure.Constans.HotkeysClass.GlobalHotKeyConstance;
+using static AutoClicker.Infrastructure.Constants.HotkeysClass.GlobalHotKeyConstance;
 
 namespace AutoClicker.Models.Hotkeys
 {

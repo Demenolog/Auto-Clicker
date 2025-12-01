@@ -1,6 +1,6 @@
-﻿using AutoClicker.Infrastructure.Constans.MouseClass;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Runtime.InteropServices;
+using AutoClicker.Infrastructure.Constants.MouseClass;
 
 namespace AutoClicker.Infrastructure.UnsafeCode
 {
