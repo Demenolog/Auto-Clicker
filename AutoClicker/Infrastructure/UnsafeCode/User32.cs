@@ -1,7 +1,6 @@
-﻿using System;
+﻿using AutoClicker.Infrastructure.Constans.MouseClass;
 using System.Drawing;
 using System.Runtime.InteropServices;
-using AutoClicker.Infrastructure.Constans.MouseClass;
 
 namespace AutoClicker.Infrastructure.UnsafeCode
 {
@@ -21,7 +20,7 @@ namespace AutoClicker.Infrastructure.UnsafeCode
 
         [DllImport("user32.dll")]
         internal static extern bool RegisterHotKey(nint hWnd, int id, uint fsModifiers, uint vk);
-  
+
         [DllImport("user32.dll")]
         internal static extern bool UnregisterHotKey(nint hWnd, int id);
     }

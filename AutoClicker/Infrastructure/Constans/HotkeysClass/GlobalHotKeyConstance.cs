@@ -5,7 +5,7 @@
         public const int HOTKEY_ID = 9000;
         public const int WM_HOTKEY = 0x0312;
 
-        public const uint MOD_NONE = 0x0000; 
+        public const uint MOD_NONE = 0x0000;
 
         public const uint MOD_ALT = 0x0001;
         public const uint MOD_CONTROL = 0x0002;
