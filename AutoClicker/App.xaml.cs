@@ -9,7 +9,7 @@ namespace AutoClicker
 {
     public partial class App
     {
-        private static IHost s_host;
+        private static IHost? s_host;
 
         public static IServiceProvider Services => Host.Services;
 

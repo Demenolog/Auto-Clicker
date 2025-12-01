@@ -18,7 +18,7 @@ namespace AutoClicker.Infrastructure.Commands.Base
             }
         }
 
-        public event EventHandler ExecutableChanged;
+        public event EventHandler? ExecutableChanged;
 
         event EventHandler ICommand.CanExecuteChanged
         {
