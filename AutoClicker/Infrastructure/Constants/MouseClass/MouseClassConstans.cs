@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AutoClicker.Infrastructure.Constans.MouseClass
+namespace AutoClicker.Infrastructure.Constants.MouseClass
 {
     public static class MouseClassConstans
     {

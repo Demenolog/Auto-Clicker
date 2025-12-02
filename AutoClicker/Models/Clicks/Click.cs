@@ -1,5 +1,6 @@
-﻿using AutoClicker.Models.Clicks.States;
-using Options = AutoClicker.Models.Clicks.States.Options;
+using AutoClicker.Models.Clicks.States;
+using AutoClicker.Models.States;
+using Options = AutoClicker.Models.States.Options;
 
 namespace AutoClicker.Models.Clicks
 {

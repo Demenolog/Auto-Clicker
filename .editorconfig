@@ -1,0 +1,103 @@
+root = true
+
+[*.{cs,vb}]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = true
+
+# C# code style
+[*.cs]
+dotnet_language_version = latest
+csharp_prefer_braces = true:suggestion
+csharp_new_line_before_open_brace = all
+csharp_indent_case_contents = true
+csharp_using_directive_placement = outside_namespace:suggestion
+
+# Naming rules (private fields _camelCase)
+dotnet_naming_rule.private_fields_should_be__camelcase.severity = suggestion
+dotnet_naming_rule.private_fields_should_be__camelcase.symbols  = private_fields
+dotnet_naming_rule.private_fields_should_be__camelcase.style    = underscore_prefix
+
+dotnet_naming_symbols.private_fields.applicable_kinds = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+dotnet_naming_symbols.private_fields.required_modifiers =
+
+dotnet_naming_style.underscore_prefix.required_prefix = _
+dotnet_naming_style.underscore_prefix.capitalization = camel_case
+
+# Analyzer baseline (tight but practical)
+dotnet_analyzer_diagnostic.category-Style.severity = warning
+dotnet_analyzer_diagnostic.category-Design.severity = warning
+dotnet_analyzer_diagnostic.category-Maintainability.severity = warning
+dotnet_analyzer_diagnostic.category-Usage.severity = warning
+dotnet_analyzer_diagnostic.category-SingleFile.severity = warning
+dotnet_analyzer_diagnostic.category-Performance.severity = warning
+dotnet_analyzer_diagnostic.category-Reliability.severity = warning
+
+# Treat common pitfalls as errors
+dotnet_diagnostic.CS8618.severity = error   # Non-nullable uninitialized
+dotnet_diagnostic.CA1062.severity = error   # Validate public args
+dotnet_diagnostic.CA2000.severity = error   # Dispose objects
+dotnet_diagnostic.CA1806.severity = error   # Ignored return value
+
+# File: Auto-Clicker/Directory.Build.props
+<!-- why: enforce nullable, analyzers, warnings-as-errors for all projects in repo -->
+<Project>
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <AnalysisLevel>latest-recommended</AnalysisLevel>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+  </PropertyGroup>
+</Project>
+
+# File: Auto-Clicker/.gitattributes
+# why: normalize line endings across contributors
+* text=auto eol=lf
+*.sln text eol=crlf
+*.cs  text eol=lf
+*.xaml text eol=lf
+
+# File: Auto-Clicker/.gitignore
+# why: keep repo clean
+bin/
+obj/
+*.user
+*.suo
+*.userprefs
+*.rsuser
+.vs/
+_ReSharper.Caches/
+*.ncrunch*
+*.DotSettings.user
+TestResults/
+*.cache/
+*.ide/
+*.coverage*
+*.DS_Store
+
+# File: Auto-Clicker/Auto-Clicker/README.md
+# Auto-Clicker
+
+Auto-Clicker is a desktop application for automating mouse clicks.  
+Written in C# and **WPF (.NET 7.0)**.
+
+## Features
+- Choose a custom interval to perform mouse tasks.
+- Left or right button; single/double/triple clicks.
+- Infinite or fixed repeat count.
+- Click at current cursor position, or at a custom position.
+
+## Platform
+**Windows only.** (WPF targets Windows; for cross-platform consider Avalonia or .NET MAUI.)
+
+## Build & Run
+```powershell
+dotnet restore
+dotnet build -c Release
+dotnet run --project Auto-Clicker/AutoClicker/AutoClicker.csproj

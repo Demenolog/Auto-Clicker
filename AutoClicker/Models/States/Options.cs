@@ -1,9 +1,9 @@
 ﻿using System;
 using AutoClicker.Services.WindowHelper;
 using AutoClicker.ViewModels;
-using static AutoClicker.Infrastructure.Constans.MouseClass.MouseClassConstans;
+using static AutoClicker.Infrastructure.Constants.MouseClass.MouseClassConstans;
 
-namespace AutoClicker.Models.Clicks.States
+namespace AutoClicker.Models.States
 {
     internal class Options
     {
