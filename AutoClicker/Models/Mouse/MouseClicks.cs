@@ -1,4 +1,4 @@
-﻿using AutoClicker.Models.Clicks;
+using AutoClicker.Models.Clicks;
 using System;
 using System.Drawing;
 using System.Threading;
@@ -12,8 +12,9 @@ namespace AutoClicker.Models.Mouse
     {
         #region [Properties]
 
-        private static readonly object LockObject = new(); // Lock for thread safety
-        private static bool isRunning; // Tracks if a task is running or stopping
+        private static readonly object LockObject = new(); // protects isRunning + Cts
+        private static bool isRunning;
+
         public static CancellationTokenSource? Cts { get; private set; }
 
         #endregion [Properties]
@@ -28,62 +29,103 @@ namespace AutoClicker.Models.Mouse
 
         public static Point GetCursorPosition()
         {
+            // Busy-wait with a small sleep to avoid high CPU when picking a point
             while (true)
             {
+                // Left mouse button -> capture and return
                 if (Convert.ToBoolean(GetKeyState(VirtualKeyStates.VK_LBUTTON) & KeyPressed))
                 {
                     GetCursorPos(out Point point);
                     return point;
                 }
-                else if (Convert.ToBoolean(GetKeyState(VirtualKeyStates.VK_ESCAPE) & KeyPressed))
+
+                // Esc -> cancel picking, return (0,0) as before
+                if (Convert.ToBoolean(GetKeyState(VirtualKeyStates.VK_ESCAPE) & KeyPressed))
                 {
                     return new Point(0, 0);
                 }
+
+                Thread.Sleep(10);
             }
         }
 
         public static async Task StartClicking(Click click)
         {
+            if (click == null) throw new ArgumentNullException(nameof(click));
+
+            // Prevent multiple concurrent click loops
             lock (LockObject)
             {
-                if (isRunning) return; // Prevent multiple tasks
+                if (isRunning)
+                    return;
+
                 isRunning = true;
                 Cts = new CancellationTokenSource();
             }
 
             var token = Cts.Token;
-            var repeats = click.Repeats.TotalTimes;
+
+            // Snapshot click configuration at start
+            var repeats = click.Repeats.TotalTimes;             // -1 => endless
+            var clicksPerBurst = click.Options.GetButtonMode(); // single/double/triple
+            var intervalMs = Math.Max(0, click.Interval.TotalTime);
+            var position = click.Position.CurrentPosition;
+            var downFlag = click.Options.DownMouseEventFlag;
+            var upFlag = click.Options.UpMouseEventFlag;
 
             try
             {
-                await Task.Run(() =>
+                await Task.Run(async () =>
                 {
                     if (repeats >= 0)
                     {
-                        for (int i = 0; i < repeats; i++)
+                        // Finite number of bursts
+                        for (var i = 0; i < repeats; i++)
                         {
-                            ExecuteClicking(click, token);
+                            token.ThrowIfCancellationRequested();
+
+                            ExecuteClicking(clicksPerBurst, position, downFlag, upFlag, token);
+
+                            // No delay after last burst
+                            if (i < repeats - 1 && intervalMs > 0)
+                            {
+                                await Task.Delay(intervalMs, token).ConfigureAwait(false);
+                            }
                         }
                     }
                     else
                     {
+                        // Endless bursts until cancelled
                         while (true)
                         {
-                            ExecuteClicking(click, token);
+                            token.ThrowIfCancellationRequested();
+
+                            ExecuteClicking(clicksPerBurst, position, downFlag, upFlag, token);
+
+                            if (intervalMs > 0)
+                            {
+                                await Task.Delay(intervalMs, token).ConfigureAwait(false);
+                            }
+                            else
+                            {
+                                // Zero interval -> yield to avoid tight CPU spin
+                                await Task.Yield();
+                            }
                         }
                     }
-                }, token);
+                }, token).ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {
-                // Expected when stopping the task
+                // Expected when StopClicking() cancels Cts.
             }
             finally
             {
                 lock (LockObject)
                 {
+                    Cts?.Dispose();
                     Cts = null;
-                    isRunning = false; // Allow new tasks to start
+                    isRunning = false;
                 }
             }
         }
@@ -92,31 +134,36 @@ namespace AutoClicker.Models.Mouse
         {
             lock (LockObject)
             {
-                if (!isRunning) return; // No task is running
-                Cts?.Cancel();
-                isRunning = false; // Mark as not running
+                if (!isRunning)
+                    return;
+
+                try
+                {
+                    Cts?.Cancel();
+                }
+                catch
+                {
+                    // Ignore races if Cts is already disposed/finished
+                }
             }
         }
 
-        private static void ExecuteClicking(Click click, CancellationToken token)
+        private static void ExecuteClicking(
+            int clicksPerBurst,
+            Point position,
+            int downFlag,
+            int upFlag,
+            CancellationToken token)
         {
-            var clicks = click.Options.GetButtonMode();
-            var sleepInterval = click.Interval.TotalTime;
-            var x = click.Position.CurrentPosition.X;
-            var y = click.Position.CurrentPosition.Y;
-            var downFlag = click.Options.DownMouseEventFlag;
-            var upFlag = click.Options.UpMouseEventFlag;
-
-            for (int i = 0; i < clicks; i++)
+            // One "burst" = 1/2/3 clicks as configured
+            for (var i = 0; i < clicksPerBurst; i++)
             {
-                SetCursorPos(x, y);
+                token.ThrowIfCancellationRequested();
+
+                SetCursorPos(position.X, position.Y);
                 Click(downFlag);
                 Click(upFlag);
             }
-
-            Thread.Sleep(sleepInterval);
-
-            token.ThrowIfCancellationRequested();
         }
 
         private static void Click(int action, int x = 0, int y = 0, int dwData = 0, int dwExtraInfo = 0)
