@@ -1,9 +1,8 @@
-// File: Auto-Clicker/AutoClicker/Models/States/Interval.cs
 using System;
 using AutoClicker.Services.WindowHelper;
 using AutoClicker.ViewModels;
 
-namespace AutoClicker.Models.Clicks.States
+namespace AutoClicker.Models.States
 {
     internal class Interval
     {
