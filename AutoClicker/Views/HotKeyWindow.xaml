@@ -5,6 +5,7 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:beh="clr-namespace:AutoClicker.Behaviors"
+        xmlns:constants="clr-namespace:AutoClicker.Infrastructure.Constants.HotkeysClass"
         DataContext="{Binding Path= HotKeyWindowModel, Source={StaticResource Locator}}"
         mc:Ignorable="d"
         Title="HotKeys"
@@ -23,10 +24,12 @@
                         HorizontalAlignment="Center"
                         Margin="5">
                 <Label Style="{StaticResource LabelDefaultStyle}"
-                       Content="Start hotkey:">
+                       Content="Start hotkey:"
+                       ToolTip="{x:Static constants:HotKeyMessages.RegistrationFailureTooltip}">
                 </Label>
                 <TextBox Style="{StaticResource TextBoxHotKeysStyle}"
-                         Text="{Binding StartHotKeyDisplay, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                         Text="{Binding StartHotKeyDisplay, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                         ToolTip="{x:Static constants:HotKeyMessages.RegistrationFailureTooltip}">
                     <i:Interaction.Behaviors>
                         <beh:HotkeyCaptureBehavior />
                     </i:Interaction.Behaviors>
@@ -36,10 +39,12 @@
                         HorizontalAlignment="Center"
                         Margin="5">
                 <Label Style="{StaticResource LabelDefaultStyle}"
-                       Content="Stop hotkey:">
+                       Content="Stop hotkey:"
+                       ToolTip="{x:Static constants:HotKeyMessages.RegistrationFailureTooltip}">
                 </Label>
                 <TextBox Style="{StaticResource TextBoxHotKeysStyle}"
-                         Text="{Binding StopHotKeyDisplay, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                         Text="{Binding StopHotKeyDisplay, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                         ToolTip="{x:Static constants:HotKeyMessages.RegistrationFailureTooltip}">
                     <i:Interaction.Behaviors>
                         <beh:HotkeyCaptureBehavior />
                     </i:Interaction.Behaviors>
