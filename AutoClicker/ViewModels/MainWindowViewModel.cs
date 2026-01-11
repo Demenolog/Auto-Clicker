@@ -4,6 +4,7 @@ using AutoClicker.Models.Other;
 using AutoClicker.Services;
 using AutoClicker.ViewModels.Base;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using AutoClicker.Models.Clicks;
 using Point = System.Drawing.Point;
@@ -290,13 +291,12 @@ namespace AutoClicker.ViewModels
 
             try
             {
-                await Task.Run((() =>
+                var point = await Task.Run(MouseClicks.GetCursorPosition);
+                await Application.Current.Dispatcher.InvokeAsync(() =>
                 {
-                    var point = MouseClicks.GetCursorPosition();
-
                     XAxisTextBox = point.X.ToString();
                     YAxisTextBox = point.Y.ToString();
-                }));
+                });
             }
             finally
             {
