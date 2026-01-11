@@ -1,4 +1,5 @@
 using AutoClicker.Models.Clicks;
+using AutoClicker.Models.Parsing;
 
 namespace AutoClicker.Models.States
 {
@@ -15,26 +16,7 @@ namespace AutoClicker.Models.States
 
         private int GetRepeats(ClickRepeatsConfig config)
         {
-            var isEndless = config.IsRepeatUntilStopped;
-
-            if (isEndless)
-            {
-                return -1;
-            }
-
-            var text = config.RepeatTimes;
-
-            if (!int.TryParse(text, out var times))
-            {
-                return 0;
-            }
-
-            if (times < 0)
-            {
-                times = 0;
-            }
-
-            return times;
+            return RepeatParser.ParseRepeatCount(config.IsRepeatUntilStopped, config.RepeatTimes);
         }
     }
 }
