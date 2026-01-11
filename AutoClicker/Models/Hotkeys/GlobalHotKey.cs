@@ -22,38 +22,32 @@ namespace AutoClicker.Models.Hotkeys
             Registration();
         }
 
-        public static uint GetVirtualKeyState(Key key)
+        private static (uint Modifiers, uint VirtualKey) GetHotKeyRegistration(HotKeyDefinition hotKey)
         {
-            var virtualKey = KeyInterop.VirtualKeyFromKey(key);
-
-            return (uint)virtualKey;
-        }
-
-        public static uint GetModifierFlags(ModifierKeys modifiers)
-        {
+            var virtualKey = (uint)KeyInterop.VirtualKeyFromKey(hotKey.Key);
             uint flags = MOD_NONE;
 
-            if (modifiers.HasFlag(ModifierKeys.Alt))
+            if (hotKey.Modifiers.HasFlag(ModifierKeys.Alt))
             {
                 flags |= MOD_ALT;
             }
 
-            if (modifiers.HasFlag(ModifierKeys.Control))
+            if (hotKey.Modifiers.HasFlag(ModifierKeys.Control))
             {
                 flags |= MOD_CONTROL;
             }
 
-            if (modifiers.HasFlag(ModifierKeys.Shift))
+            if (hotKey.Modifiers.HasFlag(ModifierKeys.Shift))
             {
                 flags |= MOD_SHIFT;
             }
 
-            if (modifiers.HasFlag(ModifierKeys.Windows))
+            if (hotKey.Modifiers.HasFlag(ModifierKeys.Windows))
             {
                 flags |= MOD_WIN;
             }
 
-            return flags;
+            return (flags, virtualKey);
         }
 
         public static IntPtr HwndHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
@@ -67,9 +61,10 @@ namespace AutoClicker.Models.Hotkeys
                             uint startModifiers = (uint)((int)lParam & 0xFFFF);
                             uint vkey = (uint)(((int)lParam >> 16) & 0xFFFF);
                             var startBinding = Locator.HotKeyWindowModel.StartHotKey;
+                            var startRegistration = GetHotKeyRegistration(startBinding);
 
-                            if (vkey == GetVirtualKeyState(startBinding.Key)
-                                && startModifiers == GetModifierFlags(startBinding.Modifiers)
+                            if (vkey == startRegistration.VirtualKey
+                                && startModifiers == startRegistration.Modifiers
                                 && MouseClicks.Cts == null)
                             {
                                 Locator.MainWindowModel.OnStartClickingExecute(null);
@@ -80,9 +75,10 @@ namespace AutoClicker.Models.Hotkeys
                             uint stopModifiers = (uint)((int)lParam & 0xFFFF);
                             uint stopVKey = (uint)(((int)lParam >> 16) & 0xFFFF);
                             var stopBinding = Locator.HotKeyWindowModel.StopHotKey;
+                            var stopRegistration = GetHotKeyRegistration(stopBinding);
 
-                            if (stopVKey == GetVirtualKeyState(stopBinding.Key)
-                                && stopModifiers == GetModifierFlags(stopBinding.Modifiers)
+                            if (stopVKey == stopRegistration.VirtualKey
+                                && stopModifiers == stopRegistration.Modifiers
                                 && MouseClicks.Cts != null)
                             {
                                 Locator.MainWindowModel.OnStopClickingExecute(null);
@@ -118,9 +114,11 @@ namespace AutoClicker.Models.Hotkeys
         {
             var startBinding = Locator.HotKeyWindowModel.StartHotKey;
             var stopBinding = Locator.HotKeyWindowModel.StopHotKey;
+            var startRegistration = GetHotKeyRegistration(startBinding);
+            var stopRegistration = GetHotKeyRegistration(stopBinding);
 
-            User32.RegisterHotKey(s_handle, START_HOTKEY_ID, GetModifierFlags(startBinding.Modifiers), GetVirtualKeyState(startBinding.Key));
-            User32.RegisterHotKey(s_handle, STOP_HOTKEY_ID, GetModifierFlags(stopBinding.Modifiers), GetVirtualKeyState(stopBinding.Key));
+            User32.RegisterHotKey(s_handle, START_HOTKEY_ID, startRegistration.Modifiers, startRegistration.VirtualKey);
+            User32.RegisterHotKey(s_handle, STOP_HOTKEY_ID, stopRegistration.Modifiers, stopRegistration.VirtualKey);
         }
     }
 }
