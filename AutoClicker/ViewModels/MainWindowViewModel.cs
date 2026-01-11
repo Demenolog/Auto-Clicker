@@ -410,7 +410,7 @@ namespace AutoClicker.ViewModels
         {
             var position = IsCurrentLocationSelected
                 ? _mouseClicker.GetCurrentCursorPosition()
-                : new Point(int.Parse(XAxisTextBox), int.Parse(YAxisTextBox));
+                : new Point(ParseAxisValue(XAxisTextBox), ParseAxisValue(YAxisTextBox));
 
             return new ClickConfig(
                 new ClickIntervalConfig(
@@ -428,6 +428,11 @@ namespace AutoClicker.ViewModels
                     IsCurrentLocationSelected,
                     position.X.ToString(),
                     position.Y.ToString()));
+        }
+
+        private static int ParseAxisValue(string value)
+        {
+            return int.TryParse(value, out var axis) ? axis : 0;
         }
     }
 }
