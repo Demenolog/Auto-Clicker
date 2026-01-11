@@ -126,11 +126,13 @@ namespace AutoClicker.ViewModels
 
         #region Properties
 
-        #region Selected Mouse Button : string - Selected mouse button from combobox
+        #region Selected Mouse Button : MouseButtonKind - Selected mouse button from combobox
 
-        private string _mouseButton = "Left";
+        private MouseButtonKind _mouseButton = MouseButtonKind.Left;
 
-        public string SelectedMouseButton
+        public Array MouseButtonOptions { get; } = Enum.GetValues(typeof(MouseButtonKind));
+
+        public MouseButtonKind SelectedMouseButton
         {
             get => _mouseButton;
             set
@@ -142,13 +144,15 @@ namespace AutoClicker.ViewModels
             }
         }
 
-        #endregion Selected Mouse Button : string - Selected mouse button from combobox
+        #endregion Selected Mouse Button : MouseButtonKind - Selected mouse button from combobox
 
-        #region Selected Mouse Button Mode : string - Selected click type from combobox
+        #region Selected Mouse Button Mode : ClickBurstKind - Selected click type from combobox
 
-        private string _selectedMouseButtonMode = "Single";
+        private ClickBurstKind _selectedMouseButtonMode = ClickBurstKind.Single;
 
-        public string SelectedMouseButtonMode
+        public Array ClickBurstOptions { get; } = Enum.GetValues(typeof(ClickBurstKind));
+
+        public ClickBurstKind SelectedMouseButtonMode
         {
             get => _selectedMouseButtonMode;
             set
@@ -160,7 +164,7 @@ namespace AutoClicker.ViewModels
             }
         }
 
-        #endregion Selected Mouse Button Mode : string - Selected click type from combobox
+        #endregion Selected Mouse Button Mode : ClickBurstKind - Selected click type from combobox
 
         #endregion Properties
 
@@ -485,8 +489,8 @@ namespace AutoClicker.ViewModels
             MinutesTextBox = settings.Minutes ?? "0";
             SecondsTextBox = settings.Seconds ?? "1";
             MillisecondsTextBox = settings.Milliseconds ?? "0";
-            SelectedMouseButton = settings.SelectedMouseButton ?? "Left";
-            SelectedMouseButtonMode = settings.SelectedMouseButtonMode ?? "Single";
+            SelectedMouseButton = settings.SelectedMouseButton;
+            SelectedMouseButtonMode = settings.SelectedMouseButtonMode;
             RepeatTimesTextBox = settings.RepeatTimes ?? "1";
             RepeatMode = settings.RepeatUntilStopped ? RepeatMode.UntilStopped : RepeatMode.Times;
             PositionMode = settings.PositionUseCurrent ? PositionMode.Current : PositionMode.Fixed;

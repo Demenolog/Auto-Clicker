@@ -2,6 +2,7 @@ using AutoClicker.Services.Interfaces;
 using System;
 using System.IO;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace AutoClicker.Services.Settings
 {
@@ -10,7 +11,8 @@ namespace AutoClicker.Services.Settings
         private static readonly JsonSerializerOptions SerializerOptions = new()
         {
             WriteIndented = true,
-            PropertyNameCaseInsensitive = true
+            PropertyNameCaseInsensitive = true,
+            Converters = { new JsonStringEnumConverter() }
         };
 
         private readonly string _settingsPath;
