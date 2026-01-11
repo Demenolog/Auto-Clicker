@@ -2,6 +2,7 @@ using AutoClicker.Models.Clicks;
 using AutoClicker.Services.Interfaces;
 using System;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using static AutoClicker.Infrastructure.Constants.MouseClass.MouseClassConstans;
@@ -182,7 +183,24 @@ namespace AutoClicker.Services.MouseClicker
 
         private static void Click(int action, int x = 0, int y = 0, int dwData = 0, int dwExtraInfo = 0)
         {
-            mouse_event(action, x, y, dwData, dwExtraInfo);
+            var input = new INPUT
+            {
+                type = INPUT_MOUSE,
+                U = new InputUnion
+                {
+                    mi = new MOUSEINPUT
+                    {
+                        dx = x,
+                        dy = y,
+                        mouseData = (uint)dwData,
+                        dwFlags = (uint)action,
+                        time = 0,
+                        dwExtraInfo = (nuint)dwExtraInfo
+                    }
+                }
+            };
+
+            _ = SendInput(1, new[] { input }, Marshal.SizeOf<INPUT>());
         }
     }
 }
