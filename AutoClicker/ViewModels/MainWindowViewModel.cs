@@ -323,9 +323,10 @@ namespace AutoClicker.ViewModels
         internal async void OnStartClickingExecute(object p)
         {
             var config = BuildClickConfig();
+            var click = new Click(config);
 
             IsRunning = true;
-            await MouseClicks.StartClicking(config);
+            await MouseClicks.StartClicking(click);
         }
 
         #endregion Start clicking command
