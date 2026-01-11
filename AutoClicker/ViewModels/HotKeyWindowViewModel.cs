@@ -9,24 +9,50 @@ namespace AutoClicker.ViewModels
     {
         #region StartHotKey : string - definition for textbox with start hotkey
 
-        private string _startHotKey = GlobalHotKey.DefaultStartHotKey;
+        private HotKeyBinding _startHotKeyBinding = GlobalHotKey.DefaultStartHotKey;
+        private string _startHotKey = GlobalHotKey.DefaultStartHotKey.ToDisplayString();
+
+        public HotKeyBinding StartHotKeyBinding
+        {
+            get => _startHotKeyBinding;
+            private set => SetField(ref _startHotKeyBinding, value);
+        }
 
         public string StartHotKey
         {
             get => _startHotKey;
-            set => SetField(ref _startHotKey, value);
+            private set => SetField(ref _startHotKey, value);
+        }
+
+        public void SetStartHotKey(HotKeyBinding binding)
+        {
+            StartHotKeyBinding = binding;
+            StartHotKey = binding.ToDisplayString();
         }
 
         #endregion StartHotKey : string - definition for textbox with start hotkey
 
         #region StopHotKey : string - Definition for textbox with stop hotkey
 
-        private string _stopHotkey = GlobalHotKey.DefaultStopHotKey;
+        private HotKeyBinding _stopHotKeyBinding = GlobalHotKey.DefaultStopHotKey;
+        private string _stopHotkey = GlobalHotKey.DefaultStopHotKey.ToDisplayString();
+
+        public HotKeyBinding StopHotKeyBinding
+        {
+            get => _stopHotKeyBinding;
+            private set => SetField(ref _stopHotKeyBinding, value);
+        }
 
         public string StopHotKey
         {
             get => _stopHotkey;
-            set => SetField(ref _stopHotkey, value);
+            private set => SetField(ref _stopHotkey, value);
+        }
+
+        public void SetStopHotKey(HotKeyBinding binding)
+        {
+            StopHotKeyBinding = binding;
+            StopHotKey = binding.ToDisplayString();
         }
 
         #endregion StopHotKey : string - Definition for textbox with stop hotkey
@@ -59,6 +85,9 @@ namespace AutoClicker.ViewModels
             ChangeHotKeys = new LambdaCommand(OnChangeHotKeysExecute, CanChangeHotKeysExecuted);
 
             ResetHotKeys = new LambdaCommand(OnResetHotKeysExecute, CanResetHotKeysExecuted);
+
+            SetStartHotKey(GlobalHotKey.DefaultStartHotKey);
+            SetStopHotKey(GlobalHotKey.DefaultStopHotKey);
         }
     }
 }
