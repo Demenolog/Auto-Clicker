@@ -1,4 +1,5 @@
 ﻿using System.Windows.Input;
+using AutoClicker.Models.Parsing;
 
 namespace AutoClicker.Models.Hotkeys
 {
@@ -6,13 +7,7 @@ namespace AutoClicker.Models.Hotkeys
     {
         public string ToDisplayString()
         {
-            if (Modifiers == ModifierKeys.None)
-            {
-                return Key.ToString();
-            }
-
-            var modifiersText = Modifiers.ToString().Replace(", ", "+");
-            return $"{modifiersText}+{Key}";
+            return HotKeyParser.FormatDisplay(Modifiers, Key);
         }
     }
 }
