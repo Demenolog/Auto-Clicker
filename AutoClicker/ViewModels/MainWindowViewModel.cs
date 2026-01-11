@@ -309,11 +309,21 @@ namespace AutoClicker.ViewModels
 
             try
             {
-                var point = await Task.Run(_mouseClicker.GetCursorPosition);
+                var result = await Task.Run(() =>
+                {
+                    var success = _mouseClicker.TryGetCursorPosition(out var point);
+                    return (success, point);
+                });
+
+                if (!result.success)
+                {
+                    return;
+                }
+
                 await Application.Current.Dispatcher.InvokeAsync(() =>
                 {
-                    XAxisTextBox = point.X.ToString();
-                    YAxisTextBox = point.Y.ToString();
+                    XAxisTextBox = result.point.X.ToString();
+                    YAxisTextBox = result.point.Y.ToString();
                 });
             }
             finally
