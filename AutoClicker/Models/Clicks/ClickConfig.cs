@@ -44,15 +44,15 @@ namespace AutoClicker.Models.Clicks
 
     internal sealed class ClickOptionsConfig
     {
-        public ClickOptionsConfig(string button, string buttonMode)
+        public ClickOptionsConfig(MouseButtonKind button, ClickBurstKind buttonMode)
         {
             Button = button;
             ButtonMode = buttonMode;
         }
 
-        public string Button { get; }
+        public MouseButtonKind Button { get; }
 
-        public string ButtonMode { get; }
+        public ClickBurstKind ButtonMode { get; }
     }
 
     internal sealed class ClickRepeatsConfig

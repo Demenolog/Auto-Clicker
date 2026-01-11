@@ -4,7 +4,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:converters="clr-namespace:AutoClicker.Infrastructure.Converters"
-        xmlns:sys="clr-namespace:System;assembly=System.Runtime"
         mc:Ignorable="d"
         DataContext="{Binding Path=MainWindowModel, Source={StaticResource Locator}}"
         Title="Auto-Clicker"
@@ -69,9 +68,8 @@
                 <ComboBox Grid.Row="0"
                           Grid.Column="1"
                           Margin="2"
+                          ItemsSource="{Binding MouseButtonOptions}"
                           SelectedItem="{Binding SelectedMouseButton}">
-                    <sys:String>Left</sys:String>
-                    <sys:String>Right</sys:String>
                 </ComboBox>
                 <Label Grid.Row="1"
                        Grid.Column="0"
@@ -80,10 +78,8 @@
                 <ComboBox Grid.Row="1"
                           Grid.Column="1"
                           Margin="2"
+                          ItemsSource="{Binding ClickBurstOptions}"
                           SelectedItem="{Binding SelectedMouseButtonMode}">
-                    <sys:String>Single</sys:String>
-                    <sys:String>Double</sys:String>
-                    <sys:String>Triple</sys:String>
                 </ComboBox>
             </Grid>
         </GroupBox>

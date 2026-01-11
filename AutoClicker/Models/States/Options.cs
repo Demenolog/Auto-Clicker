@@ -6,8 +6,8 @@ namespace AutoClicker.Models.States
 {
     internal class Options
     {
-        private readonly string _button;
-        private readonly string _buttonMode;
+        private readonly MouseButtonKind _button;
+        private readonly ClickBurstKind _buttonMode;
         private readonly int _downMouseEventFlag;
         private readonly int _upMouseEventFlag;
 
@@ -18,23 +18,21 @@ namespace AutoClicker.Models.States
 
             (_downMouseEventFlag, _upMouseEventFlag) = Button switch
             {
-                "Left" => ((int)MouseEventFlags.Leftdown, (int)MouseEventFlags.Leftup),
-                "Right" => ((int)MouseEventFlags.Rightdown, (int)MouseEventFlags.Rightup),
-                _ => throw new ArgumentException()
+                MouseButtonKind.Left => ((int)MouseEventFlags.Leftdown, (int)MouseEventFlags.Leftup),
+                MouseButtonKind.Right => ((int)MouseEventFlags.Rightdown, (int)MouseEventFlags.Rightup),
+                MouseButtonKind.Middle => ((int)MouseEventFlags.Middledown, (int)MouseEventFlags.Middleup),
+                _ => throw new ArgumentOutOfRangeException(nameof(config.Button))
             };
         }
 
-        public string Button => _button;
+        public MouseButtonKind Button => _button;
 
-        public string ButtonMode => _buttonMode;
+        public ClickBurstKind ButtonMode => _buttonMode;
 
         public int DownMouseEventFlag => _downMouseEventFlag;
 
         public int UpMouseEventFlag => _upMouseEventFlag;
 
-        public int GetButtonMode()
-        {
-            return (int)Enum.Parse(typeof(ClickModes), ButtonMode);
-        }
+        public int GetButtonMode() => (int)ButtonMode;
     }
 }

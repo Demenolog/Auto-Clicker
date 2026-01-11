@@ -1,3 +1,5 @@
+using AutoClicker.Models.Clicks;
+
 namespace AutoClicker.Services.Settings
 {
     internal sealed class AppSettings
@@ -6,8 +8,8 @@ namespace AutoClicker.Services.Settings
         public string Minutes { get; set; } = "0";
         public string Seconds { get; set; } = "1";
         public string Milliseconds { get; set; } = "0";
-        public string SelectedMouseButton { get; set; } = "Left";
-        public string SelectedMouseButtonMode { get; set; } = "Single";
+        public MouseButtonKind SelectedMouseButton { get; set; } = MouseButtonKind.Left;
+        public ClickBurstKind SelectedMouseButtonMode { get; set; } = ClickBurstKind.Single;
         public bool RepeatUntilStopped { get; set; } = true;
         public string RepeatTimes { get; set; } = "1";
         public bool PositionUseCurrent { get; set; } = true;
