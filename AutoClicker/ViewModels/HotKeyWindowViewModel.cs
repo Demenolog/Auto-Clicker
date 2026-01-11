@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System.Windows;
+using System.Windows.Input;
 using AutoClicker.Infrastructure.Commands;
 using AutoClicker.Models.Hotkeys;
 using AutoClicker.ViewModels.Base;
@@ -65,6 +66,13 @@ namespace AutoClicker.ViewModels
 
         private void OnChangeHotKeysExecute(object p)
         {
+            if (StartHotKey == StopHotKey)
+            {
+                MessageBox.Show("Start and stop hotkeys must be different.", "Hotkey conflict",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             GlobalHotKey.ChangeHotKeys();
         }
 
