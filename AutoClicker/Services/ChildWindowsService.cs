@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 
 namespace AutoClicker.Services
@@ -38,7 +39,7 @@ namespace AutoClicker.Services
 
         public static void CloseAll()
         {
-            foreach (var window in ChildWindows)
+            foreach (var window in ChildWindows.ToList())
             {
                 window.Close();
             }
