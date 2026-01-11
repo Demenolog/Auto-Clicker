@@ -1,4 +1,4 @@
-﻿using AutoClicker.Infrastructure.UnsafeCode;
+using AutoClicker.Infrastructure.UnsafeCode;
 using AutoClicker.Models.Mouse;
 using AutoClicker.ViewModels;
 using System;
@@ -12,7 +12,7 @@ namespace AutoClicker.Models.Hotkeys
         private static readonly ViewModelLocator Locator = new();
         private static IntPtr s_handle;
         internal static readonly HotKeyDefinition DefaultStartHotKey = new(ModifierKeys.None, Key.F3);
-        internal static readonly HotKeyDefinition DefaultStopHotKey = new(ModifierKeys.None, Key.F3);
+        internal static readonly HotKeyDefinition DefaultStopHotKey = new(ModifierKeys.None, Key.F4);
 
         public static void ChangeHotKeys()
         {
