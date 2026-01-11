@@ -17,7 +17,8 @@ namespace AutoClicker.Models.Hotkeys
 
         public static void ChangeHotKeys()
         {
-            User32.UnregisterHotKey(s_handle, HOTKEY_ID);
+            User32.UnregisterHotKey(s_handle, START_HOTKEY_ID);
+            User32.UnregisterHotKey(s_handle, STOP_HOTKEY_ID);
 
             Registration();
         }
@@ -38,15 +39,18 @@ namespace AutoClicker.Models.Hotkeys
                 case WM_HOTKEY:
                     switch (wParam.ToInt32())
                     {
-                        case HOTKEY_ID:
-
+                        case START_HOTKEY_ID:
                             int vkey = (((int)lParam >> 16) & 0xFFFF);
 
                             if (vkey == GetVirtualKeyStates(Locator.HotKeyWindowModel.StartHotKey) && MouseClicks.Cts == null)
                             {
                                 Locator.MainWindowModel.OnStartClickingExecute(null);
                             }
-                            else if (vkey == GetVirtualKeyStates(Locator.HotKeyWindowModel.StopHotKey) && MouseClicks.Cts != null)
+                            handled = true;
+                            break;
+                        case STOP_HOTKEY_ID:
+                            int stopVKey = (((int)lParam >> 16) & 0xFFFF);
+                            if (stopVKey == GetVirtualKeyStates(Locator.HotKeyWindowModel.StopHotKey) && MouseClicks.Cts != null)
                             {
                                 Locator.MainWindowModel.OnStopClickingExecute(null);
                             }
@@ -68,7 +72,8 @@ namespace AutoClicker.Models.Hotkeys
 
         public static void ResetHotKeys()
         {
-            User32.UnregisterHotKey(s_handle, HOTKEY_ID);
+            User32.UnregisterHotKey(s_handle, START_HOTKEY_ID);
+            User32.UnregisterHotKey(s_handle, STOP_HOTKEY_ID);
 
             Locator.HotKeyWindowModel.StartHotKey = DefaultStartHotKey;
             Locator.HotKeyWindowModel.StopHotKey = DefaultStopHotKey;
@@ -80,8 +85,8 @@ namespace AutoClicker.Models.Hotkeys
         {
             try
             {
-                User32.RegisterHotKey(s_handle, HOTKEY_ID, MOD_NONE, GetVirtualKeyStates(Locator.HotKeyWindowModel.StartHotKey));
-                User32.RegisterHotKey(s_handle, HOTKEY_ID, MOD_NONE, GetVirtualKeyStates(Locator.HotKeyWindowModel.StopHotKey));
+                User32.RegisterHotKey(s_handle, START_HOTKEY_ID, MOD_NONE, GetVirtualKeyStates(Locator.HotKeyWindowModel.StartHotKey));
+                User32.RegisterHotKey(s_handle, STOP_HOTKEY_ID, MOD_NONE, GetVirtualKeyStates(Locator.HotKeyWindowModel.StopHotKey));
             }
             catch (ArgumentException ex)
             {
