@@ -4,6 +4,7 @@ namespace AutoClicker.Services.Settings
 {
     internal sealed class AppSettings
     {
+        public int SettingsVersion { get; set; } = 1;
         public string Hours { get; set; } = "0";
         public string Minutes { get; set; } = "0";
         public string Seconds { get; set; } = "1";

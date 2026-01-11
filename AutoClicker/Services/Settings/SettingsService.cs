@@ -8,6 +8,7 @@ namespace AutoClicker.Services.Settings
 {
     internal sealed class SettingsService : ISettingsService
     {
+        private const int CurrentSettingsVersion = 1;
         private static readonly JsonSerializerOptions SerializerOptions = new()
         {
             WriteIndented = true,
@@ -41,6 +42,10 @@ namespace AutoClicker.Services.Settings
                 var settings = JsonSerializer.Deserialize<AppSettings>(json, SerializerOptions);
                 Settings = settings ?? new AppSettings();
                 Settings.HotKeys ??= new HotKeySettings();
+                if (Settings.SettingsVersion < CurrentSettingsVersion)
+                {
+                    Settings.SettingsVersion = CurrentSettingsVersion;
+                }
             }
             catch (IOException)
             {
@@ -60,8 +65,30 @@ namespace AutoClicker.Services.Settings
                 Directory.CreateDirectory(directory);
             }
 
+            Settings.SettingsVersion = CurrentSettingsVersion;
             var json = JsonSerializer.Serialize(Settings, SerializerOptions);
-            File.WriteAllText(_settingsPath, json);
+            var tempPath = $"{_settingsPath}.tmp";
+
+            try
+            {
+                File.WriteAllText(tempPath, json);
+
+                if (File.Exists(_settingsPath))
+                {
+                    File.Replace(tempPath, _settingsPath, null);
+                }
+                else
+                {
+                    File.Move(tempPath, _settingsPath, overwrite: true);
+                }
+            }
+            finally
+            {
+                if (File.Exists(tempPath))
+                {
+                    File.Delete(tempPath);
+                }
+            }
         }
 
         public void Update(Action<AppSettings> updateAction)
