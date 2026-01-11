@@ -323,7 +323,10 @@ namespace AutoClicker.ViewModels
         {
             HotKeysWindowService.Create();
 
-            HotKeysWindowService.Show();
+            if (!HotKeysWindowService.Show())
+            {
+                return;
+            }
         }
 
         #endregion Open hotKeys Window
