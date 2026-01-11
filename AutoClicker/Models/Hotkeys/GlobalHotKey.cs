@@ -1,6 +1,8 @@
+using AutoClicker;
 using AutoClicker.Infrastructure.UnsafeCode;
-using AutoClicker.Models.Mouse;
+using AutoClicker.Services.Interfaces;
 using AutoClicker.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Windows.Input;
 using static AutoClicker.Infrastructure.Constants.HotkeysClass.GlobalHotKeyConstance;
@@ -10,6 +12,7 @@ namespace AutoClicker.Models.Hotkeys
     internal static class GlobalHotKey
     {
         private static readonly ViewModelLocator Locator = new();
+        private static IMouseClicker MouseClicker => App.Services.GetRequiredService<IMouseClicker>();
         private static IntPtr s_handle;
         internal static readonly HotKeyDefinition DefaultStartHotKey = new(ModifierKeys.None, Key.F3);
         internal static readonly HotKeyDefinition DefaultStopHotKey = new(ModifierKeys.None, Key.F4);
@@ -65,7 +68,7 @@ namespace AutoClicker.Models.Hotkeys
 
                             if (vkey == startRegistration.VirtualKey
                                 && startModifiers == startRegistration.Modifiers
-                                && MouseClicks.Cts == null)
+                                && !MouseClicker.IsRunning)
                             {
                                 Locator.MainWindowModel.OnStartClickingExecute(null);
                             }
@@ -79,7 +82,7 @@ namespace AutoClicker.Models.Hotkeys
 
                             if (stopVKey == stopRegistration.VirtualKey
                                 && stopModifiers == stopRegistration.Modifiers
-                                && MouseClicks.Cts != null)
+                                && MouseClicker.IsRunning)
                             {
                                 Locator.MainWindowModel.OnStopClickingExecute(null);
                             }

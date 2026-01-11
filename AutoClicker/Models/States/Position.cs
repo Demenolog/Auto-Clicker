@@ -1,6 +1,5 @@
 ﻿using System.Drawing;
 using AutoClicker.Models.Clicks;
-using AutoClicker.Models.Mouse;
 
 namespace AutoClicker.Models.Clicks.States
 {
@@ -17,22 +16,10 @@ namespace AutoClicker.Models.Clicks.States
 
         private Point GetPosition(ClickPositionConfig config)
         {
-            var isCurrentLocationSelected = config.IsCurrentLocationSelected;
-            Point position;
+            var x = int.Parse(config.XAxis);
+            var y = int.Parse(config.YAxis);
 
-            if (isCurrentLocationSelected)
-            {
-                position = MouseClicks.GetCurrentCursorPosition();
-            }
-            else
-            {
-                var x = int.Parse(config.XAxis);
-                var y = int.Parse(config.YAxis);
-
-                position = new Point(x, y);
-            }
-
-            return position;
+            return new Point(x, y);
         }
     }
 }

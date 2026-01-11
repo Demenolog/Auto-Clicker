@@ -1,4 +1,5 @@
 using AutoClicker.Models.Clicks;
+using AutoClicker.Services.Interfaces;
 using System;
 using System.Drawing;
 using System.Threading;
@@ -6,30 +7,34 @@ using System.Threading.Tasks;
 using static AutoClicker.Infrastructure.Constants.MouseClass.MouseClassConstans;
 using static AutoClicker.Infrastructure.UnsafeCode.User32;
 
-namespace AutoClicker.Models.Mouse
+namespace AutoClicker.Services.MouseClicker
 {
-    internal static class MouseClicks
+    internal sealed class MouseClicker : IMouseClicker
     {
-        #region [Properties]
+        private readonly object _lockObject = new(); // protects isRunning + Cts
+        private bool _isRunning;
+        private CancellationTokenSource? _cts;
 
-        private static readonly object LockObject = new(); // protects isRunning + Cts
-        private static bool isRunning;
+        public bool IsRunning
+        {
+            get
+            {
+                lock (_lockObject)
+                {
+                    return _isRunning;
+                }
+            }
+        }
 
-        public static CancellationTokenSource? Cts { get; private set; }
+        public event Action? ClickingStopped;
 
-        public static event Action? ClickingStopped;
-
-        #endregion [Properties]
-
-        #region [Methods]
-
-        public static Point GetCurrentCursorPosition()
+        public Point GetCurrentCursorPosition()
         {
             GetCursorPos(out Point result);
             return result;
         }
 
-        public static Point GetCursorPosition()
+        public Point GetCursorPosition()
         {
             // Busy-wait with a small sleep to avoid high CPU when picking a point
             while (true)
@@ -51,21 +56,23 @@ namespace AutoClicker.Models.Mouse
             }
         }
 
-        public static async Task StartClicking(Click click)
+        public async Task StartClicking(Click click)
         {
             if (click == null) throw new ArgumentNullException(nameof(click));
 
             // Prevent multiple concurrent click loops
-            lock (LockObject)
+            lock (_lockObject)
             {
-                if (isRunning)
+                if (_isRunning)
+                {
                     return;
+                }
 
-                isRunning = true;
-                Cts = new CancellationTokenSource();
+                _isRunning = true;
+                _cts = new CancellationTokenSource();
             }
 
-            var token = Cts.Token;
+            var token = _cts.Token;
 
             // Snapshot click configuration at start
             var repeats = click.Repeats.TotalTimes;             // -1 => endless
@@ -123,27 +130,29 @@ namespace AutoClicker.Models.Mouse
             }
             finally
             {
-                lock (LockObject)
+                lock (_lockObject)
                 {
-                    Cts?.Dispose();
-                    Cts = null;
-                    isRunning = false;
+                    _cts?.Dispose();
+                    _cts = null;
+                    _isRunning = false;
                 }
 
                 ClickingStopped?.Invoke();
             }
         }
 
-        public static void StopClicking()
+        public void StopClicking()
         {
-            lock (LockObject)
+            lock (_lockObject)
             {
-                if (!isRunning)
+                if (!_isRunning)
+                {
                     return;
+                }
 
                 try
                 {
-                    Cts?.Cancel();
+                    _cts?.Cancel();
                 }
                 catch
                 {
@@ -174,7 +183,5 @@ namespace AutoClicker.Models.Mouse
         {
             mouse_event(action, x, y, dwData, dwExtraInfo);
         }
-
-        #endregion [Methods]
     }
 }
