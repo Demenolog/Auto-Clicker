@@ -4,6 +4,7 @@ using AutoClicker.Models.Other;
 using AutoClicker.Services.Interfaces;
 using AutoClicker.Services.Settings;
 using AutoClicker.ViewModels.Base;
+using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -339,11 +340,21 @@ namespace AutoClicker.ViewModels
 
         internal async void OnStartClickingExecute(object p)
         {
-            var config = BuildClickConfig();
-            var click = new Click(config);
+            try
+            {
+                var config = BuildClickConfig();
+                var click = new Click(config);
 
-            IsRunning = true;
-            await _mouseClicker.StartClicking(click);
+                IsRunning = true;
+                await _mouseClicker.StartClicking(click);
+            }
+            catch (Exception ex)
+            {
+                _mouseClicker.StopClicking();
+                IsRunning = false;
+                MessageBox.Show($"Unable to start clicking. {ex.Message}", "AutoClicker Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         #endregion Start clicking command
