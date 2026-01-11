@@ -11,6 +11,8 @@ namespace AutoClicker.Services
         {
             if (!ChildWindows.Contains(window))
             {
+                window.Closed -= WindowOnClosed;
+                window.Closed += WindowOnClosed;
                 ChildWindows.Add(window);
             }
         }
@@ -20,6 +22,17 @@ namespace AutoClicker.Services
             if (ChildWindows.Contains(window))
             {
                 ChildWindows.Remove(window);
+            }
+
+            window.Closed -= WindowOnClosed;
+        }
+
+        private static void WindowOnClosed(object sender, System.EventArgs e)
+        {
+            if (sender is Window window)
+            {
+                window.Closed -= WindowOnClosed;
+                Remove(window);
             }
         }
 
