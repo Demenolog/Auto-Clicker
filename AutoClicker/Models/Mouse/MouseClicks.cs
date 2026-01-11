@@ -17,6 +17,8 @@ namespace AutoClicker.Models.Mouse
 
         public static CancellationTokenSource? Cts { get; private set; }
 
+        public static event Action? ClickingStopped;
+
         #endregion [Properties]
 
         #region [Methods]
@@ -127,6 +129,8 @@ namespace AutoClicker.Models.Mouse
                     Cts = null;
                     isRunning = false;
                 }
+
+                ClickingStopped?.Invoke();
             }
         }
 
