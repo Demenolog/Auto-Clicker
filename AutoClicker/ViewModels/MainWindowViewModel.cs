@@ -1,12 +1,12 @@
 ﻿using AutoClicker.Infrastructure.Commands;
-using AutoClicker.Models.Mouse;
+using AutoClicker.Models.Clicks;
 using AutoClicker.Models.Other;
 using AutoClicker.Services;
+using AutoClicker.Services.Interfaces;
 using AutoClicker.ViewModels.Base;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using AutoClicker.Models.Clicks;
 using Point = System.Drawing.Point;
 
 namespace AutoClicker.ViewModels
@@ -291,7 +291,7 @@ namespace AutoClicker.ViewModels
 
             try
             {
-                var point = await Task.Run(MouseClicks.GetCursorPosition);
+                var point = await Task.Run(_mouseClicker.GetCursorPosition);
                 await Application.Current.Dispatcher.InvokeAsync(() =>
                 {
                     XAxisTextBox = point.X.ToString();
@@ -326,7 +326,7 @@ namespace AutoClicker.ViewModels
             var click = new Click(config);
 
             IsRunning = true;
-            await MouseClicks.StartClicking(click);
+            await _mouseClicker.StartClicking(click);
         }
 
         #endregion Start clicking command
@@ -340,7 +340,7 @@ namespace AutoClicker.ViewModels
         internal void OnStopClickingExecute(object p)
         {
             IsRunning = false;
-            MouseClicks.StopClicking();
+            _mouseClicker.StopClicking();
         }
 
         #endregion Stop clicking command
@@ -382,8 +382,11 @@ namespace AutoClicker.ViewModels
 
         #endregion [Running state]
 
-        public MainWindowViewModel()
+        private readonly IMouseClicker _mouseClicker;
+
+        public MainWindowViewModel(IMouseClicker mouseClicker)
         {
+            _mouseClicker = mouseClicker;
             StartClicking = new LambdaCommand(OnStartClickingExecute, CanStartClickingExecuted);
 
             StopClicking = new LambdaCommand(OnStopClickingExecute, CanStopClickingExecuted);
@@ -392,7 +395,7 @@ namespace AutoClicker.ViewModels
 
             OpenHotKeysWindow = new LambdaCommand(OnOpenHotKeysWindowExecute, CanOpenHotKeysWindowExecuted);
 
-            MouseClicks.ClickingStopped += OnClickingStopped;
+            _mouseClicker.ClickingStopped += OnClickingStopped;
         }
 
         private void OnClickingStopped()
@@ -405,6 +408,10 @@ namespace AutoClicker.ViewModels
 
         private ClickConfig BuildClickConfig()
         {
+            var position = IsCurrentLocationSelected
+                ? _mouseClicker.GetCurrentCursorPosition()
+                : new Point(int.Parse(XAxisTextBox), int.Parse(YAxisTextBox));
+
             return new ClickConfig(
                 new ClickIntervalConfig(
                     HoursTextBox,
@@ -419,8 +426,8 @@ namespace AutoClicker.ViewModels
                     RepeatTimesTextBox),
                 new ClickPositionConfig(
                     IsCurrentLocationSelected,
-                    XAxisTextBox,
-                    YAxisTextBox));
+                    position.X.ToString(),
+                    position.Y.ToString()));
         }
     }
 }
