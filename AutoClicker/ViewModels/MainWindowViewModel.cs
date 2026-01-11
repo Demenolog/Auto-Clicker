@@ -356,6 +356,13 @@ namespace AutoClicker.ViewModels
         {
             try
             {
+                if (PositionMode == PositionMode.Fixed && !IsFixedPositionWithinVirtualScreen())
+                {
+                    MessageBox.Show("Fixed X/Y position is outside the virtual screen bounds.",
+                        "AutoClicker Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
                 var config = BuildClickConfig();
                 var click = new Click(config);
 
@@ -475,6 +482,19 @@ namespace AutoClicker.ViewModels
                     PositionMode == PositionMode.Current,
                     position.X.ToString(),
                     position.Y.ToString()));
+        }
+
+        private bool IsFixedPositionWithinVirtualScreen()
+        {
+            var x = ParseAxisValue(XAxisTextBox);
+            var y = ParseAxisValue(YAxisTextBox);
+
+            var left = SystemParameters.VirtualScreenLeft;
+            var top = SystemParameters.VirtualScreenTop;
+            var right = left + SystemParameters.VirtualScreenWidth;
+            var bottom = top + SystemParameters.VirtualScreenHeight;
+
+            return x >= left && x < right && y >= top && y < bottom;
         }
 
         private static int ParseAxisValue(string value)
