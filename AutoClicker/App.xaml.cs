@@ -1,4 +1,5 @@
 ﻿using AutoClicker.Services;
+using AutoClicker.Services.Interfaces;
 using AutoClicker.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -25,6 +26,9 @@ namespace AutoClicker
         {
             var host = Host;
 
+            var settingsService = host.Services.GetRequiredService<ISettingsService>();
+            settingsService.Load();
+
             base.OnStartup(e);
 
             await host.StartAsync();
@@ -32,6 +36,9 @@ namespace AutoClicker
 
         protected override async void OnExit(ExitEventArgs e)
         {
+            var settingsService = Host.Services.GetRequiredService<ISettingsService>();
+            settingsService.Save();
+
             base.OnExit(e);
 
             using (Host)
