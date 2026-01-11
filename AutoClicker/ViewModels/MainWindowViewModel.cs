@@ -322,10 +322,10 @@ namespace AutoClicker.ViewModels
 
         internal async void OnStartClickingExecute(object p)
         {
-            var click = new Click();
+            var config = BuildClickConfig();
 
             IsRunning = true;
-            await MouseClicks.StartClicking(click);
+            await MouseClicks.StartClicking(config);
         }
 
         #endregion Start clicking command
@@ -400,6 +400,26 @@ namespace AutoClicker.ViewModels
             {
                 IsRunning = false;
             });
+        }
+
+        private ClickConfig BuildClickConfig()
+        {
+            return new ClickConfig(
+                new ClickIntervalConfig(
+                    HoursTextBox,
+                    MinutesTextBox,
+                    SecondsTextBox,
+                    MillisecondsTextBox),
+                new ClickOptionsConfig(
+                    SelectedMouseButton,
+                    SelectedMouseButtonMode),
+                new ClickRepeatsConfig(
+                    IsRepeatUntilStoppedSelected,
+                    RepeatTimesTextBox),
+                new ClickPositionConfig(
+                    IsCurrentLocationSelected,
+                    XAxisTextBox,
+                    YAxisTextBox));
         }
     }
 }
