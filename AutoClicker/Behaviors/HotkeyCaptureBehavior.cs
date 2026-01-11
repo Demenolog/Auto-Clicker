@@ -1,4 +1,6 @@
-﻿using Microsoft.Xaml.Behaviors;
+﻿using AutoClicker.Models.Hotkeys;
+using AutoClicker.ViewModels;
+using Microsoft.Xaml.Behaviors;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -20,19 +22,28 @@ namespace AutoClicker.Behaviors
 
         private void OnPreviewKeyDown(object sender, KeyEventArgs e)
         {
-            // Build a name like "Ctrl" or "Alt+F5"
-            string keyName = e.Key == Key.System ? e.SystemKey.ToString() : e.Key.ToString();
-
-            if (Keyboard.Modifiers != ModifierKeys.None)
-                keyName = Keyboard.Modifiers + "+" + keyName;
+            var key = e.Key == Key.System ? e.SystemKey : e.Key;
+            var modifiers = Keyboard.Modifiers;
+            var hotKeyBinding = new HotKeyBinding(modifiers, key);
 
             var tb = (TextBox)sender;
-            tb.Text = keyName;
-            tb.CaretIndex = tb.Text.Length;
-
-            // Propagate to ViewModel
             var binding = tb.GetBindingExpression(TextBox.TextProperty);
-            binding?.UpdateSource();
+            var bindingPath = binding?.ParentBinding?.Path?.Path;
+
+            if (tb.DataContext is HotKeyWindowViewModel viewModel)
+            {
+                if (bindingPath == nameof(HotKeyWindowViewModel.StartHotKey))
+                {
+                    viewModel.SetStartHotKey(hotKeyBinding);
+                }
+                else if (bindingPath == nameof(HotKeyWindowViewModel.StopHotKey))
+                {
+                    viewModel.SetStopHotKey(hotKeyBinding);
+                }
+            }
+
+            tb.Text = hotKeyBinding.ToDisplayString();
+            tb.CaretIndex = tb.Text.Length;
 
             e.Handled = true;       // prevent default text input
         }
