@@ -193,7 +193,8 @@ namespace AutoClicker.Models.Hotkeys
 
         private static void LogRegistrationWarning(string message)
         {
-            var logger = App.Services.GetService<ILogger<GlobalHotKey>>();
+            var loggerFactory = App.Services.GetService<ILoggerFactory>();
+            var logger = loggerFactory?.CreateLogger(nameof(GlobalHotKey));
             logger?.LogWarning(message);
         }
 
