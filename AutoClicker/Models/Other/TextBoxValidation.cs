@@ -6,12 +6,18 @@ namespace AutoClicker.Models.Other
     {
         public static bool IsPositiveIntNumber(string text)
         {
-            return text.Length != 0 && (int.TryParse(text, out _) && int.Parse(text) >= 0);
+            if (string.IsNullOrEmpty(text))
+                return true;
+
+            return int.TryParse(text, out var value) && value >= 0;
         }
 
         public static bool IsIntNumber(string text)
         {
-            return text.Length != 0 && int.TryParse(text, out _);
+            if (string.IsNullOrEmpty(text))
+                return true;
+
+            return int.TryParse(text, out _);
         }
     }
 }
