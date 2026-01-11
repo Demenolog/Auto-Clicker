@@ -1,8 +1,12 @@
-﻿using AutoClicker.Services;
-using System.Windows.Interop;
+﻿using AutoClicker.Infrastructure.Constants.HotkeysClass;
+using AutoClicker.Infrastructure.UnsafeCode;
+using AutoClicker.Models.Hotkeys;
+using AutoClicker.Services;
+using AutoClicker.Services.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Windows;
-using AutoClicker.Models.Hotkeys;
+using System.Windows.Interop;
 
 namespace AutoClicker.Views.Main
 {
@@ -27,7 +31,23 @@ namespace AutoClicker.Views.Main
 
         protected override void OnClosed(EventArgs e)
         {
-            _source!.RemoveHook(GlobalHotKey.HwndHook);
+            if (_source is not null)
+            {
+                _source.RemoveHook(GlobalHotKey.HwndHook);
+            }
+
+            var mouseClicker = App.Services.GetRequiredService<IMouseClicker>();
+            if (mouseClicker.IsRunning)
+            {
+                mouseClicker.StopClicking();
+            }
+
+            var handle = new WindowInteropHelper(this).Handle;
+            if (handle != IntPtr.Zero)
+            {
+                User32.UnregisterHotKey(handle, GlobalHotKeyConstance.START_HOTKEY_ID);
+                User32.UnregisterHotKey(handle, GlobalHotKeyConstance.STOP_HOTKEY_ID);
+            }
 
             ChildWindowsService.CloseAll();
 
