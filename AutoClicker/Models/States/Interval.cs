@@ -1,6 +1,5 @@
 using System;
-using AutoClicker.Services.WindowHelper;
-using AutoClicker.ViewModels;
+using AutoClicker.Models.Clicks;
 
 namespace AutoClicker.Models.States
 {
@@ -12,14 +11,12 @@ namespace AutoClicker.Models.States
         private readonly string _milliseconds;
         private readonly int _totalTime;
 
-        private static readonly MainWindowViewModel MainWindow = ViewModelLocatorProvider.MainWindow;
-
-        public Interval()
+        public Interval(ClickIntervalConfig config)
         {
-            _hours = MainWindow.HoursTextBox;
-            _minutes = MainWindow.MinutesTextBox;
-            _seconds = MainWindow.SecondsTextBox;
-            _milliseconds = MainWindow.MillisecondsTextBox;
+            _hours = config.Hours;
+            _minutes = config.Minutes;
+            _seconds = config.Seconds;
+            _milliseconds = config.Milliseconds;
             _totalTime = GetIntervalTime();
         }
 

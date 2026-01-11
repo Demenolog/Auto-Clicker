@@ -1,6 +1,5 @@
 ﻿using System;
-using AutoClicker.Services.WindowHelper;
-using AutoClicker.ViewModels;
+using AutoClicker.Models.Clicks;
 using static AutoClicker.Infrastructure.Constants.MouseClass.MouseClassConstans;
 
 namespace AutoClicker.Models.States
@@ -11,12 +10,11 @@ namespace AutoClicker.Models.States
         private readonly string _buttonMode;
         private readonly int _downMouseEventFlag;
         private readonly int _upMouseEventFlag;
-        private static readonly MainWindowViewModel MainWindow = ViewModelLocatorProvider.MainWindow;
 
-        public Options()
+        public Options(ClickOptionsConfig config)
         {
-            _button = MainWindow.SelectedMouseButton;
-            _buttonMode = MainWindow.SelectedMouseButtonMode;
+            _button = config.Button;
+            _buttonMode = config.ButtonMode;
 
             (_downMouseEventFlag, _upMouseEventFlag) = Button switch
             {

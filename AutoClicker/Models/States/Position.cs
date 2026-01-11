@@ -1,25 +1,23 @@
 ﻿using System.Drawing;
+using AutoClicker.Models.Clicks;
 using AutoClicker.Models.Mouse;
-using AutoClicker.Services.WindowHelper;
-using AutoClicker.ViewModels;
 
 namespace AutoClicker.Models.Clicks.States
 {
     internal class Position
     {
         private readonly Point _position;
-        private static readonly MainWindowViewModel MainWindow = ViewModelLocatorProvider.MainWindow;
 
-        public Position()
+        public Position(ClickPositionConfig config)
         {
-            _position = GetPosition();
+            _position = GetPosition(config);
         }
 
         public Point CurrentPosition => _position;
 
-        private Point GetPosition()
+        private Point GetPosition(ClickPositionConfig config)
         {
-            var isCurrentLocationSelected = MainWindow.IsCurrentLocationSelected;
+            var isCurrentLocationSelected = config.IsCurrentLocationSelected;
             Point position;
 
             if (isCurrentLocationSelected)
@@ -28,8 +26,8 @@ namespace AutoClicker.Models.Clicks.States
             }
             else
             {
-                var x = int.Parse(MainWindow.XAxisTextBox);
-                var y = int.Parse(MainWindow.YAxisTextBox);
+                var x = int.Parse(config.XAxis);
+                var y = int.Parse(config.YAxis);
 
                 position = new Point(x, y);
             }

@@ -1,30 +1,28 @@
-using AutoClicker.Services.WindowHelper;
-using AutoClicker.ViewModels;
+using AutoClicker.Models.Clicks;
 
 namespace AutoClicker.Models.States
 {
     internal class Repeats
     {
         private readonly int _repeats;
-        private static readonly MainWindowViewModel MainWindow = ViewModelLocatorProvider.MainWindow;
 
-        public Repeats()
+        public Repeats(ClickRepeatsConfig config)
         {
-            _repeats = GetRepeats();
+            _repeats = GetRepeats(config);
         }
 
         public int TotalTimes => _repeats;
 
-        private int GetRepeats()
+        private int GetRepeats(ClickRepeatsConfig config)
         {
-            var isEndless = MainWindow.IsRepeatUntilStoppedSelected;
+            var isEndless = config.IsRepeatUntilStopped;
 
             if (isEndless)
             {
                 return -1;
             }
 
-            var text = MainWindow.RepeatTimesTextBox;
+            var text = config.RepeatTimes;
 
             if (!int.TryParse(text, out var times))
             {

@@ -11,12 +11,12 @@ namespace AutoClicker.Models.Clicks
         private readonly Repeats _repeats;
         private readonly Position _position;
 
-        public Click()
+        public Click(ClickConfig config)
         {
-            _interval = new Interval();
-            _options = new Options();
-            _repeats = new Repeats();
-            _position = new Position();
+            _interval = new Interval(config.Interval);
+            _options = new Options(config.Options);
+            _repeats = new Repeats(config.Repeats);
+            _position = new Position(config.Position);
         }
 
         public Interval Interval => _interval;
