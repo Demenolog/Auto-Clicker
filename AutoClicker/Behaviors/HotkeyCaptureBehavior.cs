@@ -23,6 +23,12 @@ namespace AutoClicker.Behaviors
         private void OnPreviewKeyDown(object sender, KeyEventArgs e)
         {
             var key = e.Key == Key.System ? e.SystemKey : e.Key;
+            if (IsModifierKey(key))
+            {
+                e.Handled = true;       // prevent default text input
+                return;
+            }
+
             var modifiers = Keyboard.Modifiers;
             var hotKeyBinding = new HotKeyDefinition(modifiers, key);
 
@@ -46,6 +52,18 @@ namespace AutoClicker.Behaviors
             tb.CaretIndex = tb.Text.Length;
 
             e.Handled = true;       // prevent default text input
+        }
+
+        private static bool IsModifierKey(Key key)
+        {
+            return key == Key.LeftShift
+                || key == Key.RightShift
+                || key == Key.LeftCtrl
+                || key == Key.RightCtrl
+                || key == Key.LeftAlt
+                || key == Key.RightAlt
+                || key == Key.LWin
+                || key == Key.RWin;
         }
     }
 }
