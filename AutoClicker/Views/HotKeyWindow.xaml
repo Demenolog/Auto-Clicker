@@ -26,7 +26,7 @@
                        Content="Start hotkey:">
                 </Label>
                 <TextBox Style="{StaticResource TextBoxHotKeysStyle}"
-                         Text="{Binding StartHotKey, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                         Text="{Binding StartHotKeyDisplay, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                     <i:Interaction.Behaviors>
                         <beh:HotkeyCaptureBehavior />
                     </i:Interaction.Behaviors>
@@ -39,7 +39,7 @@
                        Content="Stop hotkey:">
                 </Label>
                 <TextBox Style="{StaticResource TextBoxHotKeysStyle}"
-                         Text="{Binding StopHotKey, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                         Text="{Binding StopHotKeyDisplay, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                     <i:Interaction.Behaviors>
                         <beh:HotkeyCaptureBehavior />
                     </i:Interaction.Behaviors>

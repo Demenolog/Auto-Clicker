@@ -24,7 +24,7 @@ namespace AutoClicker.Behaviors
         {
             var key = e.Key == Key.System ? e.SystemKey : e.Key;
             var modifiers = Keyboard.Modifiers;
-            var hotKeyBinding = new HotKeyBinding(modifiers, key);
+            var hotKeyBinding = new HotKeyDefinition(modifiers, key);
 
             var tb = (TextBox)sender;
             var binding = tb.GetBindingExpression(TextBox.TextProperty);
@@ -32,11 +32,11 @@ namespace AutoClicker.Behaviors
 
             if (tb.DataContext is HotKeyWindowViewModel viewModel)
             {
-                if (bindingPath == nameof(HotKeyWindowViewModel.StartHotKey))
+                if (bindingPath == nameof(HotKeyWindowViewModel.StartHotKeyDisplay))
                 {
                     viewModel.SetStartHotKey(hotKeyBinding);
                 }
-                else if (bindingPath == nameof(HotKeyWindowViewModel.StopHotKey))
+                else if (bindingPath == nameof(HotKeyWindowViewModel.StopHotKeyDisplay))
                 {
                     viewModel.SetStopHotKey(hotKeyBinding);
                 }

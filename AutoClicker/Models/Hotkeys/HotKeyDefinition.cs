@@ -2,18 +2,8 @@
 
 namespace AutoClicker.Models.Hotkeys
 {
-    internal sealed class HotKeyBinding
+    internal sealed record HotKeyDefinition(ModifierKeys Modifiers, Key Key)
     {
-        public HotKeyBinding(ModifierKeys modifiers, Key key)
-        {
-            Modifiers = modifiers;
-            Key = key;
-        }
-
-        public ModifierKeys Modifiers { get; }
-
-        public Key Key { get; }
-
         public string ToDisplayString()
         {
             if (Modifiers == ModifierKeys.None)

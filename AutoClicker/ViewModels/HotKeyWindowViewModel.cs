@@ -7,55 +7,55 @@ namespace AutoClicker.ViewModels
 {
     internal class HotKeyWindowViewModel : ViewModel
     {
-        #region StartHotKey : string - definition for textbox with start hotkey
+        #region StartHotKey : definition for textbox with start hotkey
 
-        private HotKeyBinding _startHotKeyBinding = GlobalHotKey.DefaultStartHotKey;
-        private string _startHotKey = GlobalHotKey.DefaultStartHotKey.ToDisplayString();
+        private HotKeyDefinition _startHotKey = GlobalHotKey.DefaultStartHotKey;
 
-        public HotKeyBinding StartHotKeyBinding
-        {
-            get => _startHotKeyBinding;
-            private set => SetField(ref _startHotKeyBinding, value);
-        }
-
-        public string StartHotKey
+        public HotKeyDefinition StartHotKey
         {
             get => _startHotKey;
-            private set => SetField(ref _startHotKey, value);
+            private set
+            {
+                if (SetField(ref _startHotKey, value))
+                {
+                    OnPropertyChanged(nameof(StartHotKeyDisplay));
+                }
+            }
         }
 
-        public void SetStartHotKey(HotKeyBinding binding)
+        public string StartHotKeyDisplay => StartHotKey.ToDisplayString();
+
+        public void SetStartHotKey(HotKeyDefinition binding)
         {
-            StartHotKeyBinding = binding;
-            StartHotKey = binding.ToDisplayString();
+            StartHotKey = binding;
         }
 
-        #endregion StartHotKey : string - definition for textbox with start hotkey
+        #endregion StartHotKey : definition for textbox with start hotkey
 
-        #region StopHotKey : string - Definition for textbox with stop hotkey
+        #region StopHotKey : definition for textbox with stop hotkey
 
-        private HotKeyBinding _stopHotKeyBinding = GlobalHotKey.DefaultStopHotKey;
-        private string _stopHotkey = GlobalHotKey.DefaultStopHotKey.ToDisplayString();
+        private HotKeyDefinition _stopHotKey = GlobalHotKey.DefaultStopHotKey;
 
-        public HotKeyBinding StopHotKeyBinding
+        public HotKeyDefinition StopHotKey
         {
-            get => _stopHotKeyBinding;
-            private set => SetField(ref _stopHotKeyBinding, value);
+            get => _stopHotKey;
+            private set
+            {
+                if (SetField(ref _stopHotKey, value))
+                {
+                    OnPropertyChanged(nameof(StopHotKeyDisplay));
+                }
+            }
         }
 
-        public string StopHotKey
+        public string StopHotKeyDisplay => StopHotKey.ToDisplayString();
+
+        public void SetStopHotKey(HotKeyDefinition binding)
         {
-            get => _stopHotkey;
-            private set => SetField(ref _stopHotkey, value);
+            StopHotKey = binding;
         }
 
-        public void SetStopHotKey(HotKeyBinding binding)
-        {
-            StopHotKeyBinding = binding;
-            StopHotKey = binding.ToDisplayString();
-        }
-
-        #endregion StopHotKey : string - Definition for textbox with stop hotkey
+        #endregion StopHotKey : definition for textbox with stop hotkey
 
         #region Accept command
 
