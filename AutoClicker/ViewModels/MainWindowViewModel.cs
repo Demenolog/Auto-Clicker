@@ -1,8 +1,8 @@
 ﻿using AutoClicker.Infrastructure.Commands;
 using AutoClicker.Models.Clicks;
 using AutoClicker.Models.Other;
-using AutoClicker.Services;
 using AutoClicker.Services.Interfaces;
+using AutoClicker.Services.Settings;
 using AutoClicker.ViewModels.Base;
 using System.Threading.Tasks;
 using System.Windows;
@@ -25,6 +25,9 @@ namespace AutoClicker.ViewModels
 
     internal class MainWindowViewModel : ViewModel
     {
+        private readonly ISettingsService _settingsService;
+        private bool _isLoadingSettings;
+
         #region [Cilick interval]
 
         #region Properties
@@ -40,7 +43,10 @@ namespace AutoClicker.ViewModels
             {
                 if (TextBoxValidation.IsPositiveIntNumber(value))
                 {
-                    SetField(ref _hours, value);
+                    if (SetField(ref _hours, value))
+                    {
+                        UpdateSettings(settings => settings.Hours = value);
+                    }
                 }
             }
         }
@@ -58,7 +64,10 @@ namespace AutoClicker.ViewModels
             {
                 if (TextBoxValidation.IsPositiveIntNumber(value))
                 {
-                    SetField(ref _minutes, value);
+                    if (SetField(ref _minutes, value))
+                    {
+                        UpdateSettings(settings => settings.Minutes = value);
+                    }
                 }
             }
         }
@@ -76,7 +85,10 @@ namespace AutoClicker.ViewModels
             {
                 if (TextBoxValidation.IsPositiveIntNumber(value))
                 {
-                    SetField(ref _secondsTextBox, value);
+                    if (SetField(ref _secondsTextBox, value))
+                    {
+                        UpdateSettings(settings => settings.Seconds = value);
+                    }
                 }
             }
         }
@@ -94,7 +106,10 @@ namespace AutoClicker.ViewModels
             {
                 if (TextBoxValidation.IsPositiveIntNumber(value))
                 {
-                    SetField(ref _milliseconds, value);
+                    if (SetField(ref _milliseconds, value))
+                    {
+                        UpdateSettings(settings => settings.Milliseconds = value);
+                    }
                 }
             }
         }
@@ -116,7 +131,13 @@ namespace AutoClicker.ViewModels
         public string SelectedMouseButton
         {
             get => _mouseButton;
-            set => SetField(ref _mouseButton, value);
+            set
+            {
+                if (SetField(ref _mouseButton, value))
+                {
+                    UpdateSettings(settings => settings.SelectedMouseButton = value);
+                }
+            }
         }
 
         #endregion Selected Mouse Button : string - Selected mouse button from combobox
@@ -128,7 +149,13 @@ namespace AutoClicker.ViewModels
         public string SelectedMouseButtonMode
         {
             get => _selectedMouseButtonMode;
-            set => SetField(ref _selectedMouseButtonMode, value);
+            set
+            {
+                if (SetField(ref _selectedMouseButtonMode, value))
+                {
+                    UpdateSettings(settings => settings.SelectedMouseButtonMode = value);
+                }
+            }
         }
 
         #endregion Selected Mouse Button Mode : string - Selected click type from combobox
@@ -152,7 +179,10 @@ namespace AutoClicker.ViewModels
             {
                 if (TextBoxValidation.IsPositiveIntNumber(value))
                 {
-                    SetField(ref _repeatTimes, value);
+                    if (SetField(ref _repeatTimes, value))
+                    {
+                        UpdateSettings(settings => settings.RepeatTimes = value);
+                    }
                 }
             }
         }
@@ -166,7 +196,13 @@ namespace AutoClicker.ViewModels
         public RepeatMode RepeatMode
         {
             get => _repeatMode;
-            set => SetField(ref _repeatMode, value);
+            set
+            {
+                if (SetField(ref _repeatMode, value))
+                {
+                    UpdateSettings(settings => settings.RepeatUntilStopped = value == RepeatMode.UntilStopped);
+                }
+            }
         }
 
         #endregion Repeat Mode : RepeatMode - selected repeat mode
@@ -186,7 +222,13 @@ namespace AutoClicker.ViewModels
         public PositionMode PositionMode
         {
             get => _positionMode;
-            set => SetField(ref _positionMode, value);
+            set
+            {
+                if (SetField(ref _positionMode, value))
+                {
+                    UpdateSettings(settings => settings.PositionUseCurrent = value == PositionMode.Current);
+                }
+            }
         }
 
         #endregion Position Mode : PositionMode - selected cursor position mode
@@ -202,7 +244,10 @@ namespace AutoClicker.ViewModels
             {
                 if (TextBoxValidation.IsIntNumber(value))
                 {
-                    SetField(ref _xAxis, value);
+                    if (SetField(ref _xAxis, value))
+                    {
+                        UpdateSettings(settings => settings.LastX = value);
+                    }
                 }
             }
         }
@@ -220,7 +265,10 @@ namespace AutoClicker.ViewModels
             {
                 if (TextBoxValidation.IsIntNumber(value))
                 {
-                    SetField(ref _yAxis, value);
+                    if (SetField(ref _yAxis, value))
+                    {
+                        UpdateSettings(settings => settings.LastY = value);
+                    }
                 }
             }
         }
@@ -355,9 +403,11 @@ namespace AutoClicker.ViewModels
 
         private readonly IMouseClicker _mouseClicker;
 
-        public MainWindowViewModel(IMouseClicker mouseClicker)
+        public MainWindowViewModel(IMouseClicker mouseClicker, ISettingsService settingsService)
         {
             _mouseClicker = mouseClicker;
+            _settingsService = settingsService;
+            ApplySettings(_settingsService.Settings);
             StartClicking = new LambdaCommand(OnStartClickingExecute, CanStartClickingExecuted);
 
             StopClicking = new LambdaCommand(OnStopClickingExecute, CanStopClickingExecuted);
@@ -404,6 +454,33 @@ namespace AutoClicker.ViewModels
         private static int ParseAxisValue(string value)
         {
             return int.TryParse(value, out var axis) ? axis : 0;
+        }
+
+        private void ApplySettings(AppSettings settings)
+        {
+            _isLoadingSettings = true;
+            HoursTextBox = settings.Hours ?? "0";
+            MinutesTextBox = settings.Minutes ?? "0";
+            SecondsTextBox = settings.Seconds ?? "1";
+            MillisecondsTextBox = settings.Milliseconds ?? "0";
+            SelectedMouseButton = settings.SelectedMouseButton ?? "Left";
+            SelectedMouseButtonMode = settings.SelectedMouseButtonMode ?? "Single";
+            RepeatTimesTextBox = settings.RepeatTimes ?? "1";
+            RepeatMode = settings.RepeatUntilStopped ? RepeatMode.UntilStopped : RepeatMode.Times;
+            PositionMode = settings.PositionUseCurrent ? PositionMode.Current : PositionMode.Fixed;
+            XAxisTextBox = settings.LastX ?? "0";
+            YAxisTextBox = settings.LastY ?? "0";
+            _isLoadingSettings = false;
+        }
+
+        private void UpdateSettings(System.Action<AppSettings> updateAction)
+        {
+            if (_isLoadingSettings)
+            {
+                return;
+            }
+
+            _settingsService.Update(updateAction);
         }
     }
 }
