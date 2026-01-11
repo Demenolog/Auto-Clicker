@@ -11,5 +11,10 @@ namespace AutoClicker.Views
         {
             InitializeComponent();
         }
+
+        private void OnAcceptClick(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
     }
 }

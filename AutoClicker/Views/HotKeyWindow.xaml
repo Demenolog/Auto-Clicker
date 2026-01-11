@@ -57,7 +57,8 @@
                     VerticalAlignment="Center">
             <Button Style="{StaticResource ButtonHotKeysStyle}"
                     Content="Accept"
-                    Command="{Binding ChangeHotKeys}">
+                    Command="{Binding ChangeHotKeys}"
+                    Click="OnAcceptClick">
             </Button>
             <Button Style="{StaticResource ButtonHotKeysStyle}"
                     Content="Reset"
