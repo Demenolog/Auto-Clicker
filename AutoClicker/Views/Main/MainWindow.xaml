@@ -224,12 +224,12 @@
                         Orientation="Horizontal">
                 <!--Start HotKey Label-->
                 <Label Style="{DynamicResource LabelBottomRowStyle}"
-                       Content="{Binding StartHotKey, UpdateSourceTrigger=PropertyChanged}"
+                       Content="{Binding StartHotKeyDisplay, UpdateSourceTrigger=PropertyChanged}"
                        ContentStringFormat="Start: [{0}]">
                 </Label>
                 <!--Stop HotKey Label-->
                 <Label Style="{DynamicResource LabelBottomRowStyle}"
-                       Content="{Binding StopHotKey, UpdateSourceTrigger=PropertyChanged}"
+                       Content="{Binding StopHotKeyDisplay, UpdateSourceTrigger=PropertyChanged}"
                        ContentStringFormat="Stop: [{0}]">
                 </Label>
             </StackPanel>

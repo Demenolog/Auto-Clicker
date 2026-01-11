@@ -11,8 +11,8 @@ namespace AutoClicker.Models.Hotkeys
     {
         private static readonly ViewModelLocator Locator = new();
         private static IntPtr s_handle;
-        internal static readonly HotKeyBinding DefaultStartHotKey = new(ModifierKeys.None, Key.F3);
-        internal static readonly HotKeyBinding DefaultStopHotKey = new(ModifierKeys.None, Key.F3);
+        internal static readonly HotKeyDefinition DefaultStartHotKey = new(ModifierKeys.None, Key.F3);
+        internal static readonly HotKeyDefinition DefaultStopHotKey = new(ModifierKeys.None, Key.F3);
 
         public static void ChangeHotKeys()
         {
@@ -66,7 +66,7 @@ namespace AutoClicker.Models.Hotkeys
                         case START_HOTKEY_ID:
                             uint startModifiers = (uint)((int)lParam & 0xFFFF);
                             uint vkey = (uint)(((int)lParam >> 16) & 0xFFFF);
-                            var startBinding = Locator.HotKeyWindowModel.StartHotKeyBinding;
+                            var startBinding = Locator.HotKeyWindowModel.StartHotKey;
 
                             if (vkey == GetVirtualKeyState(startBinding.Key)
                                 && startModifiers == GetModifierFlags(startBinding.Modifiers)
@@ -79,7 +79,7 @@ namespace AutoClicker.Models.Hotkeys
                         case STOP_HOTKEY_ID:
                             uint stopModifiers = (uint)((int)lParam & 0xFFFF);
                             uint stopVKey = (uint)(((int)lParam >> 16) & 0xFFFF);
-                            var stopBinding = Locator.HotKeyWindowModel.StopHotKeyBinding;
+                            var stopBinding = Locator.HotKeyWindowModel.StopHotKey;
 
                             if (stopVKey == GetVirtualKeyState(stopBinding.Key)
                                 && stopModifiers == GetModifierFlags(stopBinding.Modifiers)
@@ -116,8 +116,8 @@ namespace AutoClicker.Models.Hotkeys
 
         private static void Registration()
         {
-            var startBinding = Locator.HotKeyWindowModel.StartHotKeyBinding;
-            var stopBinding = Locator.HotKeyWindowModel.StopHotKeyBinding;
+            var startBinding = Locator.HotKeyWindowModel.StartHotKey;
+            var stopBinding = Locator.HotKeyWindowModel.StopHotKey;
 
             User32.RegisterHotKey(s_handle, START_HOTKEY_ID, GetModifierFlags(startBinding.Modifiers), GetVirtualKeyState(startBinding.Key));
             User32.RegisterHotKey(s_handle, STOP_HOTKEY_ID, GetModifierFlags(stopBinding.Modifiers), GetVirtualKeyState(stopBinding.Key));
