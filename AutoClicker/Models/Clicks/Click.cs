@@ -1,3 +1,4 @@
+using System;
 using AutoClicker.Models.Clicks.States;
 using AutoClicker.Models.States;
 using Options = AutoClicker.Models.States.Options;
@@ -13,6 +14,9 @@ namespace AutoClicker.Models.Clicks
 
         public Click(ClickConfig config)
         {
+            if (config == null)
+                throw new ArgumentNullException(nameof(config));
+
             _interval = new Interval(config.Interval);
             _options = new Options(config.Options);
             _repeats = new Repeats(config.Repeats);

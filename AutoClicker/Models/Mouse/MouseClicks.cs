@@ -51,11 +51,9 @@ namespace AutoClicker.Models.Mouse
             }
         }
 
-        public static async Task StartClicking(ClickConfig config)
+        public static async Task StartClicking(Click click)
         {
-            if (config == null) throw new ArgumentNullException(nameof(config));
-
-            var click = new Click(config);
+            if (click == null) throw new ArgumentNullException(nameof(click));
 
             // Prevent multiple concurrent click loops
             lock (LockObject)
