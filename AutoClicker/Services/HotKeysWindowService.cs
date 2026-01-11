@@ -21,11 +21,19 @@ namespace AutoClicker.Services
         {
             if (HotKeyWindow != null) return;
 
-            HotKeyWindow = new HotKeyWindow();
-            HotKeyWindow.Closed += (o, args) => HotKeyWindow = null;
-            HotKeyWindow.Icon = new BitmapImage(new Uri("pack://application:,,,/Resources/Icons/Secondary/Gear.ico"));
+            var window = new HotKeyWindow();
+            HotKeyWindow = window;
+            EventHandler closedHandler = null;
+            closedHandler = (o, args) =>
+            {
+                window.Closed -= closedHandler;
+                ChildWindowsService.Remove(window);
+                HotKeyWindow = null;
+            };
+            window.Closed += closedHandler;
+            window.Icon = new BitmapImage(new Uri("pack://application:,,,/Resources/Icons/Secondary/Gear.ico"));
 
-            ChildWindowsService.Add(HotKeyWindow);
+            ChildWindowsService.Add(window);
         }
 
         public static bool Show()
