@@ -1,4 +1,4 @@
-﻿using AutoClicker.Infrastructure.Commands;
+using AutoClicker.Infrastructure.Commands;
 using AutoClicker.Models.Clicks;
 using AutoClicker.Models.Other;
 using AutoClicker.Services.Interfaces;
@@ -7,6 +7,7 @@ using AutoClicker.ViewModels.Base;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using AutoClicker.Services;
 using Point = System.Drawing.Point;
 
 namespace AutoClicker.ViewModels
