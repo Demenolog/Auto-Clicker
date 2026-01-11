@@ -11,6 +11,18 @@ using Point = System.Drawing.Point;
 
 namespace AutoClicker.ViewModels
 {
+    internal enum RepeatMode
+    {
+        UntilStopped,
+        Times
+    }
+
+    internal enum PositionMode
+    {
+        Current,
+        Fixed
+    }
+
     internal class MainWindowViewModel : ViewModel
     {
         #region [Cilick interval]
@@ -147,39 +159,17 @@ namespace AutoClicker.ViewModels
 
         #endregion RepeatTimesTextBox : string - get repeat times amount
 
-        #region Is Repeat Times Selected : bool - checking if repeat checkbox selected
+        #region Repeat Mode : RepeatMode - selected repeat mode
 
-        private bool _isRepeatTimes;
+        private RepeatMode _repeatMode = RepeatMode.UntilStopped;
 
-        public bool IsRepeatTimesSelected
+        public RepeatMode RepeatMode
         {
-            get => _isRepeatTimes;
-            set
-            {
-                SetField(ref _isRepeatTimes, value);
-                SetField(ref _isRepeatUntilStopped, !_isRepeatTimes);
-                OnPropertyChanged(nameof(IsRepeatUntilStoppedSelected));
-            }
+            get => _repeatMode;
+            set => SetField(ref _repeatMode, value);
         }
 
-        #endregion Is Repeat Times Selected : bool - checking if repeat checkbox selected
-
-        #region Is Repeat Until Stopped Selected : bool - checking if repeat until stopped checkbox selected
-
-        private bool _isRepeatUntilStopped = true;
-
-        public bool IsRepeatUntilStoppedSelected
-        {
-            get => _isRepeatUntilStopped;
-            set
-            {
-                SetField(ref _isRepeatUntilStopped, value);
-                SetField(ref _isRepeatTimes, !_isRepeatUntilStopped);
-                OnPropertyChanged(nameof(IsRepeatTimesSelected));
-            }
-        }
-
-        #endregion Is Repeat Until Stopped Selected : bool - checking if repeat until stopped checkbox selected
+        #endregion Repeat Mode : RepeatMode - selected repeat mode
 
         #endregion Properties
 
@@ -189,39 +179,17 @@ namespace AutoClicker.ViewModels
 
         #region Properties
 
-        #region IsCurrentLocationSelected : bool - checking if current location checkbox selected
+        #region Position Mode : PositionMode - selected cursor position mode
 
-        private bool _isCurrentLocation = true;
+        private PositionMode _positionMode = PositionMode.Current;
 
-        public bool IsCurrentLocationSelected
+        public PositionMode PositionMode
         {
-            get => _isCurrentLocation;
-            set
-            {
-                SetField(ref _isCurrentLocation, value);
-                SetField(ref _isPickLocation, !_isCurrentLocation);
-                OnPropertyChanged(nameof(IsPickLocationSelected));
-            }
+            get => _positionMode;
+            set => SetField(ref _positionMode, value);
         }
 
-        #endregion IsCurrentLocationSelected : bool - checking if current location checkbox selected
-
-        #region IsPickLocationSelected : bool - checking if pick location checkbox selected
-
-        private bool _isPickLocation;
-
-        public bool IsPickLocationSelected
-        {
-            get => _isPickLocation;
-            set
-            {
-                SetField(ref _isPickLocation, value);
-                SetField(ref _isCurrentLocation, !_isPickLocation);
-                OnPropertyChanged(nameof(IsCurrentLocationSelected));
-            }
-        }
-
-        #endregion IsPickLocationSelected : bool - checking if pick location checkbox selected
+        #endregion Position Mode : PositionMode - selected cursor position mode
 
         #region XAxisTextBox : string - Get\Set text value of X-axis textBox
 
@@ -408,7 +376,7 @@ namespace AutoClicker.ViewModels
 
         private ClickConfig BuildClickConfig()
         {
-            var position = IsCurrentLocationSelected
+            var position = PositionMode == PositionMode.Current
                 ? _mouseClicker.GetCurrentCursorPosition()
                 : new Point(ParseAxisValue(XAxisTextBox), ParseAxisValue(YAxisTextBox));
 
@@ -422,10 +390,10 @@ namespace AutoClicker.ViewModels
                     SelectedMouseButton,
                     SelectedMouseButtonMode),
                 new ClickRepeatsConfig(
-                    IsRepeatUntilStoppedSelected,
+                    RepeatMode == RepeatMode.UntilStopped,
                     RepeatTimesTextBox),
                 new ClickPositionConfig(
-                    IsCurrentLocationSelected,
+                    PositionMode == PositionMode.Current,
                     position.X.ToString(),
                     position.Y.ToString()));
         }
