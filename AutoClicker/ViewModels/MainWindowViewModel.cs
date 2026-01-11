@@ -318,12 +318,13 @@ namespace AutoClicker.ViewModels
 
         public ICommand StartClicking { get; }
 
-        private bool CanStartClickingExecuted(object p) => MouseClicks.Cts == null;
+        private bool CanStartClickingExecuted(object p) => !IsRunning;
 
         internal async void OnStartClickingExecute(object p)
         {
             var click = new Click();
 
+            IsRunning = true;
             await MouseClicks.StartClicking(click);
         }
 
@@ -333,10 +334,11 @@ namespace AutoClicker.ViewModels
 
         public ICommand StopClicking { get; }
 
-        private bool CanStopClickingExecuted(object p) => MouseClicks.Cts != null;
+        private bool CanStopClickingExecuted(object p) => IsRunning;
 
         internal void OnStopClickingExecute(object p)
         {
+            IsRunning = false;
             MouseClicks.StopClicking();
         }
 
@@ -361,6 +363,24 @@ namespace AutoClicker.ViewModels
 
         #endregion [Buttons section]
 
+        #region [Running state]
+
+        private bool _isRunning;
+
+        public bool IsRunning
+        {
+            get => _isRunning;
+            private set
+            {
+                if (SetField(ref _isRunning, value))
+                {
+                    CommandManager.InvalidateRequerySuggested();
+                }
+            }
+        }
+
+        #endregion [Running state]
+
         public MainWindowViewModel()
         {
             StartClicking = new LambdaCommand(OnStartClickingExecute, CanStartClickingExecuted);
@@ -370,6 +390,16 @@ namespace AutoClicker.ViewModels
             GetCursorPosition = new LambdaCommand(OnGetCursorPositionExecute, CanGetCursorPositionExecuted);
 
             OpenHotKeysWindow = new LambdaCommand(OnOpenHotKeysWindowExecute, CanOpenHotKeysWindowExecuted);
+
+            MouseClicks.ClickingStopped += OnClickingStopped;
+        }
+
+        private void OnClickingStopped()
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                IsRunning = false;
+            });
         }
     }
 }
