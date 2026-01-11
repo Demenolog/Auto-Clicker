@@ -13,7 +13,7 @@ namespace AutoClicker.Services.Interfaces
 
         Point GetCurrentCursorPosition();
 
-        Point GetCursorPosition();
+        bool TryGetCursorPosition(out Point position);
 
         Task StartClicking(Click click);
 

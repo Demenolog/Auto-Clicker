@@ -34,7 +34,7 @@ namespace AutoClicker.Services.MouseClicker
             return result;
         }
 
-        public Point GetCursorPosition()
+        public bool TryGetCursorPosition(out Point position)
         {
             // Busy-wait with a small sleep to avoid high CPU when picking a point
             while (true)
@@ -42,14 +42,15 @@ namespace AutoClicker.Services.MouseClicker
                 // Left mouse button -> capture and return
                 if (Convert.ToBoolean(GetKeyState(VirtualKeyStates.VK_LBUTTON) & KeyPressed))
                 {
-                    GetCursorPos(out Point point);
-                    return point;
+                    GetCursorPos(out position);
+                    return true;
                 }
 
-                // Esc -> cancel picking, return (0,0) as before
+                // Esc -> cancel picking
                 if (Convert.ToBoolean(GetKeyState(VirtualKeyStates.VK_ESCAPE) & KeyPressed))
                 {
-                    return new Point(0, 0);
+                    position = default;
+                    return false;
                 }
 
                 Thread.Sleep(10);
