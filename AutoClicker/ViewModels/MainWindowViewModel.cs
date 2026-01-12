@@ -599,12 +599,10 @@ namespace AutoClicker.ViewModels
 
                 if (delay > TimeSpan.Zero)
                 {
-                    await RunCountdownAsync(delay, token);
+                    _ = RunCountdownAsync(delay, token);
                 }
 
                 token.ThrowIfCancellationRequested();
-                IsStarting = false;
-                CountdownText = string.Empty;
 
                 var config = BuildClickConfig();
                 var click = new Click(config);
@@ -636,17 +634,38 @@ namespace AutoClicker.ViewModels
         {
             var remaining = delay;
 
-            while (remaining > TimeSpan.Zero)
+            try
             {
-                var secondsRemaining = Math.Max(1, (int)Math.Ceiling(remaining.TotalSeconds));
-                CountdownText = $"Starting in {secondsRemaining}s";
+                while (remaining > TimeSpan.Zero)
+                {
+                    var secondsRemaining = Math.Max(1, (int)Math.Ceiling(remaining.TotalSeconds));
+                    await Application.Current.Dispatcher.InvokeAsync(() =>
+                    {
+                        CountdownText = $"Starting in {secondsRemaining}s";
+                    });
 
-                var tick = remaining.TotalSeconds > 1
-                    ? TimeSpan.FromSeconds(1)
-                    : remaining;
+                    var tick = remaining.TotalSeconds > 1
+                        ? TimeSpan.FromSeconds(1)
+                        : remaining;
 
-                await Task.Delay(tick, token);
-                remaining = remaining - tick;
+                    await Task.Delay(tick, token);
+                    remaining = remaining - tick;
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                // Countdown canceled.
+            }
+            finally
+            {
+                if (!token.IsCancellationRequested)
+                {
+                    await Application.Current.Dispatcher.InvokeAsync(() =>
+                    {
+                        IsStarting = false;
+                        CountdownText = string.Empty;
+                    });
+                }
             }
         }
 
