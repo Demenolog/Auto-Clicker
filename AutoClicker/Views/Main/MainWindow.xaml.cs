@@ -12,7 +12,12 @@ namespace AutoClicker.Views.Main
 {
     public partial class MainWindow : Window
     {
-        public MainWindow() => InitializeComponent();
+        public MainWindow()
+        {
+            InitializeComponent();
+            StateChanged += OnStateChanged;
+            Closing += OnClosing;
+        }
 
         private HwndSource? _source;
 
@@ -29,7 +34,7 @@ namespace AutoClicker.Views.Main
             GlobalHotKey.RegisterHotKeys(handle);
         }
 
-        protected override void OnClosed(EventArgs e)
+        internal void CleanupForExit()
         {
             if (_source is not null)
             {
@@ -50,11 +55,33 @@ namespace AutoClicker.Views.Main
             }
 
             ChildWindowsService.CloseAll();
-
-            base.OnClosed(e);
         }
 
         #endregion
 
+        private void OnStateChanged(object? sender, EventArgs e)
+        {
+            if (WindowState == WindowState.Minimized && IsMinimizeToTrayEnabled())
+            {
+                Hide();
+            }
+        }
+
+        private void OnClosing(object? sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (!IsMinimizeToTrayEnabled() || App.IsExitRequested)
+            {
+                return;
+            }
+
+            e.Cancel = true;
+            Hide();
+        }
+
+        private static bool IsMinimizeToTrayEnabled()
+        {
+            var settingsService = App.Services.GetRequiredService<ISettingsService>();
+            return settingsService.Settings.MinimizeToTray;
+        }
     }
 }
