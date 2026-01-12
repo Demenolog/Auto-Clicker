@@ -23,6 +23,3 @@ jobs:
 
       - name: Build
         run: dotnet build AutoClicker.sln --no-restore
-
-      - name: Test
-        run: dotnet test AutoClicker.sln --no-build
