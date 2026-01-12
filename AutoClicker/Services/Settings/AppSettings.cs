@@ -1,3 +1,4 @@
+using System;
 using AutoClicker.Models.Clicks;
 
 namespace AutoClicker.Services.Settings
@@ -9,6 +10,8 @@ namespace AutoClicker.Services.Settings
         public string Minutes { get; set; } = "0";
         public string Seconds { get; set; } = "1";
         public string Milliseconds { get; set; } = "0";
+        public TimeSpan StartDelay { get; set; } = TimeSpan.Zero;
+        public TimeSpan StopAfter { get; set; } = TimeSpan.Zero;
         public MouseButtonKind SelectedMouseButton { get; set; } = MouseButtonKind.Left;
         public ClickBurstKind SelectedMouseButtonMode { get; set; } = ClickBurstKind.Single;
         public bool RepeatUntilStopped { get; set; } = true;
