@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Windows;
 using System.Windows.Forms;
+using WpfApplication = System.Windows.Application;
 
 namespace AutoClicker.Services.TrayIcon
 {
@@ -19,6 +20,10 @@ namespace AutoClicker.Services.TrayIcon
         private ToolStripMenuItem? _startItem;
         private ToolStripMenuItem? _stopItem;
         private ToolStripMenuItem? _pauseResumeItem;
+        private ToolStripMenuItem? _exitItem;
+        private ToolStripSeparator? _controlSeparator;
+        private ToolStripSeparator? _exitSeparator;
+        private ContextMenuStrip? _contextMenu;
         private bool _isInitialized;
 
         public TrayIconService(MainWindowViewModel viewModel)
@@ -47,25 +52,27 @@ namespace AutoClicker.Services.TrayIcon
             _pauseResumeItem = new ToolStripMenuItem("Pause");
             _pauseResumeItem.Click += (_, _) => TogglePauseResume();
 
-            var exitItem = new ToolStripMenuItem("Exit");
-            exitItem.Click += (_, _) => ExitApplication();
+            _exitItem = new ToolStripMenuItem("Exit");
+            _exitItem.Click += (_, _) => ExitApplication();
 
-            var menu = new ContextMenuStrip();
-            menu.Items.AddRange(
+            _controlSeparator = new ToolStripSeparator();
+            _exitSeparator = new ToolStripSeparator();
+            _contextMenu = new ContextMenuStrip();
+            _contextMenu.Items.AddRange(
             [
                 _showHideItem,
-                new ToolStripSeparator(),
+                _controlSeparator,
                 _startItem,
                 _stopItem,
                 _pauseResumeItem,
-                new ToolStripSeparator(),
-                exitItem
+                _exitSeparator,
+                _exitItem
             ]);
 
             _notifyIcon = new NotifyIcon
             {
                 Icon = _trayIcon,
-                ContextMenuStrip = menu,
+                ContextMenuStrip = _contextMenu,
                 Text = "AutoClicker",
                 Visible = true
             };
@@ -117,11 +124,19 @@ namespace AutoClicker.Services.TrayIcon
             _viewModel.PropertyChanged -= OnViewModelPropertyChanged;
             _notifyIcon.Visible = false;
             _notifyIcon.Dispose();
+            _contextMenu?.Dispose();
+            _exitItem?.Dispose();
+            _controlSeparator?.Dispose();
+            _exitSeparator?.Dispose();
             _trayIcon?.Dispose();
             _iconStream?.Dispose();
             _notifyIcon = null;
             _trayIcon = null;
             _iconStream = null;
+            _contextMenu = null;
+            _exitItem = null;
+            _controlSeparator = null;
+            _exitSeparator = null;
         }
 
         private static string TrimTooltip(string text)
@@ -156,13 +171,13 @@ namespace AutoClicker.Services.TrayIcon
 
         private static bool IsMainWindowVisible()
         {
-            var window = Application.Current?.MainWindow;
+            var window = WpfApplication.Current?.MainWindow;
             return window is not null && window.IsVisible;
         }
 
         private static void ShowMainWindow()
         {
-            var window = Application.Current?.MainWindow;
+            var window = WpfApplication.Current?.MainWindow;
             if (window is null)
             {
                 return;
@@ -179,7 +194,7 @@ namespace AutoClicker.Services.TrayIcon
 
         private static void HideMainWindow()
         {
-            var window = Application.Current?.MainWindow;
+            var window = WpfApplication.Current?.MainWindow;
             if (window is null)
             {
                 return;
@@ -206,13 +221,13 @@ namespace AutoClicker.Services.TrayIcon
             RunOnUi(() =>
             {
                 App.RequestExit();
-                Application.Current?.Shutdown();
+                WpfApplication.Current?.Shutdown();
             });
         }
 
         private static Icon LoadTrayIcon(out MemoryStream? iconStream)
         {
-            var streamInfo = Application.GetResourceStream(new Uri("pack://application:,,,/Resources/Icons/Main/Cursor.ico"));
+            var streamInfo = WpfApplication.GetResourceStream(new Uri("pack://application:,,,/Resources/Icons/Main/Cursor.ico"));
             if (streamInfo?.Stream is null)
             {
                 iconStream = null;
@@ -230,7 +245,7 @@ namespace AutoClicker.Services.TrayIcon
 
         private static void RunOnUi(Action action)
         {
-            var dispatcher = Application.Current?.Dispatcher;
+            var dispatcher = WpfApplication.Current?.Dispatcher;
             if (dispatcher is null)
             {
                 action();
