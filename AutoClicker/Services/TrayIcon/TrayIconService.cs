@@ -72,11 +72,11 @@ namespace AutoClicker.Services.TrayIcon
             _notifyIcon.DoubleClick += (_, _) => ShowMainWindow();
             _viewModel.PropertyChanged += OnViewModelPropertyChanged;
 
-            UpdateStatus("Ready", _viewModel.IsRunning);
+            UpdateStatus();
             _isInitialized = true;
         }
 
-        public void UpdateStatus(string statusText, bool isRunning)
+        public void UpdateStatus()
         {
             if (_notifyIcon is null)
             {
@@ -85,11 +85,14 @@ namespace AutoClicker.Services.TrayIcon
 
             RunOnUi(() =>
             {
+                var isRunning = _viewModel.IsRunning;
+                var isPaused = _viewModel.IsPaused;
+                var statusText = isRunning ? (isPaused ? "Paused" : "Running") : "Stopped";
                 _notifyIcon.Text = TrimTooltip(statusText);
-                _startItem!.Enabled = _viewModel.StartClicking.CanExecute(null) && !isRunning;
-                _stopItem!.Enabled = _viewModel.StopClicking.CanExecute(null) && isRunning;
-                _pauseResumeItem!.Enabled = _viewModel.StartClicking.CanExecute(null) || _viewModel.StopClicking.CanExecute(null);
-                _pauseResumeItem.Text = isRunning ? "Pause" : "Resume";
+                _startItem!.Enabled = _viewModel.StartClicking.CanExecute(null);
+                _stopItem!.Enabled = _viewModel.StopClicking.CanExecute(null);
+                _pauseResumeItem!.Enabled = _viewModel.PauseClicking.CanExecute(null) || _viewModel.ResumeClicking.CanExecute(null);
+                _pauseResumeItem.Text = isPaused ? "Resume" : "Pause";
                 _showHideItem!.Text = IsMainWindowVisible() ? "Hide" : "Show";
             });
         }
@@ -134,13 +137,13 @@ namespace AutoClicker.Services.TrayIcon
 
         private void TogglePauseResume()
         {
-            if (_viewModel.IsRunning)
+            if (_viewModel.IsPaused)
             {
-                ExecuteCommand(_viewModel.StopClicking);
+                ExecuteCommand(_viewModel.ResumeClicking);
                 return;
             }
 
-            ExecuteCommand(_viewModel.StartClicking);
+            ExecuteCommand(_viewModel.PauseClicking);
         }
 
         private void ExecuteCommand(System.Windows.Input.ICommand command)
@@ -256,9 +259,10 @@ namespace AutoClicker.Services.TrayIcon
 
         private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(MainWindowViewModel.IsRunning))
+            if (e.PropertyName == nameof(MainWindowViewModel.IsRunning)
+                || e.PropertyName == nameof(MainWindowViewModel.IsPaused))
             {
-                UpdateStatus(_viewModel.IsRunning ? "Running" : "Stopped", _viewModel.IsRunning);
+                UpdateStatus();
             }
         }
     }

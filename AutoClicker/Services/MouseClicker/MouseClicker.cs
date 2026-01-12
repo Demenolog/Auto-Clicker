@@ -13,7 +13,9 @@ namespace AutoClicker.Services.MouseClicker
     internal sealed class MouseClicker : IMouseClicker
     {
         private readonly object _lockObject = new(); // protects isRunning + Cts
+        private readonly ManualResetEventSlim _pauseGate = new(true);
         private bool _isRunning;
+        private bool _isPaused;
         private CancellationTokenSource? _cts;
 
         public bool IsRunning
@@ -23,6 +25,17 @@ namespace AutoClicker.Services.MouseClicker
                 lock (_lockObject)
                 {
                     return _isRunning;
+                }
+            }
+        }
+
+        public bool IsPaused
+        {
+            get
+            {
+                lock (_lockObject)
+                {
+                    return _isPaused;
                 }
             }
         }
@@ -71,6 +84,8 @@ namespace AutoClicker.Services.MouseClicker
                 }
 
                 _isRunning = true;
+                _isPaused = false;
+                _pauseGate.Set();
                 _cts = new CancellationTokenSource();
             }
 
@@ -94,6 +109,7 @@ namespace AutoClicker.Services.MouseClicker
                         for (var i = 0; i < repeats; i++)
                         {
                             token.ThrowIfCancellationRequested();
+                            _pauseGate.Wait(token);
 
                             ExecuteClicking(clicksPerBurst, position, downFlag, upFlag, token);
 
@@ -110,6 +126,7 @@ namespace AutoClicker.Services.MouseClicker
                         while (true)
                         {
                             token.ThrowIfCancellationRequested();
+                            _pauseGate.Wait(token);
 
                             ExecuteClicking(clicksPerBurst, position, downFlag, upFlag, token);
 
@@ -137,8 +154,10 @@ namespace AutoClicker.Services.MouseClicker
                     _cts?.Dispose();
                     _cts = null;
                     _isRunning = false;
+                    _isPaused = false;
                 }
 
+                _pauseGate.Set();
                 ClickingStopped?.Invoke();
             }
         }
@@ -152,6 +171,8 @@ namespace AutoClicker.Services.MouseClicker
                     return;
                 }
 
+                _isPaused = false;
+                _pauseGate.Set();
                 try
                 {
                     _cts?.Cancel();
@@ -160,6 +181,34 @@ namespace AutoClicker.Services.MouseClicker
                 {
                     // Ignore races if Cts is already disposed/finished
                 }
+            }
+        }
+
+        public void PauseClicking()
+        {
+            lock (_lockObject)
+            {
+                if (!_isRunning || _isPaused)
+                {
+                    return;
+                }
+
+                _isPaused = true;
+                _pauseGate.Reset();
+            }
+        }
+
+        public void ResumeClicking()
+        {
+            lock (_lockObject)
+            {
+                if (!_isPaused)
+                {
+                    return;
+                }
+
+                _isPaused = false;
+                _pauseGate.Set();
             }
         }
 
