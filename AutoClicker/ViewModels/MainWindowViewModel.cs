@@ -5,6 +5,7 @@ using AutoClicker.Services.Interfaces;
 using AutoClicker.Services.Settings;
 using AutoClicker.ViewModels.Base;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -360,6 +361,66 @@ namespace AutoClicker.ViewModels
 
         #endregion [Cursor position]
 
+        #region [Start/stop timing]
+
+        private string _startDelaySeconds = "0";
+
+        public string StartDelaySeconds
+        {
+            get => _startDelaySeconds;
+            set
+            {
+                if (TextBoxValidation.IsPositiveIntNumber(value))
+                {
+                    if (SetField(ref _startDelaySeconds, value))
+                    {
+                        UpdateSettings(settings => settings.StartDelay = TimeSpan.FromSeconds(ParseNonNegativeInt(value)));
+                    }
+                }
+            }
+        }
+
+        private string _stopAfterMinutes = "0";
+
+        public string StopAfterMinutes
+        {
+            get => _stopAfterMinutes;
+            set
+            {
+                if (TextBoxValidation.IsPositiveIntNumber(value))
+                {
+                    if (SetField(ref _stopAfterMinutes, value))
+                    {
+                        UpdateSettings(settings => settings.StopAfter = TimeSpan.FromMinutes(ParseNonNegativeInt(value)));
+                    }
+                }
+            }
+        }
+
+        private bool _isStarting;
+
+        public bool IsStarting
+        {
+            get => _isStarting;
+            private set
+            {
+                if (SetField(ref _isStarting, value))
+                {
+                    CommandManager.InvalidateRequerySuggested();
+                }
+            }
+        }
+
+        private string _countdownText = string.Empty;
+
+        public string CountdownText
+        {
+            get => _countdownText;
+            private set => SetField(ref _countdownText, value);
+        }
+
+        #endregion [Start/stop timing]
+
         #region [Buttons section]
 
         #region Commands
@@ -368,33 +429,11 @@ namespace AutoClicker.ViewModels
 
         public ICommand StartClicking { get; }
 
-        private bool CanStartClickingExecuted(object p) => !IsRunning;
+        private bool CanStartClickingExecuted(object p) => !IsRunning && !IsStarting;
 
         internal async void OnStartClickingExecute(object p)
         {
-            try
-            {
-                if (PositionMode == PositionMode.Fixed && !IsFixedPositionWithinVirtualScreen())
-                {
-                    MessageBox.Show("Fixed X/Y position is outside the virtual screen bounds.",
-                        "AutoClicker Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-
-                var config = BuildClickConfig();
-                var click = new Click(config);
-
-                IsRunning = true;
-                IsPaused = false;
-                await _mouseClicker.StartClicking(click);
-            }
-            catch (Exception ex)
-            {
-                _mouseClicker.StopClicking();
-                IsRunning = false;
-                MessageBox.Show($"Unable to start clicking. {ex.Message}", "AutoClicker Error",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            await StartClickingAsync();
         }
 
         #endregion Start clicking command
@@ -403,12 +442,15 @@ namespace AutoClicker.ViewModels
 
         public ICommand StopClicking { get; }
 
-        private bool CanStopClickingExecuted(object p) => IsRunning;
+        private bool CanStopClickingExecuted(object p) => IsRunning || IsStarting;
 
         internal void OnStopClickingExecute(object p)
         {
             IsRunning = false;
             IsPaused = false;
+            IsStarting = false;
+            CountdownText = string.Empty;
+            CancelStartStop();
             _mouseClicker.StopClicking();
         }
 
@@ -501,6 +543,7 @@ namespace AutoClicker.ViewModels
         #endregion [Paused state]
 
         private readonly IMouseClicker _mouseClicker;
+        private CancellationTokenSource? _startStopCts;
 
         public MainWindowViewModel(IMouseClicker mouseClicker, ISettingsService settingsService)
         {
@@ -528,7 +571,106 @@ namespace AutoClicker.ViewModels
             {
                 IsRunning = false;
                 IsPaused = false;
+                IsStarting = false;
+                CountdownText = string.Empty;
             });
+        }
+
+        private async Task StartClickingAsync()
+        {
+            CancelStartStop();
+            DisposeStartStop();
+            _startStopCts = new CancellationTokenSource();
+            var token = _startStopCts.Token;
+
+            try
+            {
+                if (PositionMode == PositionMode.Fixed && !IsFixedPositionWithinVirtualScreen())
+                {
+                    MessageBox.Show("Fixed X/Y position is outside the virtual screen bounds.",
+                        "AutoClicker Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                var delay = TimeSpan.FromSeconds(ParseNonNegativeInt(StartDelaySeconds));
+                IsStarting = delay > TimeSpan.Zero;
+                IsRunning = false;
+                IsPaused = false;
+
+                if (delay > TimeSpan.Zero)
+                {
+                    await RunCountdownAsync(delay, token);
+                }
+
+                token.ThrowIfCancellationRequested();
+                IsStarting = false;
+                CountdownText = string.Empty;
+
+                var config = BuildClickConfig();
+                var click = new Click(config);
+
+                IsRunning = true;
+                IsPaused = false;
+                await _mouseClicker.StartClicking(click);
+            }
+            catch (OperationCanceledException)
+            {
+                // Expected when StopClicking cancels start/stop pipeline.
+            }
+            catch (Exception ex)
+            {
+                _mouseClicker.StopClicking();
+                IsRunning = false;
+                MessageBox.Show($"Unable to start clicking. {ex.Message}", "AutoClicker Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                IsStarting = false;
+                CountdownText = string.Empty;
+                DisposeStartStop();
+            }
+        }
+
+        private async Task RunCountdownAsync(TimeSpan delay, CancellationToken token)
+        {
+            var remaining = delay;
+
+            while (remaining > TimeSpan.Zero)
+            {
+                var secondsRemaining = Math.Max(1, (int)Math.Ceiling(remaining.TotalSeconds));
+                CountdownText = $"Starting in {secondsRemaining}s";
+
+                var tick = remaining.TotalSeconds > 1
+                    ? TimeSpan.FromSeconds(1)
+                    : remaining;
+
+                await Task.Delay(tick, token);
+                remaining = remaining - tick;
+            }
+        }
+
+        private void CancelStartStop()
+        {
+            if (_startStopCts == null)
+            {
+                return;
+            }
+
+            try
+            {
+                _startStopCts.Cancel();
+            }
+            catch
+            {
+                // Ignore cancellation race.
+            }
+        }
+
+        private void DisposeStartStop()
+        {
+            _startStopCts?.Dispose();
+            _startStopCts = null;
         }
 
         private ClickConfig BuildClickConfig()
@@ -575,6 +717,11 @@ namespace AutoClicker.ViewModels
             return int.TryParse(value, out var axis) ? axis : 0;
         }
 
+        private static int ParseNonNegativeInt(string value)
+        {
+            return int.TryParse(value, out var number) && number >= 0 ? number : 0;
+        }
+
         private void ApplySettings(AppSettings settings)
         {
             _isLoadingSettings = true;
@@ -582,6 +729,8 @@ namespace AutoClicker.ViewModels
             MinutesTextBox = settings.Minutes ?? "0";
             SecondsTextBox = settings.Seconds ?? "1";
             MillisecondsTextBox = settings.Milliseconds ?? "0";
+            StartDelaySeconds = Math.Max(0, (int)settings.StartDelay.TotalSeconds).ToString();
+            StopAfterMinutes = Math.Max(0, (int)settings.StopAfter.TotalMinutes).ToString();
             SelectedMouseButton = settings.SelectedMouseButton;
             SelectedMouseButtonMode = settings.SelectedMouseButtonMode;
             RepeatTimesTextBox = settings.RepeatTimes ?? "1";
