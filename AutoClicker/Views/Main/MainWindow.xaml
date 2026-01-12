@@ -208,7 +208,7 @@
                     <Label Style="{DynamicResource LabelDefaultStyle}">Start Delay (seconds):</Label>
                     <TextBox Style="{StaticResource TimingTextBoxStyle}"
                              Width="60"
-                             Text="{Binding StartDelaySeconds, UpdateSourceTrigger=PropertyChanged}" />
+                             Text="{Binding StartDelaySeconds, UpdateSourceTrigger=PropertyChanged, TargetNullValue=0, FallbackValue=0}" />
                     <Label Style="{DynamicResource LabelDefaultStyle}"
                            Margin="10,0,0,0">Stop After (minutes or hours):</Label>
                     <TextBox Style="{StaticResource TimingTextBoxStyle}"
