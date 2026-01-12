@@ -6,12 +6,16 @@ namespace AutoClicker.Models.Clicks
             ClickIntervalConfig interval,
             ClickOptionsConfig options,
             ClickRepeatsConfig repeats,
-            ClickPositionConfig position)
+            ClickPositionConfig position,
+            System.TimeSpan startDelay,
+            System.TimeSpan stopAfter)
         {
             Interval = interval;
             Options = options;
             Repeats = repeats;
             Position = position;
+            StartDelay = startDelay;
+            StopAfter = stopAfter;
         }
 
         public ClickIntervalConfig Interval { get; }
@@ -21,6 +25,10 @@ namespace AutoClicker.Models.Clicks
         public ClickRepeatsConfig Repeats { get; }
 
         public ClickPositionConfig Position { get; }
+
+        public System.TimeSpan StartDelay { get; }
+
+        public System.TimeSpan StopAfter { get; }
     }
 
     internal sealed class ClickIntervalConfig

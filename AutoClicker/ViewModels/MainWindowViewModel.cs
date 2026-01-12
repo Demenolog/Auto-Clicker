@@ -552,7 +552,9 @@ namespace AutoClicker.ViewModels
                 new ClickPositionConfig(
                     PositionMode == PositionMode.Current,
                     position.X.ToString(),
-                    position.Y.ToString()));
+                    position.Y.ToString()),
+                _settingsService.Settings.StartDelay,
+                _settingsService.Settings.StopAfter);
         }
 
         private bool IsFixedPositionWithinVirtualScreen()
