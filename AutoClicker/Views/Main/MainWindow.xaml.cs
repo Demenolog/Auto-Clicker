@@ -69,7 +69,7 @@ namespace AutoClicker.Views.Main
 
         private void OnClosing(object? sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (!IsMinimizeToTrayEnabled() || App.IsExitRequested)
+            if (App.IsExitRequested || IsExitOnCloseEnabled() || !IsMinimizeToTrayEnabled())
             {
                 return;
             }
@@ -82,6 +82,12 @@ namespace AutoClicker.Views.Main
         {
             var settingsService = App.Services.GetRequiredService<ISettingsService>();
             return settingsService.Settings.MinimizeToTray;
+        }
+
+        private static bool IsExitOnCloseEnabled()
+        {
+            var settingsService = App.Services.GetRequiredService<ISettingsService>();
+            return settingsService.Settings.ExitOnClose;
         }
     }
 }

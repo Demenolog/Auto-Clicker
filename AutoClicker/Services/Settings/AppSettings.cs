@@ -17,6 +17,7 @@ namespace AutoClicker.Services.Settings
         public string LastX { get; set; } = "0";
         public string LastY { get; set; } = "0";
         public bool MinimizeToTray { get; set; } = true;
+        public bool ExitOnClose { get; set; } = false;
         public HotKeySettings HotKeys { get; set; } = new();
     }
 }

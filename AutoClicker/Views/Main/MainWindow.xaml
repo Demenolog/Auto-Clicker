@@ -238,5 +238,13 @@
                 </Label>
             </StackPanel>
         </Grid>
+        <Grid Grid.Column="1"
+              Grid.Row="4">
+            <CheckBox Content="Exit on close"
+                      Margin="0,0,10,0"
+                      HorizontalAlignment="Right"
+                      VerticalAlignment="Center"
+                      IsChecked="{Binding ExitOnClose, UpdateSourceTrigger=PropertyChanged}" />
+        </Grid>
     </Grid>
 </Window>

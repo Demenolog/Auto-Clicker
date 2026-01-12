@@ -299,6 +299,24 @@ namespace AutoClicker.ViewModels
 
         #endregion Properties
 
+        #region [Application settings]
+
+        private bool _exitOnClose;
+
+        public bool ExitOnClose
+        {
+            get => _exitOnClose;
+            set
+            {
+                if (SetField(ref _exitOnClose, value))
+                {
+                    UpdateSettings(settings => settings.ExitOnClose = value);
+                }
+            }
+        }
+
+        #endregion [Application settings]
+
         #region Commands
 
         #region Get cursor position command
@@ -516,6 +534,7 @@ namespace AutoClicker.ViewModels
             PositionMode = settings.PositionUseCurrent ? PositionMode.Current : PositionMode.Fixed;
             XAxisTextBox = settings.LastX ?? "0";
             YAxisTextBox = settings.LastY ?? "0";
+            ExitOnClose = settings.ExitOnClose;
             _isLoadingSettings = false;
         }
 
