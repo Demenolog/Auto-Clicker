@@ -11,6 +11,8 @@ namespace AutoClicker.Models.Clicks
         private readonly Options _options;
         private readonly Repeats _repeats;
         private readonly Position _position;
+        private readonly TimeSpan _startDelay;
+        private readonly TimeSpan _stopAfter;
 
         public Click(ClickConfig config)
         {
@@ -21,6 +23,8 @@ namespace AutoClicker.Models.Clicks
             _options = new Options(config.Options);
             _repeats = new Repeats(config.Repeats);
             _position = new Position(config.Position);
+            _startDelay = config.StartDelay;
+            _stopAfter = config.StopAfter;
         }
 
         public Interval Interval => _interval;
@@ -30,5 +34,9 @@ namespace AutoClicker.Models.Clicks
         public Repeats Repeats => _repeats;
 
         public Position Position => _position;
+
+        public TimeSpan StartDelay => _startDelay;
+
+        public TimeSpan StopAfter => _stopAfter;
     }
 }

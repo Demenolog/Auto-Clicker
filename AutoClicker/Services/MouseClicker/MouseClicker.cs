@@ -75,6 +75,9 @@ namespace AutoClicker.Services.MouseClicker
         {
             if (click == null) throw new ArgumentNullException(nameof(click));
 
+            CancellationTokenSource? linkedCts = null;
+            CancellationTokenSource? stopAfterCts = null;
+
             // Prevent multiple concurrent click loops
             lock (_lockObject)
             {
@@ -89,7 +92,22 @@ namespace AutoClicker.Services.MouseClicker
                 _cts = new CancellationTokenSource();
             }
 
+            var startDelay = click.StartDelay < TimeSpan.Zero ? TimeSpan.Zero : click.StartDelay;
+            var stopAfter = click.StopAfter;
+
             var token = _cts.Token;
+            if (stopAfter > TimeSpan.Zero)
+            {
+                stopAfterCts = new CancellationTokenSource();
+                stopAfterCts.CancelAfter(stopAfter);
+                linkedCts = CancellationTokenSource.CreateLinkedTokenSource(token, stopAfterCts.Token);
+            }
+            else
+            {
+                linkedCts = CancellationTokenSource.CreateLinkedTokenSource(token);
+            }
+
+            var linkedToken = linkedCts.Token;
 
             // Snapshot click configuration at start
             var repeats = click.Repeats.TotalTimes;             // -1 => endless
@@ -101,6 +119,7 @@ namespace AutoClicker.Services.MouseClicker
 
             try
             {
+                await Task.Delay(startDelay, linkedToken).ConfigureAwait(false);
                 await Task.Run(async () =>
                 {
                     if (repeats >= 0)
@@ -108,15 +127,15 @@ namespace AutoClicker.Services.MouseClicker
                         // Finite number of bursts
                         for (var i = 0; i < repeats; i++)
                         {
-                            token.ThrowIfCancellationRequested();
-                            _pauseGate.Wait(token);
+                            linkedToken.ThrowIfCancellationRequested();
+                            _pauseGate.Wait(linkedToken);
 
-                            ExecuteClicking(clicksPerBurst, position, downFlag, upFlag, token);
+                            ExecuteClicking(clicksPerBurst, position, downFlag, upFlag, linkedToken);
 
                             // No delay after last burst
                             if (i < repeats - 1 && intervalMs > 0)
                             {
-                                await Task.Delay(intervalMs, token).ConfigureAwait(false);
+                                await Task.Delay(intervalMs, linkedToken).ConfigureAwait(false);
                             }
                         }
                     }
@@ -125,14 +144,14 @@ namespace AutoClicker.Services.MouseClicker
                         // Endless bursts until cancelled
                         while (true)
                         {
-                            token.ThrowIfCancellationRequested();
-                            _pauseGate.Wait(token);
+                            linkedToken.ThrowIfCancellationRequested();
+                            _pauseGate.Wait(linkedToken);
 
-                            ExecuteClicking(clicksPerBurst, position, downFlag, upFlag, token);
+                            ExecuteClicking(clicksPerBurst, position, downFlag, upFlag, linkedToken);
 
                             if (intervalMs > 0)
                             {
-                                await Task.Delay(intervalMs, token).ConfigureAwait(false);
+                                await Task.Delay(intervalMs, linkedToken).ConfigureAwait(false);
                             }
                             else
                             {
@@ -141,7 +160,7 @@ namespace AutoClicker.Services.MouseClicker
                             }
                         }
                     }
-                }, token).ConfigureAwait(false);
+                }, linkedToken).ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {
@@ -158,6 +177,8 @@ namespace AutoClicker.Services.MouseClicker
                 }
 
                 _pauseGate.Set();
+                linkedCts?.Dispose();
+                stopAfterCts?.Dispose();
                 ClickingStopped?.Invoke();
             }
         }
