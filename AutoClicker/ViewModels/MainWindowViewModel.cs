@@ -370,11 +370,12 @@ namespace AutoClicker.ViewModels
             get => _startDelaySeconds;
             set
             {
-                if (TextBoxValidation.IsPositiveIntNumber(value))
+                var normalizedValue = string.IsNullOrWhiteSpace(value) ? "0" : value;
+                if (TextBoxValidation.IsPositiveIntNumber(normalizedValue))
                 {
-                    if (SetField(ref _startDelaySeconds, value))
+                    if (SetField(ref _startDelaySeconds, normalizedValue))
                     {
-                        UpdateSettings(settings => settings.StartDelay = TimeSpan.FromSeconds(ParseNonNegativeInt(value)));
+                        UpdateSettings(settings => settings.StartDelay = TimeSpan.FromSeconds(ParseNonNegativeInt(normalizedValue)));
                     }
                 }
             }
@@ -748,7 +749,8 @@ namespace AutoClicker.ViewModels
             MinutesTextBox = settings.Minutes ?? "0";
             SecondsTextBox = settings.Seconds ?? "1";
             MillisecondsTextBox = settings.Milliseconds ?? "0";
-            StartDelaySeconds = Math.Max(0, (int)settings.StartDelay.TotalSeconds).ToString();
+            var startDelaySeconds = Math.Max(0, (int)settings.StartDelay.TotalSeconds).ToString();
+            StartDelaySeconds = string.IsNullOrWhiteSpace(startDelaySeconds) ? "0" : startDelaySeconds;
             StopAfterMinutes = Math.Max(0, (int)settings.StopAfter.TotalMinutes).ToString();
             SelectedMouseButton = settings.SelectedMouseButton;
             SelectedMouseButtonMode = settings.SelectedMouseButtonMode;
