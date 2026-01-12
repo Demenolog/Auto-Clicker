@@ -2,7 +2,6 @@ using AutoClicker.Models.Clicks;
 using AutoClicker.Services.Interfaces;
 using System;
 using System.Drawing;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using static AutoClicker.Infrastructure.Constants.MouseClass.MouseClassConstans;
@@ -13,10 +12,18 @@ namespace AutoClicker.Services.MouseClicker
     internal sealed class MouseClicker : IMouseClicker
     {
         private readonly object _lockObject = new(); // protects isRunning + Cts
+        private readonly IClickerTiming _timing;
+        private readonly IClickExecutor _clickExecutor;
         private readonly ManualResetEventSlim _pauseGate = new(true);
         private bool _isRunning;
         private bool _isPaused;
         private CancellationTokenSource? _cts;
+
+        public MouseClicker(IClickerTiming timing, IClickExecutor clickExecutor)
+        {
+            _timing = timing ?? throw new ArgumentNullException(nameof(timing));
+            _clickExecutor = clickExecutor ?? throw new ArgumentNullException(nameof(clickExecutor));
+        }
 
         public bool IsRunning
         {
@@ -98,8 +105,7 @@ namespace AutoClicker.Services.MouseClicker
             var token = _cts.Token;
             if (stopAfter > TimeSpan.Zero)
             {
-                stopAfterCts = new CancellationTokenSource();
-                stopAfterCts.CancelAfter(stopAfter);
+                stopAfterCts = _timing.CreateStopAfterCancellationTokenSource(stopAfter);
                 linkedCts = CancellationTokenSource.CreateLinkedTokenSource(token, stopAfterCts.Token);
             }
             else
@@ -119,7 +125,7 @@ namespace AutoClicker.Services.MouseClicker
 
             try
             {
-                await Task.Delay(startDelay, linkedToken).ConfigureAwait(false);
+                await _timing.Delay(startDelay, linkedToken).ConfigureAwait(false);
                 await Task.Run(async () =>
                 {
                     if (repeats >= 0)
@@ -135,7 +141,7 @@ namespace AutoClicker.Services.MouseClicker
                             // No delay after last burst
                             if (i < repeats - 1 && intervalMs > 0)
                             {
-                                await Task.Delay(intervalMs, linkedToken).ConfigureAwait(false);
+                                await _timing.Delay(intervalMs, linkedToken).ConfigureAwait(false);
                             }
                         }
                     }
@@ -151,12 +157,12 @@ namespace AutoClicker.Services.MouseClicker
 
                             if (intervalMs > 0)
                             {
-                                await Task.Delay(intervalMs, linkedToken).ConfigureAwait(false);
+                                await _timing.Delay(intervalMs, linkedToken).ConfigureAwait(false);
                             }
                             else
                             {
                                 // Zero interval -> yield to avoid tight CPU spin
-                                await Task.Yield();
+                                await _timing.Yield();
                             }
                         }
                     }
@@ -233,44 +239,14 @@ namespace AutoClicker.Services.MouseClicker
             }
         }
 
-        private static void ExecuteClicking(
+        private void ExecuteClicking(
             int clicksPerBurst,
             Point position,
             int downFlag,
             int upFlag,
             CancellationToken token)
         {
-            // One "burst" = 1/2/3 clicks as configured
-            for (var i = 0; i < clicksPerBurst; i++)
-            {
-                token.ThrowIfCancellationRequested();
-
-                SetCursorPos(position.X, position.Y);
-                Click(downFlag);
-                Click(upFlag);
-            }
-        }
-
-        private static void Click(int action, int x = 0, int y = 0, int dwData = 0, int dwExtraInfo = 0)
-        {
-            var input = new INPUT
-            {
-                type = INPUT_MOUSE,
-                U = new InputUnion
-                {
-                    mi = new MOUSEINPUT
-                    {
-                        dx = x,
-                        dy = y,
-                        mouseData = (uint)dwData,
-                        dwFlags = (uint)action,
-                        time = 0,
-                        dwExtraInfo = (nuint)dwExtraInfo
-                    }
-                }
-            };
-
-            _ = SendInput(1, new[] { input }, Marshal.SizeOf<INPUT>());
+            _clickExecutor.ExecuteClicking(clicksPerBurst, position, downFlag, upFlag, token);
         }
     }
 }
