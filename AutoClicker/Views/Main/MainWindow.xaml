@@ -9,7 +9,7 @@
         Title="Auto-Clicker"
         ResizeMode="CanMinimize"
         WindowStartupLocation="CenterScreen"
-        Height="450" Width="500">
+        Height="525" Width="500">
     <Window.Resources>
         <converters:EnumEqualsConverter x:Key="EnumEqualsConverter" />
         <Style x:Key="TimingTextBoxStyle"
