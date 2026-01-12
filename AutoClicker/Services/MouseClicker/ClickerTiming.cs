@@ -9,7 +9,7 @@ namespace AutoClicker.Services.MouseClicker
     {
         public Task Delay(TimeSpan delay, CancellationToken token) => Task.Delay(delay, token);
 
-        public Task Yield() => Task.Yield();
+        public async Task Yield() => await Task.Yield();
 
         public CancellationTokenSource CreateStopAfterCancellationTokenSource(TimeSpan stopAfter)
         {

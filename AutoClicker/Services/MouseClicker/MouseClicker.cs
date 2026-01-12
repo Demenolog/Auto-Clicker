@@ -119,6 +119,7 @@ namespace AutoClicker.Services.MouseClicker
             var repeats = click.Repeats.TotalTimes;             // -1 => endless
             var clicksPerBurst = click.Options.GetButtonMode(); // single/double/triple
             var intervalMs = Math.Max(0, click.Interval.TotalTime);
+            var intervalDelay = TimeSpan.FromMilliseconds(intervalMs);
             var position = click.Position.CurrentPosition;
             var downFlag = click.Options.DownMouseEventFlag;
             var upFlag = click.Options.UpMouseEventFlag;
@@ -141,7 +142,7 @@ namespace AutoClicker.Services.MouseClicker
                             // No delay after last burst
                             if (i < repeats - 1 && intervalMs > 0)
                             {
-                                await _timing.Delay(intervalMs, linkedToken).ConfigureAwait(false);
+                                await _timing.Delay(intervalDelay, linkedToken).ConfigureAwait(false);
                             }
                         }
                     }
@@ -157,7 +158,7 @@ namespace AutoClicker.Services.MouseClicker
 
                             if (intervalMs > 0)
                             {
-                                await _timing.Delay(intervalMs, linkedToken).ConfigureAwait(false);
+                                await _timing.Delay(intervalDelay, linkedToken).ConfigureAwait(false);
                             }
                             else
                             {

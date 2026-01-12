@@ -1,6 +1,6 @@
 using AutoClicker.Models.Clicks;
 using AutoClicker.Services.Interfaces;
-using AutoClicker.Services.MouseClicker;
+using Clicker = AutoClicker.Services.MouseClicker.MouseClicker;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -15,7 +15,7 @@ namespace AutoClicker.Tests.MouseClicker
         {
             var timing = new ControlledClickerTiming();
             var executor = new RecordingClickExecutor();
-            var clicker = new MouseClicker(timing, executor);
+            var clicker = new Clicker(timing, executor);
             var click = CreateClick(TimeSpan.FromSeconds(5), TimeSpan.Zero, repeatUntilStopped: false, repeatTimes: "1", intervalMilliseconds: "0");
             var stoppedTcs = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
 
@@ -36,7 +36,7 @@ namespace AutoClicker.Tests.MouseClicker
         {
             var timing = new ControlledClickerTiming();
             var executor = new RecordingClickExecutor();
-            var clicker = new MouseClicker(timing, executor);
+            var clicker = new Clicker(timing, executor);
             var click = CreateClick(TimeSpan.Zero, TimeSpan.FromSeconds(5), repeatUntilStopped: true, repeatTimes: string.Empty, intervalMilliseconds: "100");
             var stoppedTcs = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
 
