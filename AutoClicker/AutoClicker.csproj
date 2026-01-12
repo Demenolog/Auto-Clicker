@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Resources\Icons\Main\Cursor.ico" />
+    <Resource Include="Resources\Icons\Main\Cursor.ico" />
     <Resource Include="Resources\Icons\Secondary\Gear.ico" />
   </ItemGroup>
 
