@@ -16,6 +16,7 @@ namespace AutoClicker.Services.Settings
         public bool PositionUseCurrent { get; set; } = true;
         public string LastX { get; set; } = "0";
         public string LastY { get; set; } = "0";
+        public bool MinimizeToTray { get; set; } = true;
         public HotKeySettings HotKeys { get; set; } = new();
     }
 }

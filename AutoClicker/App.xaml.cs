@@ -11,6 +11,7 @@ namespace AutoClicker
     public partial class App
     {
         private static IHost? s_host;
+        private static bool s_exitRequested;
 
         public static IServiceProvider Services => Host.Services;
 
@@ -32,6 +33,9 @@ namespace AutoClicker
             base.OnStartup(e);
 
             await host.StartAsync();
+
+            var trayIconService = host.Services.GetRequiredService<ITrayIconService>();
+            trayIconService.Initialize();
         }
 
         protected override async void OnExit(ExitEventArgs e)
@@ -39,12 +43,27 @@ namespace AutoClicker
             var settingsService = Host.Services.GetRequiredService<ISettingsService>();
             settingsService.Save();
 
+            if (Current.MainWindow is Views.Main.MainWindow mainWindow)
+            {
+                mainWindow.CleanupForExit();
+            }
+
+            var trayIconService = Host.Services.GetRequiredService<ITrayIconService>();
+            trayIconService.Dispose();
+
             base.OnExit(e);
 
             using (Host)
             {
                 await Host.StopAsync();
             }
+        }
+
+        internal static bool IsExitRequested => s_exitRequested;
+
+        internal static void RequestExit()
+        {
+            s_exitRequested = true;
         }
     }
 }
