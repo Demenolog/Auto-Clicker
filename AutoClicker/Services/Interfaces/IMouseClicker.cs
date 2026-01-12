@@ -9,6 +9,8 @@ namespace AutoClicker.Services.Interfaces
     {
         bool IsRunning { get; }
 
+        bool IsPaused { get; }
+
         event Action? ClickingStopped;
 
         Point GetCurrentCursorPosition();
@@ -18,5 +20,9 @@ namespace AutoClicker.Services.Interfaces
         Task StartClicking(Click click);
 
         void StopClicking();
+
+        void PauseClicking();
+
+        void ResumeClicking();
     }
 }
