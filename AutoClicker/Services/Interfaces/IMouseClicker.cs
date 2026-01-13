@@ -9,8 +9,6 @@ namespace AutoClicker.Services.Interfaces
     {
         bool IsRunning { get; }
 
-        bool IsPaused { get; }
-
         event Action? ClickingStopped;
 
         Point GetCurrentCursorPosition();
@@ -21,8 +19,5 @@ namespace AutoClicker.Services.Interfaces
 
         void StopClicking();
 
-        void PauseClicking();
-
-        void ResumeClicking();
     }
 }
