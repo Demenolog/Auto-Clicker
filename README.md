@@ -19,5 +19,9 @@ Auto Clicker helps you automate mouse clicks so you can repeat actions quickly a
 5) Press **Start** (or use the Start hotkey).
 6) Press **Stop** when you are done.
 
+## Requirements
+- .NET 8.0
+
 ## Version / Changelog
-- _Coming soon._
+- v1.0 - Release
+- v1.1 - Added tray mode and delay feature. Improved some logic and fixed some bugs.
