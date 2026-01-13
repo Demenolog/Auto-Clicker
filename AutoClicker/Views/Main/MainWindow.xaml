@@ -201,16 +201,16 @@
         <GroupBox Style="{StaticResource GroupBoxDefaultStyle}"
                   Grid.Row="3"
                   Grid.ColumnSpan="2"
-                  Header="Start/stop timing">
+                  Header="Delay settings">
             <StackPanel HorizontalAlignment="Center"
                         VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal">
-                    <Label Style="{DynamicResource LabelDefaultStyle}">Start Delay (seconds):</Label>
+                    <Label Style="{DynamicResource LabelDefaultStyle}">Start Delay (sec):</Label>
                     <TextBox Style="{StaticResource TimingTextBoxStyle}"
                              Width="60"
                              Text="{Binding StartDelaySeconds, UpdateSourceTrigger=PropertyChanged, TargetNullValue=0, FallbackValue=0}" />
                     <Label Style="{DynamicResource LabelDefaultStyle}"
-                           Margin="10,0,0,0">Stop After (minutes or hours):</Label>
+                           Margin="10,0,0,0">Stop After (min):</Label>
                     <TextBox Style="{StaticResource TimingTextBoxStyle}"
                              Width="60"
                              Text="{Binding StopAfterMinutes, UpdateSourceTrigger=PropertyChanged}" />
