@@ -7,11 +7,11 @@ namespace AutoClicker.Services
 {
     internal static class HotKeysWindowService
     {
-        private static HotKeyWindow s_hotKeyWindow = null;
+        private static HotKeyWindow? s_hotKeyWindow;
 
         public static bool IsCreated => s_hotKeyWindow != null;
 
-        public static HotKeyWindow HotKeyWindow
+        public static HotKeyWindow? HotKeyWindow
         {
             get => s_hotKeyWindow;
             set => s_hotKeyWindow = value;
@@ -21,23 +21,35 @@ namespace AutoClicker.Services
         {
             if (HotKeyWindow != null) return;
 
-            HotKeyWindow = new HotKeyWindow();
-            HotKeyWindow.Closed += (o, args) => HotKeyWindow = null;
-            HotKeyWindow.Icon = new BitmapImage(new Uri("pack://application:,,,/Resources/Icons/Secondary/Gear.ico"));
+            var window = new HotKeyWindow();
+            HotKeyWindow = window;
+            EventHandler? closedHandler = null;
+            closedHandler = (o, args) =>
+            {
+                if (closedHandler != null)
+                {
+                    window.Closed -= closedHandler;
+                }
+                ChildWindowsService.Remove(window);
+                HotKeyWindow = null;
+            };
+            window.Closed += closedHandler;
+            window.Icon = new BitmapImage(new Uri("pack://application:,,,/Resources/Icons/Secondary/Gear.ico"));
 
-            ChildWindowsService.Add(HotKeyWindow);
+            ChildWindowsService.Add(window);
         }
 
         public static bool Show()
         {
-            if (HotKeyWindow != null)
+            var window = HotKeyWindow;
+            if (window == null)
             {
-                HotKeyWindow.Show();
-                HotKeyWindow.Focus();
-                return true;
+                return false;
             }
 
-            return false;
+            window.Show();
+            window.Focus();
+            return true;
         }
     }
 }

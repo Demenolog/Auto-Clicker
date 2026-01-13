@@ -1,14 +1,23 @@
-﻿using AutoClicker.Services;
-using System.Windows.Interop;
+﻿using AutoClicker.Infrastructure.Constants.HotkeysClass;
+using AutoClicker.Infrastructure.UnsafeCode;
+using AutoClicker.Models.Hotkeys;
+using AutoClicker.Services;
+using AutoClicker.Services.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Windows;
-using AutoClicker.Models.Hotkeys;
+using System.Windows.Interop;
 
 namespace AutoClicker.Views.Main
 {
     public partial class MainWindow : Window
     {
-        public MainWindow() => InitializeComponent();
+        public MainWindow()
+        {
+            InitializeComponent();
+            StateChanged += OnStateChanged;
+            Closing += OnClosing;
+        }
 
         private HwndSource? _source;
 
@@ -25,16 +34,60 @@ namespace AutoClicker.Views.Main
             GlobalHotKey.RegisterHotKeys(handle);
         }
 
-        protected override void OnClosed(EventArgs e)
+        internal void CleanupForExit()
         {
-            _source!.RemoveHook(GlobalHotKey.HwndHook);
+            if (_source is not null)
+            {
+                _source.RemoveHook(GlobalHotKey.HwndHook);
+            }
+
+            var mouseClicker = App.Services.GetRequiredService<IMouseClicker>();
+            if (mouseClicker.IsRunning)
+            {
+                mouseClicker.StopClicking();
+            }
+
+            var handle = new WindowInteropHelper(this).Handle;
+            if (handle != IntPtr.Zero)
+            {
+                User32.UnregisterHotKey(handle, GlobalHotKeyConstance.START_HOTKEY_ID);
+                User32.UnregisterHotKey(handle, GlobalHotKeyConstance.STOP_HOTKEY_ID);
+            }
 
             ChildWindowsService.CloseAll();
-
-            base.OnClosed(e);
         }
 
         #endregion
 
+        private void OnStateChanged(object? sender, EventArgs e)
+        {
+            if (WindowState == WindowState.Minimized && IsMinimizeToTrayEnabled())
+            {
+                Hide();
+            }
+        }
+
+        private void OnClosing(object? sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (App.IsExitRequested || IsExitOnCloseEnabled() || !IsMinimizeToTrayEnabled())
+            {
+                return;
+            }
+
+            e.Cancel = true;
+            Hide();
+        }
+
+        private static bool IsMinimizeToTrayEnabled()
+        {
+            var settingsService = App.Services.GetRequiredService<ISettingsService>();
+            return settingsService.Settings.MinimizeToTray;
+        }
+
+        private static bool IsExitOnCloseEnabled()
+        {
+            var settingsService = App.Services.GetRequiredService<ISettingsService>();
+            return settingsService.Settings.ExitOnClose;
+        }
     }
 }

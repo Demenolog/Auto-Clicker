@@ -3,28 +3,50 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+        xmlns:converters="clr-namespace:AutoClicker.Infrastructure.Converters"
         mc:Ignorable="d"
         DataContext="{Binding Path=MainWindowModel, Source={StaticResource Locator}}"
         Title="Auto-Clicker"
         ResizeMode="CanMinimize"
         WindowStartupLocation="CenterScreen"
-        Height="400" Width="500">
+        Height="525" Width="500">
+    <Window.Resources>
+        <converters:EnumEqualsConverter x:Key="EnumEqualsConverter" />
+        <Style x:Key="TimingTextBoxStyle"
+               BasedOn="{StaticResource TextBoxDefaultStyle}"
+               TargetType="TextBox">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsRunning}"
+                             Value="True">
+                    <Setter Property="IsEnabled"
+                            Value="False" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsStarting}"
+                             Value="True">
+                    <Setter Property="IsEnabled"
+                            Value="False" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="0.75*"></RowDefinition>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="0.25*"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
+        <!-- Click Interval GroupBox -->
         <GroupBox Style="{StaticResource GroupBoxDefaultStyle}"
                   Grid.Row="0"
                   Grid.ColumnSpan="2"
-                  Header="Click interval">
+                  Header="Click intervals">
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center">
@@ -42,6 +64,7 @@
                          Text="{Binding MillisecondsTextBox, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
         </GroupBox>
+        <!-- Click Options GroupBox -->
         <GroupBox Style="{StaticResource GroupBoxDefaultStyle}"
                   Grid.Row="1"
                   Grid.Column="0"
@@ -62,9 +85,8 @@
                 <ComboBox Grid.Row="0"
                           Grid.Column="1"
                           Margin="2"
+                          ItemsSource="{Binding MouseButtonOptions}"
                           SelectedItem="{Binding SelectedMouseButton}">
-                    <sys:String>Left</sys:String>
-                    <sys:String>Right</sys:String>
                 </ComboBox>
                 <Label Grid.Row="1"
                        Grid.Column="0"
@@ -73,17 +95,16 @@
                 <ComboBox Grid.Row="1"
                           Grid.Column="1"
                           Margin="2"
+                          ItemsSource="{Binding ClickBurstOptions}"
                           SelectedItem="{Binding SelectedMouseButtonMode}">
-                    <sys:String>Single</sys:String>
-                    <sys:String>Double</sys:String>
-                    <sys:String>Triple</sys:String>
                 </ComboBox>
             </Grid>
         </GroupBox>
+        <!-- Click Repeat GroupBox -->
         <GroupBox Style="{StaticResource GroupBoxDefaultStyle}"
                   Grid.Row="1"
                   Grid.Column="1"
-                  Header="Click repeat">
+                  Header="Click repeats">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition></RowDefinition>
@@ -93,18 +114,19 @@
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <CheckBox Grid.Row="0"
-                          Grid.Column="0"
-                          Content="Repeat"
-                          Margin="6"
-                          HorizontalAlignment="Left"
-                          VerticalAlignment="Center"
-                          IsChecked="{Binding IsRepeatTimesSelected, UpdateSourceTrigger=PropertyChanged}">
-                </CheckBox>
+                <RadioButton Grid.Row="0"
+                             Grid.Column="0"
+                             Content="Repeat"
+                             Margin="6"
+                             HorizontalAlignment="Left"
+                             VerticalAlignment="Center"
+                             GroupName="RepeatMode"
+                             IsChecked="{Binding RepeatMode, Converter={StaticResource EnumEqualsConverter}, ConverterParameter=Times, UpdateSourceTrigger=PropertyChanged}">
+                </RadioButton>
                 <StackPanel Grid.Row="0"
                             Grid.Column="1"
                             Orientation="Horizontal"
-                            IsEnabled="{Binding IsRepeatTimesSelected}">
+                            IsEnabled="{Binding RepeatMode, Converter={StaticResource EnumEqualsConverter}, ConverterParameter=Times}">
                     <TextBox Style="{StaticResource TextBoxDefaultStyle}"
                              HorizontalContentAlignment="Center"
                              VerticalContentAlignment="Center"
@@ -115,17 +137,19 @@
                     </TextBox>
                     <Label Style="{StaticResource LabelDefaultStyle}">times</Label>
                 </StackPanel>
-                <CheckBox Grid.Row="1"
-                          Grid.Column="0"
-                          Grid.ColumnSpan="2"
-                          Content="Repeat until stopped"
-                          Margin="6"
-                          HorizontalAlignment="Left"
-                          VerticalAlignment="Center"
-                          IsChecked="{Binding IsRepeatUntilStoppedSelected, UpdateSourceTrigger=PropertyChanged}">
-                </CheckBox>
+                <RadioButton Grid.Row="1"
+                             Grid.Column="0"
+                             Grid.ColumnSpan="2"
+                             Content="Repeat until stopped"
+                             Margin="6"
+                             HorizontalAlignment="Left"
+                             VerticalAlignment="Center"
+                             GroupName="RepeatMode"
+                             IsChecked="{Binding RepeatMode, Converter={StaticResource EnumEqualsConverter}, ConverterParameter=UntilStopped, UpdateSourceTrigger=PropertyChanged}">
+                </RadioButton>
             </Grid>
         </GroupBox>
+        <!-- Cursor Position GroupBox -->
         <GroupBox Style="{StaticResource GroupBoxDefaultStyle}"
                   Grid.Row="2"
                   Grid.Column="0"
@@ -136,24 +160,26 @@
                     <ColumnDefinition Width="0.85*"></ColumnDefinition>
                     <ColumnDefinition Width="*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <CheckBox Content="Current location"
-                          VerticalAlignment="Center"
-                          HorizontalAlignment="Left"
-                          IsChecked="{Binding IsCurrentLocationSelected, UpdateSourceTrigger=PropertyChanged}">
-                </CheckBox>
+                <RadioButton Content="Current location"
+                             VerticalAlignment="Center"
+                             HorizontalAlignment="Left"
+                             GroupName="PositionMode"
+                             IsChecked="{Binding PositionMode, Converter={StaticResource EnumEqualsConverter}, ConverterParameter=Current, UpdateSourceTrigger=PropertyChanged}">
+                </RadioButton>
                 <StackPanel Grid.Row="0"
                            Grid.Column="1"
                            Orientation="Horizontal"
                            VerticalAlignment="Center">
-                    <CheckBox VerticalAlignment="Center"
-                              HorizontalAlignment="Left"
-                              VerticalContentAlignment="Center"
-                              HorizontalContentAlignment="Center"
-                              IsChecked="{Binding IsPickLocationSelected, UpdateSourceTrigger=PropertyChanged}">
-                    </CheckBox>
+                    <RadioButton VerticalAlignment="Center"
+                                 HorizontalAlignment="Left"
+                                 VerticalContentAlignment="Center"
+                                 HorizontalContentAlignment="Center"
+                                 GroupName="PositionMode"
+                                 IsChecked="{Binding PositionMode, Converter={StaticResource EnumEqualsConverter}, ConverterParameter=Fixed, UpdateSourceTrigger=PropertyChanged}">
+                    </RadioButton>
                     <StackPanel Orientation="Horizontal"
                                 Margin="5"
-                                IsEnabled="{Binding IsPickLocationSelected}">
+                                IsEnabled="{Binding PositionMode, Converter={StaticResource EnumEqualsConverter}, ConverterParameter=Fixed}">
                         <Button Style="{StaticResource ButtonDefaultStyle}"
                                 Height="25"
                                 Width="75"
@@ -171,7 +197,31 @@
                 </StackPanel>
             </Grid>
         </GroupBox>
-        <Grid Grid.Row="3"
+        <!-- Start/Stop Timing GroupBox -->
+        <GroupBox Style="{StaticResource GroupBoxDefaultStyle}"
+                  Grid.Row="3"
+                  Grid.ColumnSpan="2"
+                  Header="Delay settings">
+            <StackPanel HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal">
+                    <Label Style="{DynamicResource LabelDefaultStyle}">Start Delay (sec):</Label>
+                    <TextBox Style="{StaticResource TimingTextBoxStyle}"
+                             Width="60"
+                             Text="{Binding StartDelaySeconds, UpdateSourceTrigger=PropertyChanged, TargetNullValue=0, FallbackValue=0}" />
+                    <Label Style="{DynamicResource LabelDefaultStyle}"
+                           Margin="10,0,0,0">Stop After (min):</Label>
+                    <TextBox Style="{StaticResource TimingTextBoxStyle}"
+                             Width="60"
+                             Text="{Binding StopAfterMinutes, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+                <TextBlock Margin="0,6,0,0"
+                           HorizontalAlignment="Center"
+                           Text="{Binding CountdownText}" />
+            </StackPanel>
+        </GroupBox>
+        <!-- Button Section Grid -->
+        <Grid Grid.Row="4"
               Grid.Column="0"
               Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
@@ -207,6 +257,34 @@
                     Content="Hotkeys"
                     Command="{Binding OpenHotKeysWindow}">
             </Button>
+        </Grid>
+        <!-- HotKeys Grid -->
+        <Grid Grid.Column="0"
+            Grid.Row="5"
+            DataContext="{Binding Path=HotKeyWindowModel, Source={StaticResource Locator}}">
+            <StackPanel
+                        VerticalAlignment="Stretch"
+                        HorizontalAlignment="Stretch"
+                        Orientation="Horizontal">
+                <!--Start HotKey Label-->
+                <Label Style="{DynamicResource LabelBottomRowStyle}"
+                       Content="{Binding StartHotKeyDisplay, UpdateSourceTrigger=PropertyChanged}"
+                       ContentStringFormat="Start: [{0}]">
+                </Label>
+                <!--Stop HotKey Label-->
+                <Label Style="{DynamicResource LabelBottomRowStyle}"
+                       Content="{Binding StopHotKeyDisplay, UpdateSourceTrigger=PropertyChanged}"
+                       ContentStringFormat="Stop: [{0}]">
+                </Label>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Column="1"
+              Grid.Row="5">
+            <CheckBox Content="Exit on close"
+                      Margin="0,0,10,0"
+                      HorizontalAlignment="Right"
+                      VerticalAlignment="Center"
+                      IsChecked="{Binding ExitOnClose, UpdateSourceTrigger=PropertyChanged}" />
         </Grid>
     </Grid>
 </Window>

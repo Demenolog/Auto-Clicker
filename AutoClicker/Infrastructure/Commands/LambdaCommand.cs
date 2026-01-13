@@ -11,7 +11,6 @@ namespace AutoClicker.Infrastructure.Commands
         public LambdaCommand(Action execute, Func<bool> canExecute = null)
         : this(p => execute(), (canExecute is null ? (Func<object, bool>)null : p => canExecute())!)
         {
-
         }
 
         public LambdaCommand(Action<object> execute, Func<object, bool> canExecute = null)

@@ -1,35 +1,77 @@
-﻿using System.Windows.Input;
+﻿using System.Windows;
+using System.Windows.Input;
 using AutoClicker.Infrastructure.Commands;
 using AutoClicker.Models.Hotkeys;
+using AutoClicker.Services.Interfaces;
+using AutoClicker.Services.Settings;
 using AutoClicker.ViewModels.Base;
 
 namespace AutoClicker.ViewModels
 {
     internal class HotKeyWindowViewModel : ViewModel
     {
-        #region StartHotkey : string - definition for textbox with start hotkey
+        private readonly ISettingsService _settingsService;
+        private bool _isLoadingSettings;
 
-        private string _startHotkey = GlobalHotKey.DefaultStartHotKey;
+        #region StartHotKey : definition for textbox with start hotkey
 
-        public string StartHotkey
+        private HotKeyDefinition _startHotKey = GlobalHotKey.DefaultStartHotKey;
+
+        public HotKeyDefinition StartHotKey
         {
-            get => _startHotkey;
-            set => SetField(ref _startHotkey, value);
+            get => _startHotKey;
+            private set
+            {
+                if (SetField(ref _startHotKey, value))
+                {
+                    OnPropertyChanged(nameof(StartHotKeyDisplay));
+                }
+            }
         }
 
-        #endregion StartHotkey : string - definition for textbox with start hotkey
+        public string StartHotKeyDisplay => StartHotKey.ToDisplayString();
 
-        #region StopHotKey : string - Definition for textbox with stop hotkey
-
-        private string _stopHotkey = GlobalHotKey.DefaultStopHotKey;
-
-        public string StopHotKey
+        public void SetStartHotKey(HotKeyDefinition binding)
         {
-            get => _stopHotkey;
-            set => SetField(ref _stopHotkey, value);
+            StartHotKey = binding;
+            UpdateSettings(settings =>
+            {
+                settings.HotKeys.StartModifiers = binding.Modifiers;
+                settings.HotKeys.StartKey = binding.Key;
+            });
         }
 
-        #endregion StopHotKey : string - Definition for textbox with stop hotkey
+        #endregion StartHotKey : definition for textbox with start hotkey
+
+        #region StopHotKey : definition for textbox with stop hotkey
+
+        private HotKeyDefinition _stopHotKey = GlobalHotKey.DefaultStopHotKey;
+
+        public HotKeyDefinition StopHotKey
+        {
+            get => _stopHotKey;
+            private set
+            {
+                if (SetField(ref _stopHotKey, value))
+                {
+                    OnPropertyChanged(nameof(StopHotKeyDisplay));
+                }
+            }
+        }
+
+        public string StopHotKeyDisplay => StopHotKey.ToDisplayString();
+
+        public void SetStopHotKey(HotKeyDefinition binding)
+        {
+            StopHotKey = binding;
+            UpdateSettings(settings =>
+            {
+                settings.HotKeys.StopModifiers = binding.Modifiers;
+                settings.HotKeys.StopKey = binding.Key;
+            });
+        }
+
+        #endregion StopHotKey : definition for textbox with stop hotkey
 
         #region Accept command
 
@@ -39,12 +81,17 @@ namespace AutoClicker.ViewModels
 
         private void OnChangeHotKeysExecute(object p)
         {
+            if (StartHotKey == StopHotKey)
+            {
+                MessageBox.Show("Start and stop hotkeys must be different.", "Hotkey conflict",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             GlobalHotKey.ChangeHotKeys();
         }
 
         #endregion Accept command
-
-        #region Reset Hotkeys command
 
         public ICommand ResetHotKeys { get; }
 
@@ -55,13 +102,36 @@ namespace AutoClicker.ViewModels
             GlobalHotKey.ResetHotKeys();
         }
 
-        #endregion Reset Hotkeys command
 
-        public HotKeyWindowViewModel()
+        public HotKeyWindowViewModel(ISettingsService settingsService)
         {
+            _settingsService = settingsService;
             ChangeHotKeys = new LambdaCommand(OnChangeHotKeysExecute, CanChangeHotKeysExecuted);
 
             ResetHotKeys = new LambdaCommand(OnResetHotKeysExecute, CanResetHotKeysExecuted);
+
+            ApplySettings(_settingsService.Settings);
+        }
+
+        private void ApplySettings(AppSettings settings)
+        {
+            _isLoadingSettings = true;
+            var hotKeys = settings.HotKeys ?? new HotKeySettings();
+            var startHotKey = new HotKeyDefinition(hotKeys.StartModifiers, hotKeys.StartKey);
+            var stopHotKey = new HotKeyDefinition(hotKeys.StopModifiers, hotKeys.StopKey);
+            SetStartHotKey(startHotKey);
+            SetStopHotKey(stopHotKey);
+            _isLoadingSettings = false;
+        }
+
+        private void UpdateSettings(System.Action<AppSettings> updateAction)
+        {
+            if (_isLoadingSettings)
+            {
+                return;
+            }
+
+            _settingsService.Update(updateAction);
         }
     }
 }

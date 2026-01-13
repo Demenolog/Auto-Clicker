@@ -1,8 +1,11 @@
 ﻿<Window x:Class="AutoClicker.Views.HotKeyWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:beh="clr-namespace:AutoClicker.Behaviors"
+        xmlns:constants="clr-namespace:AutoClicker.Infrastructure.Constants.HotkeysClass"
         DataContext="{Binding Path= HotKeyWindowModel, Source={StaticResource Locator}}"
         mc:Ignorable="d"
         Title="HotKeys"
@@ -13,7 +16,7 @@
             <RowDefinition></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" 
+        <StackPanel Grid.Row="0"
                     Orientation="Vertical"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center">
@@ -21,20 +24,30 @@
                         HorizontalAlignment="Center"
                         Margin="5">
                 <Label Style="{StaticResource LabelDefaultStyle}"
-                       Content="Start hotkey:">
+                       Content="Start hotkey:"
+                       ToolTip="{x:Static constants:HotKeyMessages.RegistrationFailureTooltip}">
                 </Label>
                 <TextBox Style="{StaticResource TextBoxHotKeysStyle}"
-                         Text="{Binding StartHotkey}">
+                         Text="{Binding StartHotKeyDisplay, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                         ToolTip="{x:Static constants:HotKeyMessages.RegistrationFailureTooltip}">
+                    <i:Interaction.Behaviors>
+                        <beh:HotkeyCaptureBehavior />
+                    </i:Interaction.Behaviors>
                 </TextBox>
             </StackPanel>
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Center"
                         Margin="5">
                 <Label Style="{StaticResource LabelDefaultStyle}"
-                       Content="Stop hotkey:">
+                       Content="Stop hotkey:"
+                       ToolTip="{x:Static constants:HotKeyMessages.RegistrationFailureTooltip}">
                 </Label>
                 <TextBox Style="{StaticResource TextBoxHotKeysStyle}"
-                         Text="{Binding StopHotKey}">
+                         Text="{Binding StopHotKeyDisplay, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                         ToolTip="{x:Static constants:HotKeyMessages.RegistrationFailureTooltip}">
+                    <i:Interaction.Behaviors>
+                        <beh:HotkeyCaptureBehavior />
+                    </i:Interaction.Behaviors>
                 </TextBox>
             </StackPanel>
         </StackPanel>
@@ -44,7 +57,8 @@
                     VerticalAlignment="Center">
             <Button Style="{StaticResource ButtonHotKeysStyle}"
                     Content="Accept"
-                    Command="{Binding ChangeHotKeys}">
+                    Command="{Binding ChangeHotKeys}"
+                    Click="OnAcceptClick">
             </Button>
             <Button Style="{StaticResource ButtonHotKeysStyle}"
                     Content="Reset"

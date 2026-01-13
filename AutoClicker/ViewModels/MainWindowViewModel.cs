@@ -1,17 +1,36 @@
-﻿using AutoClicker.Infrastructure.Commands;
-using AutoClicker.Models.Mouse;
-using AutoClicker.Models.Other;
-using AutoClicker.Services;
-using AutoClicker.ViewModels.Base;
-using System.Threading.Tasks;
-using System.Windows.Input;
+using AutoClicker.Infrastructure.Commands;
 using AutoClicker.Models.Clicks;
+using AutoClicker.Models.Other;
+using AutoClicker.Services.Interfaces;
+using AutoClicker.Services.Settings;
+using AutoClicker.ViewModels.Base;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Input;
+using AutoClicker.Services;
 using Point = System.Drawing.Point;
 
 namespace AutoClicker.ViewModels
 {
+    internal enum RepeatMode
+    {
+        UntilStopped,
+        Times
+    }
+
+    internal enum PositionMode
+    {
+        Current,
+        Fixed
+    }
+
     internal class MainWindowViewModel : ViewModel
     {
+        private readonly ISettingsService _settingsService;
+        private bool _isLoadingSettings;
+
         #region [Cilick interval]
 
         #region Properties
@@ -27,7 +46,10 @@ namespace AutoClicker.ViewModels
             {
                 if (TextBoxValidation.IsPositiveIntNumber(value))
                 {
-                    SetField(ref _hours, value);
+                    if (SetField(ref _hours, value))
+                    {
+                        UpdateSettings(settings => settings.Hours = value);
+                    }
                 }
             }
         }
@@ -45,7 +67,10 @@ namespace AutoClicker.ViewModels
             {
                 if (TextBoxValidation.IsPositiveIntNumber(value))
                 {
-                    SetField(ref _minutes, value);
+                    if (SetField(ref _minutes, value))
+                    {
+                        UpdateSettings(settings => settings.Minutes = value);
+                    }
                 }
             }
         }
@@ -54,7 +79,7 @@ namespace AutoClicker.ViewModels
 
         #region SecondsTextBox : string - TextBox with seconds values
 
-        private string _secondsTextBox = "0";
+        private string _secondsTextBox = "1";
 
         public string SecondsTextBox
         {
@@ -63,7 +88,10 @@ namespace AutoClicker.ViewModels
             {
                 if (TextBoxValidation.IsPositiveIntNumber(value))
                 {
-                    SetField(ref _secondsTextBox, value);
+                    if (SetField(ref _secondsTextBox, value))
+                    {
+                        UpdateSettings(settings => settings.Seconds = value);
+                    }
                 }
             }
         }
@@ -81,7 +109,10 @@ namespace AutoClicker.ViewModels
             {
                 if (TextBoxValidation.IsPositiveIntNumber(value))
                 {
-                    SetField(ref _milliseconds, value);
+                    if (SetField(ref _milliseconds, value))
+                    {
+                        UpdateSettings(settings => settings.Milliseconds = value);
+                    }
                 }
             }
         }
@@ -96,29 +127,45 @@ namespace AutoClicker.ViewModels
 
         #region Properties
 
-        #region Selected Mouse Button : string - Selected mouse button from combobox
+        #region Selected Mouse Button : MouseButtonKind - Selected mouse button from combobox
 
-        private string _mouseButton = "Left";
+        private MouseButtonKind _mouseButton = MouseButtonKind.Left;
 
-        public string SelectedMouseButton
+        public Array MouseButtonOptions { get; } = Enum.GetValues(typeof(MouseButtonKind));
+
+        public MouseButtonKind SelectedMouseButton
         {
             get => _mouseButton;
-            set => SetField(ref _mouseButton, value);
+            set
+            {
+                if (SetField(ref _mouseButton, value))
+                {
+                    UpdateSettings(settings => settings.SelectedMouseButton = value);
+                }
+            }
         }
 
-        #endregion Selected Mouse Button : string - Selected mouse button from combobox
+        #endregion Selected Mouse Button : MouseButtonKind - Selected mouse button from combobox
 
-        #region Selected Mouse Button Mode : string - Selected click type from combobox
+        #region Selected Mouse Button Mode : ClickBurstKind - Selected click type from combobox
 
-        private string _selectedMouseButtonMode = "Single";
+        private ClickBurstKind _selectedMouseButtonMode = ClickBurstKind.Single;
 
-        public string SelectedMouseButtonMode
+        public Array ClickBurstOptions { get; } = Enum.GetValues(typeof(ClickBurstKind));
+
+        public ClickBurstKind SelectedMouseButtonMode
         {
             get => _selectedMouseButtonMode;
-            set => SetField(ref _selectedMouseButtonMode, value);
+            set
+            {
+                if (SetField(ref _selectedMouseButtonMode, value))
+                {
+                    UpdateSettings(settings => settings.SelectedMouseButtonMode = value);
+                }
+            }
         }
 
-        #endregion Selected Mouse Button Mode : string - Selected click type from combobox
+        #endregion Selected Mouse Button Mode : ClickBurstKind - Selected click type from combobox
 
         #endregion Properties
 
@@ -139,46 +186,33 @@ namespace AutoClicker.ViewModels
             {
                 if (TextBoxValidation.IsPositiveIntNumber(value))
                 {
-                    SetField(ref _repeatTimes, value);
+                    if (SetField(ref _repeatTimes, value))
+                    {
+                        UpdateSettings(settings => settings.RepeatTimes = value);
+                    }
                 }
             }
         }
 
         #endregion RepeatTimesTextBox : string - get repeat times amount
 
-        #region Is Repeat Times Selected : bool - checking if repeat checkbox selected
+        #region Repeat Mode : RepeatMode - selected repeat mode
 
-        private bool _isRepeatTimes;
+        private RepeatMode _repeatMode = RepeatMode.UntilStopped;
 
-        public bool IsRepeatTimesSelected
+        public RepeatMode RepeatMode
         {
-            get => _isRepeatTimes;
+            get => _repeatMode;
             set
             {
-                SetField(ref _isRepeatTimes, value);
-                SetField(ref _isRepeatUntilStopped, !_isRepeatTimes);
-                OnPropertyChanged(nameof(IsRepeatUntilStoppedSelected));
+                if (SetField(ref _repeatMode, value))
+                {
+                    UpdateSettings(settings => settings.RepeatUntilStopped = value == RepeatMode.UntilStopped);
+                }
             }
         }
 
-        #endregion Is Repeat Times Selected : bool - checking if repeat checkbox selected
-
-        #region Is Repeat Until Stopped Selected : bool - checking if repeat until stopped checkbox selected
-
-        private bool _isRepeatUntilStopped = true;
-
-        public bool IsRepeatUntilStoppedSelected
-        {
-            get => _isRepeatUntilStopped;
-            set
-            {
-                SetField(ref _isRepeatUntilStopped, value);
-                SetField(ref _isRepeatTimes, !_isRepeatUntilStopped);
-                OnPropertyChanged(nameof(IsRepeatTimesSelected));
-            }
-        }
-
-        #endregion Is Repeat Until Stopped Selected : bool - checking if repeat until stopped checkbox selected
+        #endregion Repeat Mode : RepeatMode - selected repeat mode
 
         #endregion Properties
 
@@ -188,39 +222,23 @@ namespace AutoClicker.ViewModels
 
         #region Properties
 
-        #region IsCurrentLocationSelected : bool - checking if current location checkbox selected
+        #region Position Mode : PositionMode - selected cursor position mode
 
-        private bool _isCurrentLocation = true;
+        private PositionMode _positionMode = PositionMode.Current;
 
-        public bool IsCurrentLocationSelected
+        public PositionMode PositionMode
         {
-            get => _isCurrentLocation;
+            get => _positionMode;
             set
             {
-                SetField(ref _isCurrentLocation, value);
-                SetField(ref _isPickLocation, !_isCurrentLocation);
-                OnPropertyChanged(nameof(IsPickLocationSelected));
+                if (SetField(ref _positionMode, value))
+                {
+                    UpdateSettings(settings => settings.PositionUseCurrent = value == PositionMode.Current);
+                }
             }
         }
 
-        #endregion IsCurrentLocationSelected : bool - checking if current location checkbox selected
-
-        #region IsPickLocationSelected : bool - checking if pick location checkbox selected
-
-        private bool _isPickLocation;
-
-        public bool IsPickLocationSelected
-        {
-            get => _isPickLocation;
-            set
-            {
-                SetField(ref _isPickLocation, value);
-                SetField(ref _isCurrentLocation, !_isPickLocation);
-                OnPropertyChanged(nameof(IsCurrentLocationSelected));
-            }
-        }
-
-        #endregion IsPickLocationSelected : bool - checking if pick location checkbox selected
+        #endregion Position Mode : PositionMode - selected cursor position mode
 
         #region XAxisTextBox : string - Get\Set text value of X-axis textBox
 
@@ -233,7 +251,10 @@ namespace AutoClicker.ViewModels
             {
                 if (TextBoxValidation.IsIntNumber(value))
                 {
-                    SetField(ref _xAxis, value);
+                    if (SetField(ref _xAxis, value))
+                    {
+                        UpdateSettings(settings => settings.LastX = value);
+                    }
                 }
             }
         }
@@ -251,7 +272,10 @@ namespace AutoClicker.ViewModels
             {
                 if (TextBoxValidation.IsIntNumber(value))
                 {
-                    SetField(ref _yAxis, value);
+                    if (SetField(ref _yAxis, value))
+                    {
+                        UpdateSettings(settings => settings.LastY = value);
+                    }
                 }
             }
         }
@@ -276,6 +300,24 @@ namespace AutoClicker.ViewModels
 
         #endregion Properties
 
+        #region [Application settings]
+
+        private bool _exitOnClose;
+
+        public bool ExitOnClose
+        {
+            get => _exitOnClose;
+            set
+            {
+                if (SetField(ref _exitOnClose, value))
+                {
+                    UpdateSettings(settings => settings.ExitOnClose = value);
+                }
+            }
+        }
+
+        #endregion [Application settings]
+
         #region Commands
 
         #region Get cursor position command
@@ -290,13 +332,22 @@ namespace AutoClicker.ViewModels
 
             try
             {
-                await Task.Run((() =>
+                var result = await Task.Run(() =>
                 {
-                    var point = MouseClicks.GetCursorPosition();
+                    var success = _mouseClicker.TryGetCursorPosition(out var point);
+                    return (success, point);
+                });
 
-                    XAxisTextBox = point.X.ToString();
-                    YAxisTextBox = point.Y.ToString();
-                }));
+                if (!result.success)
+                {
+                    return;
+                }
+
+                await Application.Current.Dispatcher.InvokeAsync(() =>
+                {
+                    XAxisTextBox = result.point.X.ToString();
+                    YAxisTextBox = result.point.Y.ToString();
+                });
             }
             finally
             {
@@ -310,6 +361,67 @@ namespace AutoClicker.ViewModels
 
         #endregion [Cursor position]
 
+        #region [Start/stop timing]
+
+        private string _startDelaySeconds = "0";
+
+        public string StartDelaySeconds
+        {
+            get => _startDelaySeconds;
+            set
+            {
+                var normalizedValue = string.IsNullOrWhiteSpace(value) ? "0" : value;
+                if (TextBoxValidation.IsPositiveIntNumber(normalizedValue))
+                {
+                    if (SetField(ref _startDelaySeconds, normalizedValue))
+                    {
+                        UpdateSettings(settings => settings.StartDelay = TimeSpan.FromSeconds(ParseNonNegativeInt(normalizedValue)));
+                    }
+                }
+            }
+        }
+
+        private string _stopAfterMinutes = "0";
+
+        public string StopAfterMinutes
+        {
+            get => _stopAfterMinutes;
+            set
+            {
+                if (TextBoxValidation.IsPositiveIntNumber(value))
+                {
+                    if (SetField(ref _stopAfterMinutes, value))
+                    {
+                        UpdateSettings(settings => settings.StopAfter = TimeSpan.FromMinutes(ParseNonNegativeInt(value)));
+                    }
+                }
+            }
+        }
+
+        private bool _isStarting;
+
+        public bool IsStarting
+        {
+            get => _isStarting;
+            private set
+            {
+                if (SetField(ref _isStarting, value))
+                {
+                    CommandManager.InvalidateRequerySuggested();
+                }
+            }
+        }
+
+        private string _countdownText = string.Empty;
+
+        public string CountdownText
+        {
+            get => _countdownText;
+            private set => SetField(ref _countdownText, value);
+        }
+
+        #endregion [Start/stop timing]
+
         #region [Buttons section]
 
         #region Commands
@@ -318,13 +430,11 @@ namespace AutoClicker.ViewModels
 
         public ICommand StartClicking { get; }
 
-        private bool CanStartClickingExecuted(object p) => MouseClicks.Cts == null;
+        private bool CanStartClickingExecuted(object p) => !IsRunning && !IsStarting;
 
         internal async void OnStartClickingExecute(object p)
         {
-            var click = new Click();
-
-            await MouseClicks.StartClicking(click);
+            await StartClickingAsync();
         }
 
         #endregion Start clicking command
@@ -333,11 +443,15 @@ namespace AutoClicker.ViewModels
 
         public ICommand StopClicking { get; }
 
-        private bool CanStopClickingExecuted(object p) => MouseClicks.Cts != null;
+        private bool CanStopClickingExecuted(object p) => IsRunning || IsStarting;
 
         internal void OnStopClickingExecute(object p)
         {
-            MouseClicks.StopClicking();
+            IsRunning = false;
+            IsStarting = false;
+            CountdownText = string.Empty;
+            CancelStartStop();
+            _mouseClicker.StopClicking();
         }
 
         #endregion Stop clicking command
@@ -352,7 +466,10 @@ namespace AutoClicker.ViewModels
         {
             HotKeysWindowService.Create();
 
-            HotKeysWindowService.Show();
+            if (!HotKeysWindowService.Show())
+            {
+                return;
+            }
         }
 
         #endregion Open hotKeys Window
@@ -361,8 +478,32 @@ namespace AutoClicker.ViewModels
 
         #endregion [Buttons section]
 
-        public MainWindowViewModel()
+        #region [Running state]
+
+        private bool _isRunning;
+
+        public bool IsRunning
         {
+            get => _isRunning;
+            private set
+            {
+                if (SetField(ref _isRunning, value))
+                {
+                    CommandManager.InvalidateRequerySuggested();
+                }
+            }
+        }
+
+        #endregion [Running state]
+
+        private readonly IMouseClicker _mouseClicker;
+        private CancellationTokenSource? _startStopCts;
+
+        public MainWindowViewModel(IMouseClicker mouseClicker, ISettingsService settingsService)
+        {
+            _mouseClicker = mouseClicker;
+            _settingsService = settingsService;
+            ApplySettings(_settingsService.Settings);
             StartClicking = new LambdaCommand(OnStartClickingExecute, CanStartClickingExecuted);
 
             StopClicking = new LambdaCommand(OnStopClickingExecute, CanStopClickingExecuted);
@@ -370,6 +511,212 @@ namespace AutoClicker.ViewModels
             GetCursorPosition = new LambdaCommand(OnGetCursorPositionExecute, CanGetCursorPositionExecuted);
 
             OpenHotKeysWindow = new LambdaCommand(OnOpenHotKeysWindowExecute, CanOpenHotKeysWindowExecuted);
+
+            _mouseClicker.ClickingStopped += OnClickingStopped;
+        }
+
+        private void OnClickingStopped()
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                IsRunning = false;
+                IsStarting = false;
+                CountdownText = string.Empty;
+            });
+        }
+
+        private async Task StartClickingAsync()
+        {
+            CancelStartStop();
+            DisposeStartStop();
+            _startStopCts = new CancellationTokenSource();
+            var token = _startStopCts.Token;
+
+            try
+            {
+                if (PositionMode == PositionMode.Fixed && !IsFixedPositionWithinVirtualScreen())
+                {
+                    MessageBox.Show("Fixed X/Y position is outside the virtual screen bounds.",
+                        "AutoClicker Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                var delay = TimeSpan.FromSeconds(ParseNonNegativeInt(StartDelaySeconds));
+                IsStarting = delay > TimeSpan.Zero;
+                IsRunning = false;
+
+                if (delay > TimeSpan.Zero)
+                {
+                    _ = RunCountdownAsync(delay, token);
+                }
+
+                token.ThrowIfCancellationRequested();
+
+                var config = BuildClickConfig();
+                var click = new Click(config);
+
+                IsRunning = true;
+                await _mouseClicker.StartClicking(click);
+            }
+            catch (OperationCanceledException)
+            {
+                // Expected when StopClicking cancels start/stop pipeline.
+            }
+            catch (Exception ex)
+            {
+                _mouseClicker.StopClicking();
+                IsRunning = false;
+                MessageBox.Show($"Unable to start clicking. {ex.Message}", "AutoClicker Error",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            finally
+            {
+                IsStarting = false;
+                CountdownText = string.Empty;
+                DisposeStartStop();
+            }
+        }
+
+        private async Task RunCountdownAsync(TimeSpan delay, CancellationToken token)
+        {
+            var remaining = delay;
+
+            try
+            {
+                while (remaining > TimeSpan.Zero)
+                {
+                    var secondsRemaining = Math.Max(1, (int)Math.Ceiling(remaining.TotalSeconds));
+                    await Application.Current.Dispatcher.InvokeAsync(() =>
+                    {
+                        CountdownText = $"Starting in {secondsRemaining}s";
+                    });
+
+                    var tick = remaining.TotalSeconds > 1
+                        ? TimeSpan.FromSeconds(1)
+                        : remaining;
+
+                    await Task.Delay(tick, token);
+                    remaining = remaining - tick;
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                // Countdown canceled.
+            }
+            finally
+            {
+                if (!token.IsCancellationRequested)
+                {
+                    await Application.Current.Dispatcher.InvokeAsync(() =>
+                    {
+                        IsStarting = false;
+                        CountdownText = string.Empty;
+                    });
+                }
+            }
+        }
+
+        private void CancelStartStop()
+        {
+            if (_startStopCts == null)
+            {
+                return;
+            }
+
+            try
+            {
+                _startStopCts.Cancel();
+            }
+            catch
+            {
+                // Ignore cancellation race.
+            }
+        }
+
+        private void DisposeStartStop()
+        {
+            _startStopCts?.Dispose();
+            _startStopCts = null;
+        }
+
+        private ClickConfig BuildClickConfig()
+        {
+            var position = PositionMode == PositionMode.Current
+                ? _mouseClicker.GetCurrentCursorPosition()
+                : new Point(ParseAxisValue(XAxisTextBox), ParseAxisValue(YAxisTextBox));
+
+            return new ClickConfig(
+                new ClickIntervalConfig(
+                    HoursTextBox,
+                    MinutesTextBox,
+                    SecondsTextBox,
+                    MillisecondsTextBox),
+                new ClickOptionsConfig(
+                    SelectedMouseButton,
+                    SelectedMouseButtonMode),
+                new ClickRepeatsConfig(
+                    RepeatMode == RepeatMode.UntilStopped,
+                    RepeatTimesTextBox),
+                new ClickPositionConfig(
+                    PositionMode == PositionMode.Current,
+                    position.X.ToString(),
+                    position.Y.ToString()),
+                _settingsService.Settings.StartDelay,
+                _settingsService.Settings.StopAfter);
+        }
+
+        private bool IsFixedPositionWithinVirtualScreen()
+        {
+            var x = ParseAxisValue(XAxisTextBox);
+            var y = ParseAxisValue(YAxisTextBox);
+
+            var left = SystemParameters.VirtualScreenLeft;
+            var top = SystemParameters.VirtualScreenTop;
+            var right = left + SystemParameters.VirtualScreenWidth;
+            var bottom = top + SystemParameters.VirtualScreenHeight;
+
+            return x >= left && x < right && y >= top && y < bottom;
+        }
+
+        private static int ParseAxisValue(string value)
+        {
+            return int.TryParse(value, out var axis) ? axis : 0;
+        }
+
+        private static int ParseNonNegativeInt(string value)
+        {
+            return int.TryParse(value, out var number) && number >= 0 ? number : 0;
+        }
+
+        private void ApplySettings(AppSettings settings)
+        {
+            _isLoadingSettings = true;
+            HoursTextBox = settings.Hours ?? "0";
+            MinutesTextBox = settings.Minutes ?? "0";
+            SecondsTextBox = settings.Seconds ?? "1";
+            MillisecondsTextBox = settings.Milliseconds ?? "0";
+            var startDelaySeconds = Math.Max(0, (int)settings.StartDelay.TotalSeconds).ToString();
+            StartDelaySeconds = string.IsNullOrWhiteSpace(startDelaySeconds) ? "0" : startDelaySeconds;
+            StopAfterMinutes = Math.Max(0, (int)settings.StopAfter.TotalMinutes).ToString();
+            SelectedMouseButton = settings.SelectedMouseButton;
+            SelectedMouseButtonMode = settings.SelectedMouseButtonMode;
+            RepeatTimesTextBox = settings.RepeatTimes ?? "1";
+            RepeatMode = settings.RepeatUntilStopped ? RepeatMode.UntilStopped : RepeatMode.Times;
+            PositionMode = settings.PositionUseCurrent ? PositionMode.Current : PositionMode.Fixed;
+            XAxisTextBox = settings.LastX ?? "0";
+            YAxisTextBox = settings.LastY ?? "0";
+            ExitOnClose = settings.ExitOnClose;
+            _isLoadingSettings = false;
+        }
+
+        private void UpdateSettings(System.Action<AppSettings> updateAction)
+        {
+            if (_isLoadingSettings)
+            {
+                return;
+            }
+
+            _settingsService.Update(updateAction);
         }
     }
 }
