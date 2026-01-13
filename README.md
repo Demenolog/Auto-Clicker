@@ -1,14 +1,23 @@
-# Auto-Clicker
+# Auto Clicker
 
-Auto-Clicker is a desktop application for automating mouse clicks.
-<br>Written in C# and WPF (.NET 8.0)
+Auto Clicker helps you automate mouse clicks so you can repeat actions quickly and hands-free.
 
-## Features
-* Choose a custom interval to perform mouse tasks.
-* Perform left button or right button mouse clicks.
-* Perform single, double or triple click tasks.
-* Perform clicks infinitely, or choose a limited number of times.
-* Perform clicks at the current cursor position, or choose a custom position. 
+## What this app can do
+- Click at a speed you choose (set the interval).
+- Choose left, right, or middle mouse button.
+- Choose single, double, or triple click.
+- Click at your current cursor position or a fixed position you pick.
+- Repeat until you stop it, or for a set number of clicks.
+- Start and stop with global hotkeys, even when the app is not focused.
+- Use a start delay and an automatic stop time if you want.
 
-## Platform
-Available for Windows OS.
+## How to use
+1) Set your click interval.
+2) Choose the mouse button and click type.
+3) Pick a position (current or fixed).
+4) Choose how many times to repeat.
+5) Press **Start** (or use the Start hotkey).
+6) Press **Stop** when you are done.
+
+## Version / Changelog
+- _Coming soon._
