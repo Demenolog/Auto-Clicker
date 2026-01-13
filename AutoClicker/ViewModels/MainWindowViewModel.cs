@@ -448,7 +448,6 @@ namespace AutoClicker.ViewModels
         internal void OnStopClickingExecute(object p)
         {
             IsRunning = false;
-            IsPaused = false;
             IsStarting = false;
             CountdownText = string.Empty;
             CancelStartStop();
@@ -456,34 +455,6 @@ namespace AutoClicker.ViewModels
         }
 
         #endregion Stop clicking command
-
-        #region Pause clicking command
-
-        public ICommand PauseClicking { get; }
-
-        private bool CanPauseClickingExecuted(object p) => IsRunning && !IsPaused;
-
-        private void OnPauseClickingExecute(object p)
-        {
-            _mouseClicker.PauseClicking();
-            IsPaused = true;
-        }
-
-        #endregion Pause clicking command
-
-        #region Resume clicking command
-
-        public ICommand ResumeClicking { get; }
-
-        private bool CanResumeClickingExecuted(object p) => IsRunning && IsPaused;
-
-        private void OnResumeClickingExecute(object p)
-        {
-            _mouseClicker.ResumeClicking();
-            IsPaused = false;
-        }
-
-        #endregion Resume clicking command
 
         #region Open hotKeys Window
 
@@ -525,24 +496,6 @@ namespace AutoClicker.ViewModels
 
         #endregion [Running state]
 
-        #region [Paused state]
-
-        private bool _isPaused;
-
-        public bool IsPaused
-        {
-            get => _isPaused;
-            private set
-            {
-                if (SetField(ref _isPaused, value))
-                {
-                    CommandManager.InvalidateRequerySuggested();
-                }
-            }
-        }
-
-        #endregion [Paused state]
-
         private readonly IMouseClicker _mouseClicker;
         private CancellationTokenSource? _startStopCts;
 
@@ -554,10 +507,6 @@ namespace AutoClicker.ViewModels
             StartClicking = new LambdaCommand(OnStartClickingExecute, CanStartClickingExecuted);
 
             StopClicking = new LambdaCommand(OnStopClickingExecute, CanStopClickingExecuted);
-
-            PauseClicking = new LambdaCommand(OnPauseClickingExecute, CanPauseClickingExecuted);
-
-            ResumeClicking = new LambdaCommand(OnResumeClickingExecute, CanResumeClickingExecuted);
 
             GetCursorPosition = new LambdaCommand(OnGetCursorPositionExecute, CanGetCursorPositionExecuted);
 
@@ -571,7 +520,6 @@ namespace AutoClicker.ViewModels
             Application.Current.Dispatcher.Invoke(() =>
             {
                 IsRunning = false;
-                IsPaused = false;
                 IsStarting = false;
                 CountdownText = string.Empty;
             });
@@ -596,7 +544,6 @@ namespace AutoClicker.ViewModels
                 var delay = TimeSpan.FromSeconds(ParseNonNegativeInt(StartDelaySeconds));
                 IsStarting = delay > TimeSpan.Zero;
                 IsRunning = false;
-                IsPaused = false;
 
                 if (delay > TimeSpan.Zero)
                 {
@@ -609,7 +556,6 @@ namespace AutoClicker.ViewModels
                 var click = new Click(config);
 
                 IsRunning = true;
-                IsPaused = false;
                 await _mouseClicker.StartClicking(click);
             }
             catch (OperationCanceledException)

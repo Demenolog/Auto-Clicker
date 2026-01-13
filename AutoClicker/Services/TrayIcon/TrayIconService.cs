@@ -19,7 +19,6 @@ namespace AutoClicker.Services.TrayIcon
         private ToolStripMenuItem? _showHideItem;
         private ToolStripMenuItem? _startItem;
         private ToolStripMenuItem? _stopItem;
-        private ToolStripMenuItem? _pauseResumeItem;
         private ToolStripMenuItem? _exitItem;
         private ToolStripSeparator? _controlSeparator;
         private ToolStripSeparator? _exitSeparator;
@@ -49,9 +48,6 @@ namespace AutoClicker.Services.TrayIcon
             _stopItem = new ToolStripMenuItem("Stop");
             _stopItem.Click += (_, _) => ExecuteCommand(_viewModel.StopClicking);
 
-            _pauseResumeItem = new ToolStripMenuItem("Pause");
-            _pauseResumeItem.Click += (_, _) => TogglePauseResume();
-
             _exitItem = new ToolStripMenuItem("Exit");
             _exitItem.Click += (_, _) => ExitApplication();
 
@@ -64,7 +60,6 @@ namespace AutoClicker.Services.TrayIcon
                 _controlSeparator,
                 _startItem,
                 _stopItem,
-                _pauseResumeItem,
                 _exitSeparator,
                 _exitItem
             ]);
@@ -93,13 +88,10 @@ namespace AutoClicker.Services.TrayIcon
             RunOnUi(() =>
             {
                 var isRunning = _viewModel.IsRunning;
-                var isPaused = _viewModel.IsPaused;
-                var statusText = isRunning ? (isPaused ? "Paused" : "Running") : "Stopped";
+                var statusText = isRunning ? "Running" : "Stopped";
                 _notifyIcon.Text = TrimTooltip(statusText);
                 _startItem!.Enabled = _viewModel.StartClicking.CanExecute(null);
                 _stopItem!.Enabled = _viewModel.StopClicking.CanExecute(null);
-                _pauseResumeItem!.Enabled = _viewModel.PauseClicking.CanExecute(null) || _viewModel.ResumeClicking.CanExecute(null);
-                _pauseResumeItem.Text = isPaused ? "Resume" : "Pause";
                 _showHideItem!.Text = IsMainWindowVisible() ? "Hide" : "Show";
             });
         }
@@ -148,17 +140,6 @@ namespace AutoClicker.Services.TrayIcon
             }
 
             return text[..maxLength];
-        }
-
-        private void TogglePauseResume()
-        {
-            if (_viewModel.IsPaused)
-            {
-                ExecuteCommand(_viewModel.ResumeClicking);
-                return;
-            }
-
-            ExecuteCommand(_viewModel.PauseClicking);
         }
 
         private void ExecuteCommand(System.Windows.Input.ICommand command)
@@ -275,7 +256,7 @@ namespace AutoClicker.Services.TrayIcon
         private void OnViewModelPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(MainWindowViewModel.IsRunning)
-                || e.PropertyName == nameof(MainWindowViewModel.IsPaused))
+                || e.PropertyName == nameof(MainWindowViewModel.IsStarting))
             {
                 UpdateStatus();
             }

@@ -14,9 +14,7 @@ namespace AutoClicker.Services.MouseClicker
         private readonly object _lockObject = new(); // protects isRunning + Cts
         private readonly IClickerTiming _timing;
         private readonly IClickExecutor _clickExecutor;
-        private readonly ManualResetEventSlim _pauseGate = new(true);
         private bool _isRunning;
-        private bool _isPaused;
         private CancellationTokenSource? _cts;
 
         public MouseClicker(IClickerTiming timing, IClickExecutor clickExecutor)
@@ -32,17 +30,6 @@ namespace AutoClicker.Services.MouseClicker
                 lock (_lockObject)
                 {
                     return _isRunning;
-                }
-            }
-        }
-
-        public bool IsPaused
-        {
-            get
-            {
-                lock (_lockObject)
-                {
-                    return _isPaused;
                 }
             }
         }
@@ -94,8 +81,6 @@ namespace AutoClicker.Services.MouseClicker
                 }
 
                 _isRunning = true;
-                _isPaused = false;
-                _pauseGate.Set();
                 _cts = new CancellationTokenSource();
             }
 
@@ -135,8 +120,6 @@ namespace AutoClicker.Services.MouseClicker
                         for (var i = 0; i < repeats; i++)
                         {
                             linkedToken.ThrowIfCancellationRequested();
-                            _pauseGate.Wait(linkedToken);
-
                             ExecuteClicking(clicksPerBurst, position, downFlag, upFlag, linkedToken);
 
                             // No delay after last burst
@@ -152,8 +135,6 @@ namespace AutoClicker.Services.MouseClicker
                         while (true)
                         {
                             linkedToken.ThrowIfCancellationRequested();
-                            _pauseGate.Wait(linkedToken);
-
                             ExecuteClicking(clicksPerBurst, position, downFlag, upFlag, linkedToken);
 
                             if (intervalMs > 0)
@@ -180,10 +161,7 @@ namespace AutoClicker.Services.MouseClicker
                     _cts?.Dispose();
                     _cts = null;
                     _isRunning = false;
-                    _isPaused = false;
                 }
-
-                _pauseGate.Set();
                 linkedCts?.Dispose();
                 stopAfterCts?.Dispose();
                 ClickingStopped?.Invoke();
@@ -199,8 +177,6 @@ namespace AutoClicker.Services.MouseClicker
                     return;
                 }
 
-                _isPaused = false;
-                _pauseGate.Set();
                 try
                 {
                     _cts?.Cancel();
@@ -209,34 +185,6 @@ namespace AutoClicker.Services.MouseClicker
                 {
                     // Ignore races if Cts is already disposed/finished
                 }
-            }
-        }
-
-        public void PauseClicking()
-        {
-            lock (_lockObject)
-            {
-                if (!_isRunning || _isPaused)
-                {
-                    return;
-                }
-
-                _isPaused = true;
-                _pauseGate.Reset();
-            }
-        }
-
-        public void ResumeClicking()
-        {
-            lock (_lockObject)
-            {
-                if (!_isPaused)
-                {
-                    return;
-                }
-
-                _isPaused = false;
-                _pauseGate.Set();
             }
         }
 
